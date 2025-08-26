@@ -52,15 +52,16 @@ export interface BeritaData {
   judul: string;
   konten: string;
   featuredImage?: string;
-  category: 'research-tips' | 'success-stories' | 'industry-news' | 'company-news';
+  category: 'research-tips' | 'success-stories' | 'industry-news' | 'company-news' | 'industry' | 'research' | 'company' | 'announcement';
   tags: string[];
   author: string;
-  publicationDate: Date;
-  status: 'draft' | 'published';
+  publicationDate: string;
+  status: 'aktif' | 'nonaktif';
+  featured?: boolean;
   metaDescription?: string;
   keywords?: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ContactFormData {

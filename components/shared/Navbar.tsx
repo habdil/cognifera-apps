@@ -23,12 +23,12 @@ export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = [
-    { name: "Home", link: "#hero" },
-    { name: "About", link: "#about" },
-    { name: "Services", link: "#services" },
-    { name: "Publications", link: "#publications" },
-    { name: "News", link: "#news" },
-    { name: "Contacts", link: "#contacts" },
+    { name: "Home", link: "/" },
+    { name: "About", link: "/#about" },
+    { name: "Services", link: "/#services" },
+    { name: "Publications", link: "/#publications" },
+    { name: "News", link: "/news" },
+    { name: "Contacts", link: "/#contacts" },
   ];
 
   return (
@@ -37,7 +37,7 @@ export const Navbar = () => {
       <NavBody>
         {/* Logo */}
         <a
-          href="#hero"
+          href="/"
           className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1"
         >
           <img
@@ -59,31 +59,11 @@ export const Navbar = () => {
           </MenuItem>
 
           <MenuItem setActive={setActive} active={active} item="Services">
-            <div className="grid grid-cols-2 gap-4 p-3 min-w-[480px]">
-              <ProductItem
-                title="FERADATA"
-                description="Paket Analisis Data Premium"
-                href="#feradata"
-                src="/hero/hero-feradata.png"
-              />
-              <ProductItem
-                title="FERAGUIDE"
-                description="Paket Bimbingan Karya Tulis Ilmiah"
-                href="#feraguide"
-                src="/hero/hero-feraguide.png"
-              />
-              <ProductItem
-                title="FERAPUB"
-                description="Paket Publikasi Jurnal Nasional dan Internasional"
-                href="#ferapub"
-                src="/hero/hero-ferapub.png"
-              />
-              <ProductItem
-                title="FERAGRANT"
-                description="Paket Hibah dan Pendanaan Penelitian"
-                href="#feragrant"
-                src="/hero/hero-feragrant.png"
-              />
+            <div className="flex flex-col space-y-4 text-sm">
+              <HoveredLink href="#feradata">FERADATA</HoveredLink>
+              <HoveredLink href="#feraguide">FERAGUIDE</HoveredLink>
+              <HoveredLink href="#ferapub">FERAPUB</HoveredLink>
+              <HoveredLink href="#feragrant">FERAGRANT</HoveredLink>
             </div>
           </MenuItem>
 
@@ -97,9 +77,10 @@ export const Navbar = () => {
 
           <MenuItem setActive={setActive} active={active} item="News">
             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="#industry-news">Industry News</HoveredLink>
-              <HoveredLink href="#research-news">Research News</HoveredLink>
-              <HoveredLink href="#company-news">Company News</HoveredLink>
+              <HoveredLink href="/news">Semua Berita</HoveredLink>
+              <HoveredLink href="/news?category=industry">Industry News</HoveredLink>
+              <HoveredLink href="/news?category=research">Research News</HoveredLink>
+              <HoveredLink href="/news?category=company">Company News</HoveredLink>
             </div>
           </MenuItem>
         </Menu>
@@ -107,7 +88,7 @@ export const Navbar = () => {
         {/* CTA */}
         <div className="flex items-center space-x-4">
           <NavbarButton
-            href="#contacts"
+            href="/#contacts"
             variant="primary"
             className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
           >
@@ -120,7 +101,7 @@ export const Navbar = () => {
       <MobileNav>
         <MobileNavHeader>
           {/* Logo */}
-          <a href="#hero" className="flex items-center space-x-2">
+          <a href="/" className="flex items-center space-x-2">
             <img
               src="/Logo-Cognifera.svg"
               alt="Logo Cognifera"
@@ -152,7 +133,7 @@ export const Navbar = () => {
             </a>
           ))}
           <NavbarButton
-            href="#contacts"
+            href="/#contacts"
             variant="primary"
             className="w-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
           >

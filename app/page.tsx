@@ -7,6 +7,7 @@ import { TestimonialSection } from "@/components/landing/TestimonialSection";
 import { BeritaSection } from "@/components/landing/BeritaSection";
 import { ContactSection } from "@/components/landing/ContactSection";
 import { HeroSection } from "@/components/landing/HeroSection";
+import { Footer } from "@/components/landing/Footer";
 
 export default function Home() {
   return (
@@ -21,6 +22,7 @@ export default function Home() {
         <BeritaSection />
         <ContactSection />
       </main>
+      <Footer />
     </>
   );
 }
