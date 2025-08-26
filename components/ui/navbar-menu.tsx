@@ -89,19 +89,19 @@ export const ProductItem = ({
   src: string;
 }) => {
   return (
-    <a href={href} className="flex space-x-2">
+    <a href={href} className="flex space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors">
       <img
         src={src}
-        width={140}
-        height={70}
+        width={80}
+        height={50}
         alt={title}
-        className="shrink-0 rounded-md shadow-2xl"
+        className="shrink-0 object-cover"
       />
-      <div>
-        <h4 className="text-xl font-bold mb-1 text-black dark:text-white">
+      <div className="flex-1">
+        <h4 className="text-base font-semibold mb-1 text-black dark:text-white">
           {title}
         </h4>
-        <p className="text-neutral-700 text-sm max-w-[10rem] dark:text-neutral-300">
+        <p className="text-neutral-600 text-xs leading-relaxed dark:text-neutral-400">
           {description}
         </p>
       </div>

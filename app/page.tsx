@@ -1,4 +1,5 @@
 
+import { Navbar } from "@/components/shared/Navbar";
 import { AboutSection } from "@/components/landing/AboutSection";
 import { LayananSection } from "@/components/landing/LayananSection";
 import { PromoSection } from "@/components/landing/PromoSection";
@@ -9,14 +10,17 @@ import { HeroSection } from "@/components/landing/HeroSection";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <HeroSection />
-      <AboutSection />
-      <LayananSection />
-      <PromoSection />
-      <TestimonialSection />
-      <BeritaSection />
-      <ContactSection />
-    </main>
+    <>
+      <Navbar />
+      <main className="min-h-screen">
+        <HeroSection />
+        <AboutSection />
+        <LayananSection />
+        <PromoSection />
+        <TestimonialSection />
+        <BeritaSection />
+        <ContactSection />
+      </main>
+    </>
   );
 }

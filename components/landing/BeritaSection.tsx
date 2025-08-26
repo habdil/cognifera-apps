@@ -196,27 +196,6 @@ export function BeritaSection() {
             </p>
           </div>
         )}
-
-        {/* Newsletter Subscription */}
-        <div className="bg-white rounded-3xl p-8 shadow-lg text-center">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">
-            Jangan Lewatkan Update Terbaru
-          </h3>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Berlangganan newsletter kami untuk mendapatkan tips riset, success stories, 
-            dan insights terbaru langsung ke inbox Anda.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-            />
-            <Button className="px-6 rounded-full">
-              Subscribe
-            </Button>
-          </div>
-        </div>
       </div>
     </section>
   );

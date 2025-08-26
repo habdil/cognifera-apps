@@ -23,13 +23,12 @@ export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = [
-    { name: "Beranda", link: "#hero" },
-    { name: "Tentang", link: "#about" },
-    { name: "Layanan", link: "#layanan" },
-    { name: "Promo", link: "#promo" },
-    { name: "Testimonial", link: "#testimonial" },
-    { name: "Berita", link: "#berita" },
-    { name: "Kontak", link: "#contact" },
+    { name: "Home", link: "#hero" },
+    { name: "About", link: "#about" },
+    { name: "Services", link: "#services" },
+    { name: "Publications", link: "#publications" },
+    { name: "News", link: "#news" },
+    { name: "Contacts", link: "#contacts" },
   ];
 
   return (
@@ -44,42 +43,63 @@ export const Navbar = () => {
           <img
             src="/logo.png"
             alt="Logo Cognifera"
-            width={40}
-            height={40}
+            width={30}
+            height={30}
           />
         </a>
 
         {/* Menu utama dengan dropdown */}
         <Menu setActive={setActive}>
-          <MenuItem setActive={setActive} active={active} item="Tentang">
+          <MenuItem setActive={setActive} active={active} item="About">
             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="#about">Profil</HoveredLink>
-              <HoveredLink href="#layanan">Visi & Misi</HoveredLink>
-              <HoveredLink href="#team">Tim Kami</HoveredLink>
+              <HoveredLink href="#profile">Profile</HoveredLink>
+              <HoveredLink href="#vision">Visi dan Misi</HoveredLink>
+              <HoveredLink href="#team">Our Team</HoveredLink>
             </div>
           </MenuItem>
 
-          <MenuItem setActive={setActive} active={active} item="Layanan">
-            <div className="grid grid-cols-2 gap-6 p-2">
+          <MenuItem setActive={setActive} active={active} item="Services">
+            <div className="grid grid-cols-2 gap-4 p-3 min-w-[480px]">
               <ProductItem
-                title="Konsultasi"
-                description="Layanan konsultasi AI & teknologi"
-                href="#layanan"
-                src="https://placehold.co/140x70"
+                title="FERADATA"
+                description="Paket Analisis Data Premium"
+                href="#feradata"
+                src="/hero/hero-feradata.png"
               />
               <ProductItem
-                title="Workshop"
-                description="Pelatihan untuk pelajar & profesional"
-                href="#layanan"
-                src="https://placehold.co/140x70"
+                title="FERAGUIDE"
+                description="Paket Bimbingan Karya Tulis Ilmiah"
+                href="#feraguide"
+                src="/hero/hero-feraguide.png"
+              />
+              <ProductItem
+                title="FERAPUB"
+                description="Paket Publikasi Jurnal Nasional dan Internasional"
+                href="#ferapub"
+                src="/hero/hero-ferapub.png"
+              />
+              <ProductItem
+                title="FERAGRANT"
+                description="Paket Hibah dan Pendanaan Penelitian"
+                href="#feragrant"
+                src="/hero/hero-feragrant.png"
               />
             </div>
           </MenuItem>
 
-          <MenuItem setActive={setActive} active={active} item="Berita">
+          <MenuItem setActive={setActive} active={active} item="Publications">
             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="#berita">Artikel</HoveredLink>
-              <HoveredLink href="#promo">Promo</HoveredLink>
+              <HoveredLink href="#research-journals">Research Journals</HoveredLink>
+              <HoveredLink href="#community-service-journals">Community Service Journals</HoveredLink>
+              <HoveredLink href="#books">Books</HoveredLink>
+            </div>
+          </MenuItem>
+
+          <MenuItem setActive={setActive} active={active} item="News">
+            <div className="flex flex-col space-y-4 text-sm">
+              <HoveredLink href="#industry-news">Industry News</HoveredLink>
+              <HoveredLink href="#research-news">Research News</HoveredLink>
+              <HoveredLink href="#company-news">Company News</HoveredLink>
             </div>
           </MenuItem>
         </Menu>
@@ -87,11 +107,11 @@ export const Navbar = () => {
         {/* CTA */}
         <div className="flex items-center space-x-4">
           <NavbarButton
-            href="#contact"
+            href="#contacts"
             variant="primary"
             className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
           >
-            Hubungi Kami
+            Try Now
           </NavbarButton>
         </div>
       </NavBody>
@@ -132,11 +152,11 @@ export const Navbar = () => {
             </a>
           ))}
           <NavbarButton
-            href="#contact"
+            href="#contacts"
             variant="primary"
             className="w-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
           >
-            Hubungi Kami
+            Contact Us
           </NavbarButton>
         </MobileNavMenu>
       </MobileNav>

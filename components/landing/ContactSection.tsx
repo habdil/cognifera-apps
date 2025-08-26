@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { ContactFormData } from "@/types";
 
 export function ContactSection() {
@@ -15,10 +16,10 @@ export function ContactSection() {
 
   const layananOptions = [
     { value: '', label: 'Pilih layanan yang diminati' },
-    { value: 'feradata', label: 'FERADATA - Analisis Data' },
-    { value: 'feraguide', label: 'FERAGUIDE - Research Guidance' },
-    { value: 'ferawrite', label: 'FERAWRITE - Academic Writing' },
-    { value: 'ferapub', label: 'FERAPUB - Publication Strategy' },
+    { value: 'feradata', label: 'FERADATA - Paket Analisis Data Premium' },
+    { value: 'feraguide', label: 'FERAGUIDE - Paket Bimbingan Karya Tulis Ilmiah' },
+    { value: 'ferapub', label: 'FERAPUB - Paket Publikasi Jurnal Internasional' },
+    { value: 'feragrant', label: 'FERAGRANT - Paket Hibah dan Pendanaan Penelitian' },
     { value: 'konsultasi', label: 'Konsultasi Umum' }
   ];
 
@@ -56,25 +57,25 @@ export function ContactSection() {
     {
       icon: '📞',
       title: 'Telepon',
-      content: '+62 21 1234 5678'
+      content: '+62 813 5551 5694'
     },
     {
       icon: '📧',
       title: 'Email',
-      content: 'info@cognifera.com'
+      content: 'cognifera.edu@gmail.com'
     },
     {
       icon: '💬',
       title: 'WhatsApp',
-      content: '+62 812 3456 7890'
+      content: '+62 813 5551 5694'
     }
   ];
 
   const socialLinks = [
-    { icon: '💼', name: 'LinkedIn', url: '#' },
-    { icon: '📷', name: 'Instagram', url: '#' },
-    { icon: '🎥', name: 'YouTube', url: '#' },
-    { icon: '🐦', name: 'Twitter', url: '#' }
+    { icon: 'LinkedIn', name: 'LinkedIn', url: '#' },
+    { icon: 'Instagram', name: 'Instagram', url: '#' },
+    { icon: 'Youtube', name: 'YouTube', url: '#' },
+    { icon: 'Twitter', name: 'Twitter', url: '#' }
   ];
 
   return (
@@ -94,10 +95,16 @@ export function ContactSection() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <div className="bg-gray-50 rounded-3xl p-8 shadow-lg">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">
-              Mulai Konsultasi Gratis
-            </h3>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl text-[var(--color-text)]">
+                Mulai Konsultasi Gratis
+              </CardTitle>
+              <CardDescription>
+                Isi formulir di bawah untuk memulai konsultasi gratis dengan tim expert kami
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
             
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
@@ -113,7 +120,7 @@ export function ContactSection() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-900 mb-2">
+                <label htmlFor="name" className="block text-sm font-medium text-[var(--color-text)] mb-2">
                   Nama Lengkap *
                 </label>
                 <input
@@ -123,13 +130,13 @@ export function ContactSection() {
                   required
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)] transition-all duration-200 placeholder:text-gray-400"
                   placeholder="Masukkan nama lengkap Anda"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-[var(--color-text)] mb-2">
                   Email *
                 </label>
                 <input
@@ -139,13 +146,13 @@ export function ContactSection() {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)] transition-all duration-200 placeholder:text-gray-400"
                   placeholder="nama@email.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="layananInterest" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="layananInterest" className="block text-sm font-medium text-[var(--color-text)] mb-2">
                   Layanan yang Diminati
                 </label>
                 <select
@@ -153,10 +160,10 @@ export function ContactSection() {
                   name="layananInterest"
                   value={formData.layananInterest}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)] transition-all duration-200"
                 >
                   {layananOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
+                    <option key={option.value} value={option.value} className="bg-[var(--color-background)] text-[var(--color-text)]">
                       {option.label}
                     </option>
                   ))}
@@ -164,7 +171,7 @@ export function ContactSection() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-[var(--color-text)] mb-2">
                   Pesan *
                 </label>
                 <textarea
@@ -174,7 +181,7 @@ export function ContactSection() {
                   rows={5}
                   value={formData.message}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200 resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)] transition-all duration-200 resize-none placeholder:text-gray-400"
                   placeholder="Ceritakan tentang kebutuhan riset Anda, tantangan yang dihadapi, atau pertanyaan yang ingin dikonsultasikan..."
                 />
               </div>
@@ -182,122 +189,133 @@ export function ContactSection() {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="w-full py-4 text-lg font-semibold rounded-lg"
+                className="w-full py-4 text-lg font-semibold rounded-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-[var(--color-primary-foreground)]"
               >
                 {isSubmitting ? 'Mengirim...' : 'Kirim Pesan'}
               </Button>
             </form>
 
-            <p className="text-center text-sm text-gray-500 mt-4">
+            <p className="text-center text-sm text-[var(--color-muted-foreground)] mt-4">
               Dengan mengirim pesan ini, Anda menyetujui untuk dihubungi oleh tim Cognifera.
             </p>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Contact Info */}
-          <div className="space-y-8">
-            <h3 className="text-2xl font-bold text-gray-800">
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-[var(--color-text)]">
               Informasi Kontak
             </h3>
 
             {/* Contact Details */}
-            <div className="space-y-6">
-              {contactInfo.map((info, index) => (
-                <div key={index} className="flex items-start space-x-4">
-                  <div className="text-2xl flex-shrink-0">{info.icon}</div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">{info.title}</h4>
-                    <p className="text-gray-600">{info.content}</p>
+            <Card>
+              <CardContent className="space-y-6">
+                {contactInfo.map((info, index) => (
+                  <div key={index} className="flex items-start space-x-4">
+                    <div className="text-2xl flex-shrink-0">{info.icon}</div>
+                    <div>
+                      <h4 className="font-semibold text-[var(--color-text)] mb-1">{info.title}</h4>
+                      <p className="text-[var(--color-muted-foreground)]">{info.content}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </CardContent>
+            </Card>
 
             {/* Office Hours */}
-            <div className="bg-primary/10 rounded-2xl p-6">
-              <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
-                🕐 Jam Operasional
-              </h4>
-              <div className="space-y-2 text-gray-700">
-                <p><span className="font-medium">Senin - Jumat:</span> 08:00 - 18:00 WIB</p>
-                <p><span className="font-medium">Sabtu:</span> 09:00 - 15:00 WIB</p>
-                <p><span className="font-medium">Minggu:</span> Libur</p>
-              </div>
-            </div>
+            <Card>
+              <CardContent>
+                <h4 className="font-semibold text-[var(--color-text)] mb-3 flex items-center">
+                  🕐 Jam Operasional
+                </h4>
+                <div className="space-y-2 text-[var(--color-muted-foreground)]">
+                  <p><span className="font-medium">Senin - Jumat:</span> 08:00 - 18:00 WIB</p>
+                  <p><span className="font-medium">Sabtu:</span> 09:00 - 15:00 WIB</p>
+                  <p><span className="font-medium">Minggu:</span> Libur</p>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Social Media */}
-            <div>
-              <h4 className="font-semibold text-gray-800 mb-4">Ikuti Kami</h4>
-              <div className="flex space-x-4">
-                {socialLinks.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.url}
-                    className="w-12 h-12 bg-white border border-gray-200 rounded-full flex items-center justify-center text-xl hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 transform hover:scale-110 shadow-sm hover:shadow-md"
-                    title={social.name}
-                  >
-                    {social.icon}
-                  </a>
-                ))}
-              </div>
-            </div>
+            <Card>
+              <CardContent>
+                <h4 className="font-semibold text-[var(--color-text)] mb-4">Ikuti Kami</h4>
+                <div className="flex space-x-4">
+                  {socialLinks.map((social, index) => (
+                    <a
+                      key={index}
+                      href={social.url}
+                      className="w-12 h-12 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-300 transform hover:scale-110 shadow-sm hover:shadow-lg"
+                      title={social.name}
+                    >
+                      <span className="text-sm font-medium">{social.icon.charAt(0)}</span>
+                    </a>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Quick Actions */}
-            <div className="space-y-4">
-              <h4 className="font-semibold text-gray-800">Aksi Cepat</h4>
-              <div className="space-y-3">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start rounded-lg h-12"
-                >
-                  <span className="mr-3">💬</span>
-                  Chat via WhatsApp
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start rounded-lg h-12"
-                >
-                  <span className="mr-3">📞</span>
-                  Jadwalkan Video Call
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start rounded-lg h-12"
-                >
-                  <span className="mr-3">📧</span>
-                  Email Langsung
-                </Button>
-              </div>
-            </div>
+            <Card>
+              <CardContent className="space-y-4">
+                <h4 className="font-semibold text-[var(--color-text)]">Aksi Cepat</h4>
+                <div className="space-y-3">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                  >
+                    <span className="mr-3">💬</span>
+                    Chat via WhatsApp
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                  >
+                    <span className="mr-3">📞</span>
+                    Jadwalkan Video Call
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                  >
+                    <span className="mr-3">📧</span>
+                    Email Langsung
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
         {/* Final CTA */}
         <div className="mt-20 text-center">
-          <div className="bg-primary rounded-3xl p-12 text-white">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-              Mulai Perjalanan Riset Anda Hari Ini
-            </h3>
-            <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
-              Jangan biarkan impian publikasi internasional hanya menjadi mimpi. 
-              Bergabunglah dengan ratusan peneliti yang telah merasakan kesuksesan bersama Cognifera.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button 
-                variant="secondary" 
-                size="lg" 
-                className="px-8 font-semibold rounded-full"
-              >
-                Konsultasi Gratis Sekarang
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="px-8 font-semibold rounded-full border-white text-white hover:bg-white hover:text-primary"
-              >
-                Lihat Portfolio Kami
-              </Button>
-            </div>
-          </div>
+          <Card className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)] border-[var(--color-primary)]">
+            <CardContent className="p-12">
+              <h3 className="text-3xl md:text-4xl font-bold mb-4">
+                Mulai Perjalanan Riset Anda Hari Ini
+              </h3>
+              <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
+                Jangan biarkan impian publikasi internasional hanya menjadi mimpi. 
+                Bergabunglah dengan ratusan peneliti yang telah merasakan kesuksesan bersama Cognifera.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button 
+                  variant="secondary" 
+                  size="lg" 
+                  className="px-8 font-semibold rounded-full bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] hover:bg-[var(--color-secondary)]/90"
+                >
+                  Konsultasi Gratis Sekarang
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="px-8 font-semibold rounded-full border-[var(--color-primary-foreground)] text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary-foreground)] hover:text-[var(--color-primary)]"
+                >
+                  Lihat Portfolio Kami
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

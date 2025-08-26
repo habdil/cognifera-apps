@@ -73,7 +73,7 @@ export function LayananSection() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
           {layanan.map((service) => (
             <div 
               key={service.id}
@@ -81,57 +81,57 @@ export function LayananSection() {
             >
               {/* Service Header */}
               <div 
-                className="p-8 pb-6"
+                className="p-5 pb-4"
                 style={{ 
                   background: `linear-gradient(135deg, ${service.warna}10 0%, ${service.warna}05 100%)` 
                 }}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="text-4xl">{getIconComponent(service.icon)}</div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-3xl">{getIconComponent(service.icon)}</div>
                   {service.successRate && (
-                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                      {service.successRate} Success Rate
+                    <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                      {service.successRate}
                     </div>
                   )}
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                <h3 className="text-lg font-bold text-gray-800 mb-2">
                   {service.nama}
                 </h3>
                 <p 
-                  className="text-lg font-medium mb-4"
+                  className="text-sm font-medium mb-3"
                   style={{ color: service.warna }}
                 >
                   {service.tagline}
                 </p>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-gray-600 text-sm leading-relaxed">
                   {service.deskripsi}
                 </p>
               </div>
 
               {/* Service Content */}
-              <div className="p-8 pt-6">
+              <div className="p-5 pt-4">
                 {/* Features */}
-                <div className="mb-6">
-                  <h4 className="font-semibold text-gray-800 mb-3">Fitur Utama:</h4>
-                  <ul className="space-y-2">
-                    {service.fiturUtama.slice(0, 3).map((fitur, index) => (
-                      <li key={index} className="flex items-center text-gray-600">
-                        <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
-                        {fitur}
+                <div className="mb-4">
+                  <h4 className="font-semibold text-gray-800 mb-2 text-sm">Fitur Utama:</h4>
+                  <ul className="space-y-1">
+                    {service.fiturUtama.slice(0, 2).map((fitur, index) => (
+                      <li key={index} className="flex items-start text-gray-600 text-xs">
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2 flex-shrink-0 mt-1.5"></div>
+                        <span>{fitur}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 {/* Target Market */}
-                <div className="mb-6">
-                  <h4 className="font-semibold text-gray-800 mb-3">Target:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {service.targetMarket.map((target, index) => (
+                <div className="mb-4">
+                  <h4 className="font-semibold text-gray-800 mb-2 text-sm">Target:</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {service.targetMarket.slice(0, 2).map((target, index) => (
                       <span 
                         key={index}
-                        className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
+                        className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs"
                       >
                         {target}
                       </span>
@@ -140,15 +140,15 @@ export function LayananSection() {
                 </div>
 
                 {/* Price & CTA */}
-                <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-                  <div>
-                    <div className="text-2xl font-bold text-gray-800">
+                <div className="pt-4 border-t border-gray-100">
+                  <div className="text-center mb-3">
+                    <div className="text-base font-bold text-gray-800">
                       {formatPrice(service.hargaMulai)}
                     </div>
-                    <div className="text-sm text-gray-500">Mulai dari</div>
+                    <div className="text-xs text-gray-500">Mulai dari</div>
                   </div>
                   <button 
-                    className="px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 group-hover:shadow-lg"
+                    className="w-full px-3 py-2 rounded-full font-semibold text-xs transition-all duration-300 transform hover:scale-105 group-hover:shadow-lg"
                     style={{ 
                       backgroundColor: service.warna,
                       color: 'white'
