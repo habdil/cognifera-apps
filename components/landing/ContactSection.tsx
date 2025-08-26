@@ -97,9 +97,16 @@ export function ContactSection() {
           {/* Contact Form */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl text-[var(--color-text)]">
-                Mulai Konsultasi Gratis
-              </CardTitle>
+                <CardTitle className="text-2xl text-[var(--color-text)]">
+                <a
+                  href="https://wa.me/message/VRRB5IFQ7LQ4A1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline hover:text-[var(--color-primary)] transition-colors"
+                >
+                  Mulai Konsultasi Gratis
+                </a>
+                </CardTitle>
               <CardDescription>
                 Isi formulir di bawah untuk memulai konsultasi gratis dengan tim expert kami
               </CardDescription>

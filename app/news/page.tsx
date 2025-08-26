@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { BeritaData } from "@/types";
 import { beritaAPI } from "@/lib/api-dummy";
 import { Navbar } from "@/components/shared/Navbar";
-import { Footer } from "@/components/landing/Footer";
+import { Footer } from "@/components/shared/Footer";
 import { NewsCard } from "@/components/news/NewsCard";
 import { Search, Filter } from "lucide-react";
 

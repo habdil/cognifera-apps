@@ -79,9 +79,14 @@ export function TestimonialSection() {
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
               Bergabunglah dengan ratusan peneliti yang telah mempercayakan perjalanan riset mereka kepada Cognifera.
             </p>
-            <button className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            <a
+              href="https://wa.me/message/VRRB5IFQ7LQ4A1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-block"
+            >
               Mulai Konsultasi
-            </button>
+            </a>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BeritaData } from "@/types";
 import { beritaAPI } from "@/lib/api-dummy";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function BeritaSection() {
   const [berita, setBerita] = useState<BeritaData[]>([]);
@@ -10,11 +11,11 @@ export function BeritaSection() {
   const [loading, setLoading] = useState(true);
 
   const categories = [
-    { value: 'all', label: 'Semua Artikel' },
-    { value: 'research-tips', label: 'Tips Riset' },
-    { value: 'success-stories', label: 'Success Stories' },
-    { value: 'industry-news', label: 'Industry News' },
-    { value: 'company-news', label: 'Company News' }
+    { value: 'all', label: 'All Articles' },
+    { value: 'research', label: 'Research' },
+    { value: 'industry', label: 'Industry' },
+    { value: 'company', label: 'Company' },
+    { value: 'announcement', label: 'Announcement' }
   ];
 
   useEffect(() => {
@@ -25,9 +26,9 @@ export function BeritaSection() {
       
       const response = await beritaAPI.getAll(filters);
       if (response.success && response.data) {
-        // Filter only published articles on frontend
-        const publishedArticles = response.data.filter(article => article.status === 'published');
-        setBerita(publishedArticles.slice(0, 6)); // Show latest 6 articles
+        // Filter only active articles on frontend
+        const activeArticles = response.data.filter(article => article.status === 'aktif');
+        setBerita(activeArticles.slice(0, 4)); // Show latest 4 articles
       }
       setLoading(false);
     };
@@ -35,7 +36,8 @@ export function BeritaSection() {
     fetchBerita();
   }, [selectedCategory]);
 
-  const formatDate = (date: Date) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
     return new Intl.DateTimeFormat('id-ID', {
       day: 'numeric',
       month: 'long',
@@ -45,10 +47,10 @@ export function BeritaSection() {
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      'research-tips': 'bg-blue-100 text-blue-800',
-      'success-stories': 'bg-green-100 text-green-800',
-      'industry-news': 'bg-purple-100 text-purple-800',
-      'company-news': 'bg-orange-100 text-orange-800'
+      'research': 'bg-blue-100 text-blue-800',
+      'industry': 'bg-purple-100 text-purple-800',
+      'company': 'bg-orange-100 text-orange-800',
+      'announcement': 'bg-red-100 text-red-800'
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
@@ -133,9 +135,11 @@ export function BeritaSection() {
                       <span className="text-gray-500 text-sm">
                         By {berita[0].author}
                       </span>
-                      <Button variant="outline" className="rounded-full">
-                        Baca Selengkapnya
-                      </Button>
+                      <Link href={`/news/${berita[0].id}`}>
+                        <Button variant="outline" className="rounded-full">
+                          Read More
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -151,10 +155,10 @@ export function BeritaSection() {
                 >
                   <div className="h-48 bg-primary/10 flex items-center justify-center">
                     <div className="text-4xl">
-                      {artikel.category === 'research-tips' && '💡'}
-                      {artikel.category === 'success-stories' && '🏆'}
-                      {artikel.category === 'industry-news' && '📊'}
-                      {artikel.category === 'company-news' && '📢'}
+                      {artikel.category === 'research' && '🔬'}
+                      {artikel.category === 'industry' && '📊'}
+                      {artikel.category === 'company' && '🏢'}
+                      {artikel.category === 'announcement' && '📢'}
                     </div>
                   </div>
                   <div className="p-6">
@@ -176,9 +180,11 @@ export function BeritaSection() {
                       <span className="text-gray-500 text-xs">
                         {artikel.author}
                       </span>
-                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
-                        Read More →
-                      </Button>
+                      <Link href={`/news/${artikel.id}`}>
+                        <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+                          Read More →
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>

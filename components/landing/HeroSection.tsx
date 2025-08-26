@@ -7,18 +7,6 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen w-full bg-white overflow-hidden">
       <BackgroundRippleEffect />
-      
-      {/* Language Toggle - Top Right */}
-      <div className="absolute top-8 right-8 z-20">
-        <div className="flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg border border-gray-200/50">
-          <Button variant="secondary" size="sm" className="rounded-full">
-            ID
-          </Button>
-          <Button variant="ghost" size="sm" className="rounded-full">
-            EN
-          </Button>
-        </div>
-      </div>
 
       <div className="container mx-auto px-6 h-screen flex items-center">
         <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
@@ -71,79 +59,64 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right Image/Illustration */}
+          {/* Right Hero Image */}
           <div className="relative hidden lg:flex items-center justify-center">
-            {/* Image Placeholder - Letakkan gambar Anda di sini */}
-            <div className="relative w-full max-w-lg">
-              {/* Main Card/Dashboard Mockup */}
-              <div className="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
+            <div className="relative w-full max-w-3xl">
+                {/* Main Hero Image */}
+                <div className="relative -translate-y-15">
+                <img 
+                  src="/hero/hero-section.png" 
+                  alt="Cognifera Services - Research Platform"
+                  className="w-full h-auto object-contain transition-transform duration-700 hover:scale-105 drop-shadow-2xl relative z-10"
+                />
+                
+                {/* Floating UI Cards */}
+                <div className="absolute top-5 left-4 bg-white rounded-2xl shadow-xl p-4 border border-gray-100 animate-float">
                   <div className="flex items-center space-x-3">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span className="text-sm font-medium text-gray-700">Research Active</span>
                   </div>
-                  <div className="text-sm text-gray-500">Research Dashboard</div>
+                  <div className="mt-2 text-xs text-gray-500">4 Services Online</div>
                 </div>
 
-                {/* Content */}
-                <div className="space-y-6">
+                <div className="absolute top-20 right-8 bg-white rounded-2xl shadow-xl p-4 border border-gray-100 animate-float-delayed">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-primary mb-1">95%</div>
+                    <div className="text-xs text-gray-600">Success Rate</div>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-10 left-8 bg-white rounded-2xl shadow-xl p-4 border border-gray-100 animate-float">
+                  <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                    <span className="text-xs">📊</span>
+                  </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">Research Analytics</h3>
-                    <p className="text-gray-600 text-sm">Track your publication journey</p>
+                    <div className="text-sm font-semibold text-gray-800">Analytics</div>
+                    <div className="text-xs text-gray-500">Real-time data</div>
                   </div>
-
-                  {/* Stats Cards */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-primary/10 rounded-2xl p-4">
-                      <div className="text-2xl font-bold text-primary">12</div>
-                      <div className="text-xs text-gray-600">Publications</div>
-                    </div>
-                    <div className="bg-secondary/20 rounded-2xl p-4">
-                      <div className="text-2xl font-bold text-yellow-600">3.2</div>
-                      <div className="text-xs text-gray-600">Impact Factor</div>
-                    </div>
                   </div>
+                </div>
 
-                  {/* Progress Bar */}
-                  <div className="space-y-2">
-                    <div className="text-sm text-gray-700 font-medium">Research Progress</div>
-                    <div className="bg-gray-200 rounded-full h-2">
-                      <div className="bg-primary h-2 rounded-full" style={{width: '75%'}}></div>
+                <div className="absolute bottom-8 right-12 bg-white rounded-2xl shadow-xl p-4 border border-gray-100 animate-float-delayed">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-secondary/20 rounded-full flex items-center justify-center">
+                      <span className="text-xs">🏆</span>
                     </div>
-                    <div className="text-xs text-gray-500">75% Complete</div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="space-y-3">
-                    <button className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary/90 transition-colors">
-                      Start New Research
-                    </button>
-                    <div className="flex gap-2">
-                      <button className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
-                        Analytics
-                      </button>
-                      <button className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
-                        Export
-                      </button>
+                    <div>
+                      <div className="text-sm font-semibold text-gray-800">Publications</div>
+                      <div className="text-xs text-gray-500">200+ completed</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Floating Elements */}
-              <div className="absolute -top-6 -right-6 bg-secondary/90 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                🏆 Published!
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-tertiary/90 text-blue-800 px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                📊 Analytics
-              </div>
+              {/* Background Geometric Shapes */}
+              <div className="absolute top-12 right-4 w-24 h-24 border-2 border-primary/20 rounded-3xl rotate-12 -z-10"></div>
+              <div className="absolute bottom-20 left-12 w-16 h-16 border-2 border-secondary/30 rounded-2xl -rotate-12 -z-10"></div>
+              <div className="absolute top-1/2 left-0 w-8 h-32 bg-tertiary/10 rounded-full -z-10"></div>
+              <div className="absolute bottom-4 right-0 w-20 h-8 bg-primary/10 rounded-full -z-10"></div>
             </div>
-
-            {/* Background Decorations */}
-            <div className="absolute top-1/4 right-0 w-72 h-72 bg-primary/10 rounded-full blur-3xl -z-10"></div>
-            <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-tertiary/10 rounded-full blur-3xl -z-10"></div>
           </div>
         </div>
       </div>

@@ -60,10 +60,10 @@ export const Navbar = () => {
 
           <MenuItem setActive={setActive} active={active} item="Services">
             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="#feradata">FERADATA</HoveredLink>
-              <HoveredLink href="#feraguide">FERAGUIDE</HoveredLink>
-              <HoveredLink href="#ferapub">FERAPUB</HoveredLink>
-              <HoveredLink href="#feragrant">FERAGRANT</HoveredLink>
+              <HoveredLink href="/services/feradata">FERADATA</HoveredLink>
+              <HoveredLink href="/services/feraguide">FERAGUIDE</HoveredLink>
+              <HoveredLink href="/services/ferapub">FERAPUB</HoveredLink>
+              <HoveredLink href="/services/feragrant">FERAGRANT</HoveredLink>
             </div>
           </MenuItem>
 
@@ -77,7 +77,7 @@ export const Navbar = () => {
 
           <MenuItem setActive={setActive} active={active} item="News">
             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="/news">Semua Berita</HoveredLink>
+              <HoveredLink href="/news">All News</HoveredLink>
               <HoveredLink href="/news?category=industry">Industry News</HoveredLink>
               <HoveredLink href="/news?category=research">Research News</HoveredLink>
               <HoveredLink href="/news?category=company">Company News</HoveredLink>

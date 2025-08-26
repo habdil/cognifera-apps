@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { BeritaData } from "@/types";
 import { beritaAPI } from "@/lib/api-dummy";
+import { Footer } from "@/components/shared/Footer";
 import { Navbar } from "@/components/shared/Navbar";
-import { Footer } from "@/components/landing/Footer";
 import { Calendar, Clock, Tag, ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 
@@ -52,20 +52,20 @@ export default function NewsDetailPage() {
 
   const getCategoryLabel = (category: string) => {
     const categoryMap: { [key: string]: string } = {
-      industry: "Industry News",
-      research: "Research News",
-      company: "Company News", 
-      announcement: "Pengumuman"
+      industry: "Industry",
+      research: "Research",
+      company: "Company", 
+      announcement: "Announcement"
     };
     return categoryMap[category] || category;
   };
 
   const getCategoryColor = (category: string) => {
     const colorMap: { [key: string]: string } = {
-      industry: "bg-blue-100 text-blue-800",
-      research: "bg-green-100 text-green-800",
-      company: "bg-purple-100 text-purple-800",
-      announcement: "bg-orange-100 text-orange-800"
+      research: "bg-blue-100 text-blue-800",
+      industry: "bg-purple-100 text-purple-800",
+      company: "bg-orange-100 text-orange-800",
+      announcement: "bg-red-100 text-red-800"
     };
     return colorMap[category] || "bg-gray-100 text-gray-800";
   };
@@ -104,11 +104,11 @@ export default function NewsDetailPage() {
             <h1 className="text-2xl font-bold text-gray-800 mb-4">Artikel Tidak Ditemukan</h1>
             <p className="text-gray-600 mb-8">Artikel yang Anda cari tidak tersedia.</p>
             <Link
-              href="/news"
+              href="/#news"
               className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Kembali ke Berita
+              Back to News
             </Link>
           </div>
         </div>
@@ -124,11 +124,11 @@ export default function NewsDetailPage() {
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Back Button */}
           <Link
-            href="/news"
+            href="/#news"
             className="inline-flex items-center text-gray-600 hover:text-primary transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Kembali ke Berita
+            Back to News
           </Link>
 
           {/* Article */}

@@ -38,7 +38,7 @@ export const mockLayanan: LayananData[] = [
       "Strategi publikasi jurnal",
       "Template dan tools penelitian"
     ],
-    targetMarket: ["Mahasiswa S2/S3", "Dosen", "Peneliti senior"],
+    targetMarket: ["Mahasiswa S1/S2/S3", "Dosen", "Peneliti senior"],
     successRate: "90%",
     warna: "#FFDD02",
     status: "aktif",
