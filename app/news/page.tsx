@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { BeritaData } from "@/types";
 import { beritaAPI } from "@/lib/api-dummy";
@@ -9,7 +9,7 @@ import { Footer } from "@/components/shared/Footer";
 import { NewsCard } from "@/components/news/NewsCard";
 import { Search, Filter } from "lucide-react";
 
-export default function NewsPage() {
+function NewsContent() {
   const searchParams = useSearchParams();
   const [news, setNews] = useState<BeritaData[]>([]);
   const [filteredNews, setFilteredNews] = useState<BeritaData[]>([]);
@@ -208,5 +208,34 @@ export default function NewsPage() {
       </div>
       <Footer />
     </>
+  );
+}
+
+export default function NewsPage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Navbar />
+        <div className="min-h-screen bg-gray-50 pt-20">
+          <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="animate-pulse">
+              <div className="h-12 bg-gray-200 rounded w-64 mx-auto mb-8"></div>
+              <div className="grid md:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="bg-white rounded-xl p-6">
+                    <div className="h-48 bg-gray-200 rounded mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    }>
+      <NewsContent />
+    </Suspense>
   );
 }

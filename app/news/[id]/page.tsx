@@ -1,19 +1,28 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { BeritaData } from "@/types";
 import { beritaAPI } from "@/lib/api-dummy";
 import { Footer } from "@/components/shared/Footer";
 import { Navbar } from "@/components/shared/Navbar";
-import { Calendar, Clock, Tag, ArrowLeft, Share2 } from "lucide-react";
+import { ArrowLeft, Share2, Eye, ThumbsUp } from "lucide-react";
 import Link from "next/link";
 
 export default function NewsDetailPage() {
   const { id } = useParams();
+  const router = useRouter();
   const [article, setArticle] = useState<BeritaData | null>(null);
   const [relatedNews, setRelatedNews] = useState<BeritaData[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push('/#news');
+    }
+  };
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -120,106 +129,169 @@ export default function NewsDetailPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 pt-20">
-        <div className="max-w-4xl mx-auto px-6 py-12">
-          {/* Back Button */}
-          <Link
-            href="/#news"
-            className="inline-flex items-center text-gray-600 hover:text-primary transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to News
-          </Link>
+      <div className="min-h-screen bg-white pt-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex gap-8 py-6">
+            {/* Main Content */}
+            <div className="flex-1 max-w-4xl">
+              {/* Back Button */}
+              <button
+                onClick={handleBack}
+                className="inline-flex items-center text-gray-600 hover:text-primary transition-colors mb-6"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </button>
 
-          {/* Article */}
-          <article className="bg-white rounded-xl shadow-lg overflow-hidden">
-            {/* Header */}
-            <div className="p-8 border-b">
-              {/* Category */}
-              <div className="mb-4">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(article.category)}`}>
-                  <Tag className="w-4 h-4 mr-1" />
-                  {getCategoryLabel(article.category)}
-                </span>
-                {article.featured && (
-                  <span className="ml-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                    ⭐ Featured
-                  </span>
-                )}
+              {/* Article Header */}
+              <div className="mb-6">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4">
+                  {article.judul}
+                </h1>
+                
+                {/* Author and Date */}
+                <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                  <span className="font-medium">{article.author}</span>
+                  <span>•</span>
+                  <span>{formatDate(article.publicationDate)}</span>
+                </div>
+
+                {/* Social Actions */}
+                <div className="flex items-center gap-4 py-3 border-y border-gray-200">
+                  <button className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors">
+                    <ThumbsUp className="w-4 h-4" />
+                    <span className="text-sm">Like</span>
+                  </button>
+                  <button className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors">
+                    <Share2 className="w-4 h-4" />
+                    <span className="text-sm">Share</span>
+                  </button>
+                  <div className="flex items-center gap-2 text-gray-500 ml-auto">
+                    <Eye className="w-4 h-4" />
+                    <span className="text-sm">1,234 views</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Title */}
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6 leading-tight">
-                {article.judul}
-              </h1>
+              {/* Featured Image */}
+              <div className="mb-8">
+                <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/30 rounded-lg flex items-center justify-center">
+                  <div className="text-6xl opacity-50">📰</div>
+                </div>
+                <p className="text-xs text-gray-500 mt-2 italic">Ilustrasi artikel - {article.judul}</p>
+              </div>
 
-              {/* Meta Info */}
-              <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-6">
-                <div className="flex items-center">
-                  <Calendar className="w-5 h-5 mr-2" />
-                  {formatDate(article.publicationDate)}
-                </div>
-                <div className="flex items-center">
-                  <Clock className="w-5 h-5 mr-2" />
-                  5 min read
-                </div>
-                <button className="flex items-center hover:text-primary transition-colors">
-                  <Share2 className="w-5 h-5 mr-2" />
-                  Share
-                </button>
+              {/* Article Content */}
+              <div className="prose prose-lg max-w-none">
+                <div 
+                  className="text-gray-900 leading-relaxed"
+                  dangerouslySetInnerHTML={{ 
+                    __html: article.konten
+                      .trim()
+                      .split('\n\n')
+                      .map(paragraph => paragraph.trim())
+                      .filter(paragraph => paragraph.length > 0)
+                      .map(paragraph => `<p class="mb-6">${paragraph.replace(/\n/g, '<br>')}</p>`)
+                      .join('')
+                  }}
+                />
               </div>
 
               {/* Tags */}
               {article.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {article.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-block bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <div className="flex flex-wrap gap-2">
+                    <span className="text-sm font-medium text-gray-700 mr-2">Tags:</span>
+                    {article.tags.map((tag, index) => (
+                      <Link
+                        key={index}
+                        href={`/#news?tag=${tag}`}
+                        className="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-100 transition-colors"
+                      >
+                        {tag}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Featured Image Placeholder */}
-            <div className="h-64 bg-gradient-to-br from-primary/10 to-primary/30 flex items-center justify-center">
-              <div className="text-8xl opacity-50">📰</div>
-            </div>
+            {/* Sidebar */}
+            <div className="w-80 hidden lg:block">
+              {/* Ad Space */}
+              <div className="bg-gray-50 rounded-lg p-6 mb-6">
+                <div className="text-center">
+                  <div className="text-4xl mb-3">📢</div>
+                  <p className="text-sm text-gray-600 font-medium">Advertisement Space</p>
+                  <p className="text-xs text-gray-500 mt-2">Your ad could be here</p>
+                </div>
+              </div>
 
-            {/* Content */}
-            <div className="p-8">
-              <div 
-                className="prose prose-lg max-w-none text-gray-900"
-                dangerouslySetInnerHTML={{ __html: article.konten }}
-              />
-            </div>
-          </article>
+              {/* Related News in Sidebar */}
+              {relatedNews.length > 0 && (
+                <div className="bg-white border border-gray-200 rounded-lg p-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Artikel Terkait</h3>
+                  <div className="space-y-4">
+                    {relatedNews.map((relatedArticle) => (
+                      <Link
+                        key={relatedArticle.id}
+                        href={`/news/${relatedArticle.id}`}
+                        className="block group"
+                      >
+                        <div className="flex gap-3">
+                          <div className="flex-shrink-0">
+                            <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/30 rounded flex items-center justify-center">
+                              <span className="text-lg opacity-50">📰</span>
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-gray-900 group-hover:text-primary transition-colors line-clamp-2 text-sm leading-tight">
+                              {relatedArticle.judul}
+                            </h4>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {formatDate(relatedArticle.publicationDate)}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-          {/* Related News */}
+              {/* Another Ad Space */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 mt-6">
+                <div className="text-center">
+                  <div className="text-3xl mb-3">🎯</div>
+                  <p className="text-sm text-gray-700 font-medium">Sponsored Content</p>
+                  <p className="text-xs text-gray-600 mt-2">Premium placement available</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Related News */}
           {relatedNews.length > 0 && (
-            <div className="mt-16">
-              <h2 className="text-2xl font-bold text-gray-800 mb-8">Artikel Terkait</h2>
-              <div className="grid md:grid-cols-3 gap-6">
+            <div className="lg:hidden mt-8 px-4">
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Artikel Terkait</h2>
+              <div className="grid gap-4">
                 {relatedNews.map((relatedArticle) => (
                   <Link
                     key={relatedArticle.id}
                     href={`/news/${relatedArticle.id}`}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group"
+                    className="flex gap-4 bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
                   >
-                    <div className="h-32 bg-gradient-to-br from-primary/10 to-primary/30 flex items-center justify-center">
-                      <div className="text-4xl opacity-50">📰</div>
+                    <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/30 rounded flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl opacity-50">📰</span>
                     </div>
-                    <div className="p-4">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mb-2 ${getCategoryColor(relatedArticle.category)}`}>
+                    <div className="flex-1 min-w-0">
+                      <span className={`inline-block px-2 py-1 rounded text-xs font-medium mb-2 ${getCategoryColor(relatedArticle.category)}`}>
                         {getCategoryLabel(relatedArticle.category)}
                       </span>
-                      <h3 className="font-semibold text-gray-800 group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                      <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">
                         {relatedArticle.judul}
                       </h3>
-                      <p className="text-gray-900 text-sm">
+                      <p className="text-sm text-gray-500">
                         {formatDate(relatedArticle.publicationDate)}
                       </p>
                     </div>

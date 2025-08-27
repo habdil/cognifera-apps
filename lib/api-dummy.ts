@@ -634,8 +634,8 @@ export const beritaAPI = {
       const newBerita: BeritaData = {
         ...beritaData,
         id: generateId(),
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       
       data.push(newBerita);
@@ -672,7 +672,7 @@ export const beritaAPI = {
       const updatedBerita = {
         ...data[index],
         ...beritaData,
-        updatedAt: new Date()
+        updatedAt: new Date().toISOString()
       };
       
       data[index] = updatedBerita;
@@ -741,28 +741,28 @@ export const adminAPI = {
           type: 'layanan' as const,
           action: 'update' as const,
           title: item.nama,
-          timestamp: item.updatedAt
+          timestamp: new Date(item.updatedAt)
         })),
         ...iklanData.slice(-2).map(item => ({
           id: item.id,
           type: 'iklan' as const,
           action: 'create' as const,
           title: item.judul,
-          timestamp: item.updatedAt
+          timestamp: new Date(item.updatedAt)
         })),
         ...testimonialData.slice(-2).map(item => ({
           id: item.id,
           type: 'testimonial' as const,
           action: 'create' as const,
           title: `Testimonial dari ${item.clientName}`,
-          timestamp: item.updatedAt
+          timestamp: new Date(item.updatedAt)
         })),
         ...beritaData.slice(-3).map(item => ({
           id: item.id,
           type: 'berita' as const,
           action: 'update' as const,
           title: item.judul,
-          timestamp: item.updatedAt
+          timestamp: new Date(item.updatedAt)
         }))
       ].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()).slice(0, 10);
 
@@ -770,7 +770,7 @@ export const adminAPI = {
         totalLayanan: layananData.filter(item => item.status === 'aktif').length,
         activePromos: iklanData.filter(item => item.status === 'aktif' && new Date() <= item.tanggalBerakhir).length,
         totalTestimonials: testimonialData.filter(item => item.status === 'aktif').length,
-        publishedNews: beritaData.filter(item => item.status === 'published').length,
+        publishedNews: beritaData.filter(item => item.status === 'aktif').length,
         recentActivities
       };
       

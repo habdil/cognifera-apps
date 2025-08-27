@@ -284,7 +284,7 @@ const BookCard = ({ book }: { book: BookData }) => {
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-primary)] text-[var(--color-primary-foreground)] rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
             >
               <ShoppingCart className="h-4 w-4" />
-              {book.availability === 'pre-order' ? 'Pre-order' : 'Buy Now'}
+              Buy Now
             </button>
           )}
         </div>

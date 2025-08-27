@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Navbar } from "@/components/shared/Navbar";
 import { ResearchJournalsSection } from "@/components/publications/ResearchJournalsSection";
@@ -8,7 +8,7 @@ import { CommunityServiceSection } from "@/components/publications/CommunityServ
 import { BooksSection } from "@/components/publications/BooksSection";
 import { PublicationType } from "@/types/publications";
 
-export default function PublicationsPage() {
+function PublicationsContent() {
   const [activeSection, setActiveSection] = useState<PublicationType>("research-journals");
   const searchParams = useSearchParams();
 
@@ -80,5 +80,13 @@ export default function PublicationsPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function PublicationsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center">Loading...</div>}>
+      <PublicationsContent />
+    </Suspense>
   );
 }

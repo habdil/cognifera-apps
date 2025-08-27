@@ -59,7 +59,7 @@ export const ResearchJournalsSection = () => {
                 journal.authors.some(author => author.toLowerCase().includes(term)) ||
                 journal.keywords.some(keyword => keyword.toLowerCase().includes(term)) ||
                 journal.journal.toLowerCase().includes(term) ||
-                (journal.doi && journal.doi.toLowerCase().includes(term));
+                Boolean(journal.doi && journal.doi.toLowerCase().includes(term));
               break;
             case 'title':
               fieldMatches = journal.title.toLowerCase().includes(term);
