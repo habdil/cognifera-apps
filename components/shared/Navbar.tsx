@@ -26,7 +26,7 @@ export const Navbar = () => {
     { name: "Home", link: "/" },
     { name: "About", link: "/#about" },
     { name: "Services", link: "/#services" },
-    { name: "Publications", link: "/#publications" },
+    { name: "Publications", link: "/publications" },
     { name: "News", link: "/news" },
     { name: "Contacts", link: "/#contacts" },
   ];
@@ -69,9 +69,10 @@ export const Navbar = () => {
 
           <MenuItem setActive={setActive} active={active} item="Publications">
             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="#research-journals">Research Journals</HoveredLink>
-              <HoveredLink href="#community-service-journals">Community Service Journals</HoveredLink>
-              <HoveredLink href="#books">Books</HoveredLink>
+              <HoveredLink href="/publications">All Publications</HoveredLink>
+              <HoveredLink href="/publications?section=research-journals">Research Journals</HoveredLink>
+              <HoveredLink href="/publications?section=community-service-journals">Community Service Journals</HoveredLink>
+              <HoveredLink href="/publications?section=books">Books</HoveredLink>
             </div>
           </MenuItem>
 
@@ -103,14 +104,11 @@ export const Navbar = () => {
           {/* Logo */}
           <a href="/" className="flex items-center space-x-2">
             <img
-              src="/Logo-Cognifera.svg"
+              src="/logo.png"
               alt="Logo Cognifera"
               width={32}
               height={32}
             />
-            <span className="font-semibold text-[var(--color-foreground)]">
-              Cognifera
-            </span>
           </a>
 
           {/* Toggle */}
@@ -126,7 +124,7 @@ export const Navbar = () => {
             <a
               key={idx}
               href={item.link}
-              className="w-full rounded-md px-4 py-2 text-base font-medium text-[var(--color-foreground)] hover:bg-[var(--color-muted)]"
+              className="w-full rounded-md px-4 py-2 text-base font-medium text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
               onClick={() => setMobileOpen(false)}
             >
               {item.name}
@@ -137,7 +135,7 @@ export const Navbar = () => {
             variant="primary"
             className="w-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
           >
-            Contact Us
+            Try Now
           </NavbarButton>
         </MobileNavMenu>
       </MobileNav>
