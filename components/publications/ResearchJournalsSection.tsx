@@ -142,6 +142,34 @@ export const ResearchJournalsSection = () => {
         </p>
       </div>
 
+      {/* Journal System Access Banner */}
+      <div className="bg-gradient-to-r from-[var(--color-primary)]/5 to-[var(--color-secondary)]/5 border border-[var(--color-primary)]/20 rounded-2xl p-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="text-center md:text-left">
+            <h3 className="text-xl font-bold text-[var(--color-foreground)] mb-2">
+              🎓 Access Cognifera Journal System
+            </h3>
+            <p className="text-[var(--color-muted-foreground)] max-w-md">
+              Visit our Open Journal System for article submissions, current issues, archives, and editorial information.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <a
+              href="/journal"
+              className="px-6 py-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-[var(--color-primary-foreground)] rounded-lg font-medium transition-colors text-center"
+            >
+              Browse Journal →
+            </a>
+            <a
+              href="/journal/submit"
+              className="px-6 py-3 border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 rounded-lg font-medium transition-colors text-center"
+            >
+              Submit Article
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Search and Filter Controls */}
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-[var(--color-border)]">
         <div className="space-y-4">

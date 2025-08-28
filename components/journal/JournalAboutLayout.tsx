@@ -1,0 +1,472 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import JournalHeader from "./JournalHeader";
+import JournalFooter from "./JournalFooter";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { 
+  BookOpen, 
+  Users, 
+  FileText, 
+  Settings, 
+  Send,
+  Globe,
+  Mail,
+  Phone,
+  ExternalLink,
+  Award,
+  Clock
+} from "lucide-react";
+import { mockEditorialBoard } from "@/mock-data/journal";
+
+export default function JournalAboutLayout() {
+  const editorInChief = mockEditorialBoard.find(member => member.role === 'editor-in-chief');
+  const associateEditors = mockEditorialBoard.filter(member => member.role === 'associate-editor');
+  const editorialBoard = mockEditorialBoard.filter(member => member.role === 'editorial-board');
+
+  return (
+    <div className="min-h-screen bg-white">
+      <JournalHeader activeItem="about" />
+      
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <nav className="mb-8">
+          <div className="flex items-center space-x-2 text-sm text-[var(--color-muted-foreground)]">
+            <Link href="/journal" className="hover:text-[var(--color-primary)] transition-colors">Home</Link>
+            <span>/</span>
+            <Link href="/journal" className="hover:text-[var(--color-primary)] transition-colors">Journal</Link>
+            <span>/</span>
+            <span className="text-[var(--color-foreground)] font-medium">About the Journal</span>
+          </div>
+        </nav>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <div className="lg:col-span-1 mt-6">
+            <div className="sticky top-8 space-y-6">
+              {/* Navigation Card */}
+              <Card className="border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-lg text-[var(--color-foreground)]">Navigation</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <a href="#about-journal" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
+                    About the Journal
+                  </a>
+                  <a href="#people" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
+                    People
+                  </a>
+                  <a href="#policies" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
+                    Policies
+                  </a>
+                  <a href="#submissions" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
+                    Submissions
+                  </a>
+                  <a href="#other" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
+                    Other Information
+                  </a>
+                </CardContent>
+              </Card>
+
+              {/* Submit Article CTA */}
+              <Card className="border-0 shadow-lg bg-[var(--color-primary)] text-white">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <Send className="w-5 h-5 mr-2" />
+                    Submit Your Research
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-white/90 text-sm mb-4">
+                    Ready to publish your research with us?
+                  </p>
+                  <Link href="/journal/submit">
+                    <Button className="w-full bg-white text-[var(--color-primary)] hover:bg-white/90 font-semibold">
+                      Submit Article
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-3 space-y-12">
+            {/* About the Journal */}
+            <section id="about-journal">
+              <Card className="border-0 shadow-lg">
+                <CardHeader className="bg-[var(--color-primary)] text-white rounded-t-lg">
+                  <CardTitle className="text-2xl flex items-center">
+                    <BookOpen className="w-6 h-15 mr-3" />
+                    About the Journal
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 space-y-6">
+                  <div className="prose max-w-none">
+                    <p className="text-[var(--color-muted-foreground)] leading-relaxed">
+                      <strong>Cognifera Journal</strong> adalah platform publikasi ilmiah berbasis Open Journal System (OJS) 
+                      yang berfokus pada penelitian-penelitian berkualitas tinggi dalam bidang teknologi pendidikan, 
+                      ilmu komputer, matematika terapan, dan bidang interdisipliner terkait.
+                    </p>
+                    <p className="text-[var(--color-muted-foreground)] leading-relaxed">
+                      Journal ini berkomitmen untuk menyediakan akses terbuka (Open Access) terhadap semua publikasi, 
+                      mendukung penyebaran pengetahuan ilmiah yang lebih luas dan demokratisasi akses terhadap hasil penelitian.
+                    </p>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-[var(--color-foreground)] flex items-center">
+                        <Award className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
+                        Focus & Scope
+                      </h3>
+                      <ul className="text-sm text-[var(--color-muted-foreground)] space-y-2">
+                        <li>• Educational Technology & E-Learning</li>
+                        <li>• Computer Science & Software Engineering</li>
+                        <li>• Applied Mathematics & Statistical Modeling</li>
+                        <li>• Data Science & Machine Learning</li>
+                        <li>• Information Systems & Technology</li>
+                        <li>• Interdisciplinary Research</li>
+                      </ul>
+                    </div>
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-[var(--color-foreground)] flex items-center">
+                        <Clock className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
+                        Publication Details
+                      </h3>
+                      <div className="text-sm text-[var(--color-muted-foreground)] space-y-2">
+                        <div><strong>Frequency:</strong> Quarterly (4 issues per year)</div>
+                        <div><strong>Publisher:</strong> Cognifera Education Academy</div>
+                        <div><strong>Language:</strong> Indonesian & English</div>
+                        <div><strong>Access:</strong> Open Access (Free)</div>
+                        <div><strong>Review:</strong> Double-blind peer review</div>
+                        <div><strong>DOI:</strong> Assigned to all articles</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+
+            {/* People Section */}
+            <section id="people">
+              <Card className="border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
+                    <Users className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
+                    People
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 space-y-8">
+                  {/* Editor-in-Chief */}
+                  {editorInChief && (
+                    <div>
+                      <h3 className="font-semibold text-lg text-[var(--color-foreground)] mb-4">Editor-in-Chief</h3>
+                      <div className="bg-[var(--color-muted)] rounded-lg p-6">
+                        <div className="flex items-start space-x-4">
+                          <div className="w-16 h-16 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-xl">
+                              {editorInChief.name.split(' ')[0][0]}{editorInChief.name.split(' ')[1]?.[0]}
+                            </span>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-[var(--color-foreground)]">{editorInChief.name}</h4>
+                            <p className="text-sm text-[var(--color-muted-foreground)] mb-2">{editorInChief.affiliation}</p>
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              {editorInChief.specialization.map((spec) => (
+                                <span key={spec} className="bg-[var(--color-primary)]/10 text-[var(--color-primary)] px-2 py-1 rounded text-xs">
+                                  {spec}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="flex items-center text-sm text-[var(--color-muted-foreground)]">
+                              <Mail className="w-4 h-4 mr-1" />
+                              {editorInChief.email}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Associate Editors */}
+                  {associateEditors.length > 0 && (
+                    <div>
+                      <h3 className="font-semibold text-lg text-[var(--color-foreground)] mb-4">Associate Editors</h3>
+                      <div className="grid gap-4">
+                        {associateEditors.map((editor) => (
+                          <div key={editor.id} className="border border-[var(--color-border)] rounded-lg p-4">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-12 h-12 bg-[var(--color-secondary)] rounded-full flex items-center justify-center">
+                                <span className="text-[var(--color-secondary-foreground)] font-semibold text-sm">
+                                  {editor.name.split(' ')[0][0]}{editor.name.split(' ')[1]?.[0]}
+                                </span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-medium text-[var(--color-foreground)]">{editor.name}</h4>
+                                <p className="text-sm text-[var(--color-muted-foreground)]">{editor.affiliation}</p>
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {editor.specialization.slice(0, 2).map((spec) => (
+                                    <span key={spec} className="bg-[var(--color-muted)] text-[var(--color-muted-foreground)] px-2 py-1 rounded text-xs">
+                                      {spec}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Editorial Board */}
+                  {editorialBoard.length > 0 && (
+                    <div>
+                      <h3 className="font-semibold text-lg text-[var(--color-foreground)] mb-4">Editorial Board</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {editorialBoard.map((member) => (
+                          <div key={member.id} className="border border-[var(--color-border)] rounded-lg p-4">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-10 h-10 bg-[var(--color-tertiary)] rounded-full flex items-center justify-center">
+                                <span className="text-[var(--color-tertiary-foreground)] font-semibold text-xs">
+                                  {member.name.split(' ')[0][0]}{member.name.split(' ')[1]?.[0]}
+                                </span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-medium text-[var(--color-foreground)] text-sm">{member.name}</h4>
+                                <p className="text-xs text-[var(--color-muted-foreground)]">{member.affiliation}</p>
+                                <p className="text-xs text-[var(--color-muted-foreground)] mt-1">
+                                  {member.specialization[0]}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Contact */}
+                  <div>
+                    <h3 className="font-semibold text-lg text-[var(--color-foreground)] mb-4 flex items-center">
+                      <Mail className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
+                      Contact
+                    </h3>
+                    <div className="bg-[var(--color-muted)] rounded-lg p-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <div className="flex items-center text-sm">
+                            <Mail className="w-4 h-4 mr-2 text-[var(--color-primary)]" />
+                            <span className="text-[var(--color-muted-foreground)]">journal@cognifera.co.id</span>
+                          </div>
+                          <div className="flex items-center text-sm">
+                            <Phone className="w-4 h-4 mr-2 text-[var(--color-primary)]" />
+                            <span className="text-[var(--color-muted-foreground)]">+62 21 1234 5678</span>
+                          </div>
+                          <div className="flex items-center text-sm">
+                            <Globe className="w-4 h-4 mr-2 text-[var(--color-primary)]" />
+                            <span className="text-[var(--color-muted-foreground)]">journal.cognifera.co.id</span>
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] mb-2">Editorial Office</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">
+                            Cognifera Education Academy<br />
+                            Jl. Teknologi No. 123<br />
+                            Jakarta 12345, Indonesia
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+
+            {/* Policies Section */}
+            <section id="policies">
+              <Card className="border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
+                    <Settings className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
+                    Policies
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 space-y-6">
+                  <div className="grid gap-4">
+                    <Link href="/journal/focus-scope" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Focus and Scope</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Areas of research covered by the journal</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/section-policies" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Section Policies</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Policies for different article types</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/peer-review-process" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Peer Review Process</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Double-blind peer review guidelines</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/publication-frequency" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Publication Frequency</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Quarterly publication schedule</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/open-access-policy" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Open Access Policy</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Free access to all published content</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/archiving" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Archiving</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Digital preservation policies</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/ethics" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Publication Ethics</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Ethical guidelines for authors and reviewers</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+
+            {/* Submissions Section */}
+            <section id="submissions">
+              <Card className="border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
+                    <Send className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
+                    Submissions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 space-y-6">
+                  <div className="grid gap-4">
+                    <Link href="/journal/author-guidelines" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Author Guidelines</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Complete submission guidelines for authors</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/copyright-notice" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Copyright Notice</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Copyright and licensing information</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/privacy-statement" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Privacy Statement</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">How we handle author and reviewer data</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                  </div>
+                  
+                  <div className="bg-[var(--color-primary)]/10 border-l-4 border-[var(--color-primary)] p-6 rounded-r-lg">
+                    <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Ready to Submit?</h4>
+                    <p className="text-sm text-[var(--color-muted-foreground)] mb-4">
+                      Pastikan Anda telah membaca author guidelines sebelum melakukan submission.
+                    </p>
+                    <Link href="/journal/submit">
+                      <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90">
+                        Submit Your Article
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+
+            {/* Other Section */}
+            <section id="other">
+              <Card className="border-0 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
+                    <FileText className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
+                    Other Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 space-y-6">
+                  <div className="grid gap-4">
+                    <Link href="/journal/sponsorship" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Journal Sponsorship</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Support and partnership opportunities</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                    
+                    <Link href="/journal/sitemap" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Site Map</h4>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">Navigate through all journal sections</p>
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
+                      </div>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+          </div>
+        </div>
+      </main>
+      
+      <JournalFooter />
+    </div>
+  );
+}

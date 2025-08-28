@@ -43,7 +43,6 @@ export default function JournalDetailPage() {
   if (!journal) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
         <div className="pt-32 pb-16 px-4">
           <div className="max-w-7xl mx-auto text-center">
             <h1 className="text-2xl font-bold text-[var(--color-foreground)] mb-4">
@@ -53,10 +52,10 @@ export default function JournalDetailPage() {
               The publication you're looking for doesn't exist.
             </p>
             <button
-              onClick={() => router.push("/publications")}
+              onClick={() => router.back()}
               className="px-6 py-3 bg-[var(--color-primary)] text-[var(--color-primary-foreground)] rounded-lg hover:opacity-90 transition-opacity"
             >
-              Back to Publications
+              Go Back
             </button>
           </div>
         </div>
@@ -66,18 +65,16 @@ export default function JournalDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-      
-      <div className="pt-32 pb-16 px-4">
+      <div className="pt-32 pb-16 px-4 mt-0">
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <div className="mb-6">
             <button
-              onClick={() => router.push("/publications")}
+              onClick={() => router.back()}
               className="flex items-center gap-2 text-[var(--color-primary)] hover:underline"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to Publications
+              Go Back
             </button>
           </div>
 
