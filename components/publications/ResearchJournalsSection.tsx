@@ -5,6 +5,7 @@ import { Search, Filter, ExternalLink, Download, Users, Calendar, Tag, Settings 
 import { mockResearchJournals } from "@/mock-data/publications";
 import { ResearchJournalData } from "@/types/publications";
 import { AdvancedSearch, AdvancedSearchFilters } from "./AdvancedSearch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export const ResearchJournalsSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -173,31 +174,39 @@ export const ResearchJournalsSection = () => {
 
             {/* Category Filter */}
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)]" />
-              <select
+              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)] z-10" />
+              <Select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="pl-10 pr-8 py-3 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[200px]"
+                onValueChange={setSelectedCategory}
               >
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="pl-10 pr-8 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[200px]">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent className="border-none">
+                  {categories.map((category) => (
+                    <SelectItem className="bg-white hover:bg-gray-100 border-none" key={category.id} value={category.id}>
+                      {category.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Sort */}
             <div className="relative">
-              <select
+              <Select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as "year" | "citations" | "title")}
-                className="px-4 py-3 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[150px]"
+                onValueChange={(value) => setSortBy(value as "year" | "citations" | "title")}
               >
-                <option value="year">Sort by Year</option>
-                <option value="citations">Sort by Citations</option>
-                <option value="title">Sort by Title</option>
-              </select>
+                <SelectTrigger className="px-4 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[150px]">
+                  <SelectValue placeholder="Sort by Year" />
+                </SelectTrigger>
+                <SelectContent className="border-none">
+                  <SelectItem className="bg-white hover:bg-gray-100 border-none" value="year">Sort by Year</SelectItem>
+                  <SelectItem className="bg-white hover:bg-gray-100 border-none" value="citations">Sort by Citations</SelectItem>
+                  <SelectItem className="bg-white hover:bg-gray-100 border-none" value="title">Sort by Title</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

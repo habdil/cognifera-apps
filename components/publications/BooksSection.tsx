@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, Filter, ExternalLink, Eye, ShoppingCart, Calendar, Globe, BookOpen, Users, DollarSign } from "lucide-react";
 import { mockBooks } from "@/mock-data/publications";
 import { BookData } from "@/types/publications";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export const BooksSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -79,48 +80,60 @@ export const BooksSection = () => {
 
           {/* Category Filter */}
           <div className="relative">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)]" />
-            <select
+            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)] z-10" />
+            <Select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full pl-10 pr-8 py-3 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white"
+              onValueChange={setSelectedCategory}
             >
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full pl-10 pr-8 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent className="border-none">
+                {categories.map((category) => (
+                    <SelectItem className="bg-white hover:bg-gray-100 border-none" key={category.id} value={category.id}>
+                    {category.label}
+                    </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Language Filter */}
           <div className="relative">
-            <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)]" />
-            <select
+            <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)] z-10" />
+            <Select
               value={selectedLanguage}
-              onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="w-full pl-10 pr-8 py-3 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white"
+              onValueChange={setSelectedLanguage}
             >
-              {languages.map((language) => (
-                <option key={language.id} value={language.id}>
-                  {language.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full pl-10 pr-8 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white">
+                <SelectValue placeholder="All Languages" />
+              </SelectTrigger>
+              <SelectContent className="border-none">
+                {languages.map((language) => (
+                  <SelectItem className="bg-white hover:bg-gray-100 border-none" key={language.id} value={language.id}>
+                    {language.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         {/* Sort Options */}
         <div className="mt-4 flex justify-end">
-          <select
+          <Select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as "year" | "title" | "price")}
-            className="px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white"
+            onValueChange={(value) => setSortBy(value as "year" | "title" | "price")}
           >
-            <option value="year">Sort by Year</option>
-            <option value="title">Sort by Title</option>
-            <option value="price">Sort by Price</option>
-          </select>
+            <SelectTrigger className="w-48 px-4 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white">
+              <SelectValue placeholder="Sort by Year" />
+            </SelectTrigger>
+            <SelectContent className="border-none">
+              <SelectItem className="bg-white hover:bg-gray-100 border-none" value="year">Sort by Year</SelectItem>
+              <SelectItem className="bg-white hover:bg-gray-100 border-none" value="title">Sort by Title</SelectItem>
+              <SelectItem className="bg-white hover:bg-gray-100 border-none" value="price">Sort by Price</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

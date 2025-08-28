@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, MapPin, Users, Calendar, Download, Heart, Target } from "lucide-react";
 import { mockCommunityServiceJournals } from "@/mock-data/publications";
 import { CommunityServiceJournalData } from "@/types/publications";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export const CommunityServiceSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,14 +60,18 @@ export const CommunityServiceSection = () => {
 
           {/* Sort */}
           <div className="relative">
-            <select
+            <Select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "year" | "title")}
-              className="px-4 py-3 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[150px]"
+              onValueChange={(value) => setSortBy(value as "year" | "title")}
             >
-              <option value="year">Sort by Year</option>
-              <option value="title">Sort by Title</option>
-            </select>
+              <SelectTrigger className="px-4 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[150px]">
+                <SelectValue placeholder="Sort by Year" />
+              </SelectTrigger>
+              <SelectContent className="border-none">
+                <SelectItem className="bg-white hover:bg-gray-100 border-none" value="year">Sort by Year</SelectItem>
+                <SelectItem className="bg-white hover:bg-gray-100 border-none" value="title">Sort by Title</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
