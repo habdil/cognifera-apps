@@ -38,7 +38,7 @@ export default function JournalEditorialLayout() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 mt-6">
             <div className="sticky top-8 space-y-6">
               {/* Navigation Card */}
               <Card className="border-0 shadow-lg">
@@ -77,20 +77,14 @@ export default function JournalEditorialLayout() {
 
           {/* Main Content */}
           <div className="lg:col-span-3 space-y-12">
-            {/* Header */}
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-[var(--color-foreground)] mb-4">Editorial Policies</h1>
-              <p className="text-lg text-[var(--color-muted-foreground)] max-w-3xl mx-auto">
-                Kebijakan editorial dan panduan publikasi untuk Cognifera Journal
-              </p>
-            </div>
+
 
             {/* Focus and Scope */}
             <section id="focus-scope">
               <Card className="border-0 shadow-lg">
                 <CardHeader className="bg-[var(--color-primary)] text-white rounded-t-lg">
                   <CardTitle className="text-2xl flex items-center">
-                    <BookOpen className="w-6 h-6 mr-3" />
+                    <BookOpen className="w-6 h-15 mr-3" />
                     Focus and Scope
                   </CardTitle>
                 </CardHeader>
