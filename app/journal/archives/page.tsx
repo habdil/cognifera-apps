@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import JournalArchivesLayout from "@/components/journal/JournalArchivesLayout";
+import JournalArchivesLayout from "@/components/journal/research-journal/JournalArchivesLayout";
 
 export const metadata: Metadata = {
   title: "Journal Archives | Cognifera Journal",

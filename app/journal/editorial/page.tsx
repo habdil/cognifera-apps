@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import JournalEditorialLayout from "@/components/journal/JournalEditorialLayout";
+import JournalEditorialLayout from "@/components/journal/research-journal/JournalEditorialLayout";
 
 export const metadata: Metadata = {
   title: "Editorial Policies | Cognifera Journal",

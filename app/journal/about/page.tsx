@@ -1,5 +1,5 @@
+import JournalAboutLayout from "@/components/journal/research-journal/JournalAboutLayout";
 import { Metadata } from "next";
-import JournalAboutLayout from "@/components/journal/JournalAboutLayout";
 
 export const metadata: Metadata = {
   title: "About Journal | Cognifera Journal",

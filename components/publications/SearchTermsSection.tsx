@@ -1,6 +1,7 @@
 "use client";
 
 import { Plus, X } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface SearchTerm {
   id: string;
@@ -48,15 +49,21 @@ export const SearchTermsSection = ({
         <div key={searchTerm.id} className="space-y-3">
           {index > 0 && (
             <div className="flex items-center gap-4">
-              <select
+              <Select
                 value={searchTerm.operator}
-                onChange={(e) => onUpdateTerm(searchTerm.id, { operator: e.target.value })}
-                className="px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[80px]"
+                onValueChange={(value) => onUpdateTerm(searchTerm.id, { operator: value })}
               >
-                {booleanOperators.map(op => (
-                  <option key={op.value} value={op.value}>{op.label}</option>
-                ))}
-              </select>
+                <SelectTrigger className="px-3 py-2 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[80px]">
+                  <SelectValue placeholder="Operator" />
+                </SelectTrigger>
+                <SelectContent className="border-none bg-white">
+                  {booleanOperators.map(op => (
+                    <SelectItem key={op.value} value={op.value}>
+                      {op.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
           
@@ -74,15 +81,21 @@ export const SearchTermsSection = ({
 
             {/* Field Selector */}
             <div className="w-48">
-              <select
+                <Select
                 value={searchTerm.field}
-                onChange={(e) => onUpdateTerm(searchTerm.id, { field: e.target.value })}
-                className="w-full px-3 py-3 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white"
-              >
-                {metadataFields.map(field => (
-                  <option key={field.value} value={field.value}>{field.label}</option>
-                ))}
-              </select>
+                onValueChange={(value) => onUpdateTerm(searchTerm.id, { field: value })}
+                >
+                <SelectTrigger className="w-full px-3 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white">
+                  <SelectValue placeholder="Select field" />
+                </SelectTrigger>
+                <SelectContent className="border-none bg-white">
+                  {metadataFields.map(field => (
+                  <SelectItem className="hover:text-[var(--color-primary)]" key={field.value} value={field.value}>
+                    {field.label}
+                  </SelectItem>
+                  ))}
+                </SelectContent>
+                </Select>
             </div>
 
             {/* Action Buttons */}

@@ -95,7 +95,7 @@ export function ContactSection() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card>
+          <Card className="border-gray-300">
             <CardHeader>
                 <CardTitle className="text-2xl text-[var(--color-text)]">
                 <a
@@ -215,7 +215,7 @@ export function ContactSection() {
             </h3>
 
             {/* Contact Details */}
-            <Card>
+            <Card className="border-gray-300">
               <CardContent className="space-y-6">
                 {contactInfo.map((info, index) => (
                   <div key={index} className="flex items-start space-x-4">
@@ -230,7 +230,7 @@ export function ContactSection() {
             </Card>
 
             {/* Office Hours */}
-            <Card>
+            <Card className="border-gray-300">
               <CardContent>
                 <h4 className="font-semibold text-[var(--color-text)] mb-3 flex items-center">
                   🕐 Jam Operasional
@@ -244,7 +244,7 @@ export function ContactSection() {
             </Card>
 
             {/* Social Media */}
-            <Card>
+            <Card className="border-gray-300">
               <CardContent>
                 <h4 className="font-semibold text-[var(--color-text)] mb-4">Ikuti Kami</h4>
                 <div className="flex space-x-4">
@@ -263,27 +263,27 @@ export function ContactSection() {
             </Card>
 
             {/* Quick Actions */}
-            <Card>
+            <Card className="border-gray-300">
               <CardContent className="space-y-4">
                 <h4 className="font-semibold text-[var(--color-text)]">Aksi Cepat</h4>
                 <div className="space-y-3">
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-950 hover:border-gray-400"
                   >
                     <span className="mr-3">💬</span>
                     Chat via WhatsApp
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-950"
                   >
                     <span className="mr-3">📞</span>
                     Jadwalkan Video Call
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-950"
                   >
                     <span className="mr-3">📧</span>
                     Email Langsung

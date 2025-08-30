@@ -1,0 +1,798 @@
+// Prisma Schema untuk Cognifera Academy Apps
+// Generator dan datasource
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // atau "mysql" sesuai kebutuhan
+  url      = env("DATABASE_URL")
+}
+
+// ===== USER MANAGEMENT SYSTEM =====
+model User {
+  id          String      @id @default(cuid())
+  email       String      @unique
+  password    String
+  name        String
+  photo       String?
+  affiliation String?
+  phone       String?
+  address     String?     @db.Text
+  role        UserRole
+  status      UserStatus  @default(ACTIVE)
+  isBlocked   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  lastLogin   DateTime?
+
+  // Relations based on role
+  journalSubmissions     JournalSubmission[]
+  journalReviews         JournalReview[]
+  journalEditorActions   JournalEditorAction[]
+  bookSubmissions        BookSubmission[]
+  bookEditorActions      BookEditorAction[]
+  beritaArticles         Berita[]
+  adminActivities        AdminActivity[]
+  journalContentPages    JournalContentPage[]
+  createdUsers           User[] @relation("UserCreator")
+  createdBy              User?  @relation("UserCreator", fields: [createdById], references: [id])
+  createdById            String?
+
+  @@map("users")
+}
+
+enum UserRole {
+  AUTHOR_JOURNAL
+  REVIEWER_JOURNAL
+  EDITOR_JOURNAL
+  MANAGER_JOURNAL
+  AUTHOR_BOOK
+  EDITOR_BOOK
+  MANAGER_BOOK
+  AUTHOR_NEWS
+  CLIENT
+  ADMIN_COGNIFERA
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+}
+
+// ===== LAYANAN (SERVICES) =====
+model Layanan {
+  id                String   @id @default(cuid())
+  nama              String
+  tagline           String
+  deskripsi         String
+  deskripsiLengkap  String   @db.Text
+  icon              String
+  hargaMulai        Int
+  fiturUtama        String[]
+  targetMarket      String[]
+  successRate       String?
+  warna             String
+  status            LayananStatus @default(AKTIF)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  iklanLayanan      IklanLayanan[]
+  testimonials      TestimonialLayanan[]
+  contactForms      ContactForm[]
+
+  @@map("layanan")
+}
+
+enum LayananStatus {
+  AKTIF
+  NONAKTIF
+}
+
+// ===== IKLAN/PROMOSI =====
+model Iklan {
+  id                  String      @id @default(cuid())
+  judul               String
+  deskripsi           String      @db.Text
+  discountPercentage  Int
+  tanggalMulai        DateTime
+  tanggalBerakhir     DateTime
+  termsConditions     String      @db.Text
+  bannerImage         String?
+  status              IklanStatus @default(AKTIF)
+  priority            Int         @default(0)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  // Relations
+  layananAffected     IklanLayanan[]
+
+  @@map("iklan")
+}
+
+enum IklanStatus {
+  AKTIF
+  NONAKTIF
+}
+
+// Junction table untuk many-to-many relationship antara Iklan dan Layanan
+model IklanLayanan {
+  iklan     Iklan   @relation(fields: [iklanId], references: [id], onDelete: Cascade)
+  iklanId   String
+  layanan   Layanan @relation(fields: [layananId], references: [id], onDelete: Cascade)
+  layananId String
+
+  @@id([iklanId, layananId])
+  @@map("iklan_layanan")
+}
+
+// ===== TESTIMONI =====
+model Testimonial {
+  id               String            @id @default(cuid())
+  clientName       String
+  position         String
+  institution      String
+  photo            String?
+  rating           Int               @default(5) // 1-5
+  testimonialText  String            @db.Text
+  hasilDicapai     String
+  status           TestimonialStatus @default(AKTIF)
+  featured         Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  // Relations
+  layananDigunakan TestimonialLayanan[]
+
+  @@map("testimonial")
+}
+
+enum TestimonialStatus {
+  AKTIF
+  NONAKTIF
+}
+
+// Junction table untuk many-to-many relationship antara Testimonial dan Layanan
+model TestimonialLayanan {
+  testimonial   Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+  testimonialId String
+  layanan       Layanan     @relation(fields: [layananId], references: [id], onDelete: Cascade)
+  layananId     String
+
+  @@id([testimonialId, layananId])
+  @@map("testimonial_layanan")
+}
+
+// ===== BERITA =====
+model Berita {
+  id              String        @id @default(cuid())
+  judul           String
+  konten          String        @db.Text
+  featuredImage   String?
+  category        BeritaCategory
+  tags            String[]
+  publicationDate DateTime
+  status          BeritaStatus  @default(AKTIF)
+  featured        Boolean       @default(false)
+  metaDescription String?
+  keywords        String[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  author          User          @relation(fields: [authorId], references: [id])
+  authorId        String
+
+  @@map("berita")
+}
+
+enum BeritaCategory {
+  RESEARCH_TIPS
+  SUCCESS_STORIES
+  INDUSTRY_NEWS
+  COMPANY_NEWS
+  INDUSTRY
+  RESEARCH
+  COMPANY
+  ANNOUNCEMENT
+}
+
+enum BeritaStatus {
+  AKTIF
+  NONAKTIF
+}
+
+// ===== CONTACT FORM =====
+model ContactForm {
+  id               String   @id @default(cuid())
+  name             String
+  email            String
+  layananInterest  String
+  message          String   @db.Text
+  createdAt        DateTime @default(now())
+
+  // Relations
+  layanan          Layanan? @relation(fields: [layananInterest], references: [id])
+
+  @@map("contact_form")
+}
+
+// ===== JOURNAL SUBMISSIONS =====
+model JournalSubmission {
+  id                       String                    @id @default(cuid())
+  title                    String
+  abstract                 String                    @db.Text
+  keywords                 String[]
+  category                 JournalCategory
+  type                     JournalType               @default(RESEARCH)
+  manuscriptFile           String?
+  submissionDate           DateTime                  @default(now())
+  status                   SubmissionStatus          @default(SUBMITTED)
+  estimatedPublicationDate DateTime?
+  publishedDate            DateTime?
+  loaIssuedDate            DateTime?                 // Letter of Acceptance date
+  finalDecision            String?                   // Editor's final decision notes
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+
+  // Relations
+  submittedBy              User                      @relation(fields: [submittedById], references: [id])
+  submittedById            String
+  authors                  JournalAuthor[]
+  supplementaryFiles       SupplementaryFile[]
+  reviews                  JournalReview[]
+  editorActions            JournalEditorAction[]
+
+  @@map("journal_submissions")
+}
+
+enum JournalType {
+  RESEARCH
+  COMMUNITY_SERVICE
+}
+
+enum JournalCategory {
+  COMPUTER_SCIENCE
+  ENGINEERING
+  MATHEMATICS
+  PHYSICS
+  OTHER
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  REVISION_REQUIRED
+  ACCEPTED
+  REJECTED
+  PUBLISHED
+}
+
+// ===== JOURNAL REVIEWS =====
+model JournalReview {
+  id             String            @id @default(cuid())
+  submission     JournalSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  submissionId   String
+  reviewer       User              @relation(fields: [reviewerId], references: [id])
+  reviewerId     String
+  reviewStatus   ReviewStatus      @default(ASSIGNED)
+  recommendation ReviewRecommendation?
+  comments       String?           @db.Text
+  confidentialComments String?     @db.Text // Comments only for editor
+  reviewDate     DateTime?
+  assignedDate   DateTime          @default(now())
+  dueDate        DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@map("journal_reviews")
+}
+
+enum ReviewStatus {
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  OVERDUE
+}
+
+enum ReviewRecommendation {
+  ACCEPT
+  MINOR_REVISION
+  MAJOR_REVISION
+  REJECT
+}
+
+// ===== JOURNAL EDITOR ACTIONS =====
+model JournalEditorAction {
+  id             String             @id @default(cuid())
+  submission     JournalSubmission  @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  submissionId   String
+  editor         User               @relation(fields: [editorId], references: [id])
+  editorId       String
+  action         EditorActionType
+  decision       EditorDecision?
+  comments       String?            @db.Text
+  loaIssued      Boolean            @default(false)
+  publishDecision Boolean?          // Decision to publish or not
+  actionDate     DateTime           @default(now())
+  
+  @@map("journal_editor_actions")
+}
+
+enum EditorActionType {
+  ASSIGN_REVIEWER
+  REVIEW_SUBMISSION
+  MAKE_DECISION
+  ISSUE_LOA
+  PUBLISH
+  REJECT
+  REQUEST_REVISION
+}
+
+enum EditorDecision {
+  ACCEPT
+  REJECT
+  REVISION_REQUIRED
+  PUBLISH
+  UNPUBLISH
+}
+
+// ===== JOURNAL AUTHORS =====
+model JournalAuthor {
+  id             String            @id @default(cuid())
+  name           String
+  email          String
+  affiliation    String
+  isCorresponding Boolean          @default(false)
+  submission     JournalSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  submissionId   String
+
+  @@map("journal_authors")
+}
+
+// ===== SUPPLEMENTARY FILES =====
+model SupplementaryFile {
+  id           String            @id @default(cuid())
+  filename     String
+  description  String
+  fileUrl      String
+  submission   JournalSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  submissionId String
+
+  @@map("supplementary_files")
+}
+
+// ===== EDITORIAL BOARD =====
+model EditorialBoardMember {
+  id             String                 @id @default(cuid())
+  name           String
+  title          String
+  affiliation    String
+  specialization String[]
+  email          String                 @unique
+  photo          String?
+  role           EditorialRole
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@map("editorial_board")
+}
+
+enum EditorialRole {
+  EDITOR_IN_CHIEF
+  ASSOCIATE_EDITOR
+  EDITORIAL_BOARD
+  REVIEWER
+}
+
+// ===== JOURNAL ANNOUNCEMENTS =====
+model JournalAnnouncement {
+  id          String              @id @default(cuid())
+  title       String
+  content     String              @db.Text
+  type        AnnouncementType
+  priority    AnnouncementPriority
+  publishDate DateTime
+  expiryDate  DateTime?
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@map("journal_announcements")
+}
+
+enum AnnouncementType {
+  CALL_FOR_PAPERS
+  NEW_ISSUE
+  EDITORIAL_CHANGE
+  SYSTEM_UPDATE
+  GENERAL
+}
+
+enum AnnouncementPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+// ===== JOURNAL ISSUES =====
+model JournalIssue {
+  id              String   @id @default(cuid())
+  volume          String
+  number          String
+  year            String
+  title           String
+  publishDate     String
+  description     String   @db.Text
+  articleCount    Int      @default(0)
+  pageCount       Int      @default(0)
+  coverColor      String
+  isCurrentIssue  Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  articles        ResearchJournal[]
+
+  @@map("journal_issues")
+}
+
+// ===== RESEARCH JOURNALS =====
+model ResearchJournal {
+  id                      String           @id @default(cuid())
+  title                   String
+  authors                 String[]
+  journal                 String
+  year                    Int
+  volume                  String?
+  issue                   String?
+  pages                   String?
+  doi                     String?
+  abstract                String           @db.Text
+  keywords                String[]
+  category                JournalCategory
+  publicationDate         DateTime
+  pdfUrl                  String?
+  citationCount           Int              @default(0)
+  isOpenAccess            Boolean          @default(true)
+  conferenceLocation      String?
+  dateAddedToLibrary      DateTime?
+  fullTextViews           Int              @default(0)
+  conferenceDate          DateTime?
+  fundingAgency           String?
+  introduction            String?          @db.Text
+  methodology             String?          @db.Text
+  results                 String?          @db.Text
+  conclusion              String?          @db.Text
+  isbn                    String?
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+
+  // Relations
+  journalIssue            JournalIssue?    @relation(fields: [journalIssueId], references: [id])
+  journalIssueId          String?
+  sections                DocumentSection[]
+  references              Reference[]
+  citations               Citation[]
+  figures                 Figure[]
+
+  @@map("research_journals")
+}
+
+// ===== DOCUMENT SECTIONS =====
+model DocumentSection {
+  id                String           @id @default(cuid())
+  title             String
+  content           String           @db.Text
+  researchJournal   ResearchJournal  @relation(fields: [researchJournalId], references: [id], onDelete: Cascade)
+  researchJournalId String
+
+  @@map("document_sections")
+}
+
+// ===== REFERENCES =====
+model Reference {
+  id                String          @id @default(cuid())
+  authors           String[]
+  title             String
+  publication       String
+  year              Int
+  doi               String?
+  researchJournal   ResearchJournal @relation(fields: [researchJournalId], references: [id], onDelete: Cascade)
+  researchJournalId String
+
+  @@map("references")
+}
+
+// ===== CITATIONS =====
+model Citation {
+  id                String          @id @default(cuid())
+  authors           String[]
+  title             String
+  publication       String
+  year              Int
+  citedBy           Int             @default(0)
+  researchJournal   ResearchJournal @relation(fields: [researchJournalId], references: [id], onDelete: Cascade)
+  researchJournalId String
+
+  @@map("citations")
+}
+
+// ===== FIGURES =====
+model Figure {
+  id                String          @id @default(cuid())
+  title             String
+  caption           String
+  imageUrl          String?
+  researchJournal   ResearchJournal @relation(fields: [researchJournalId], references: [id], onDelete: Cascade)
+  researchJournalId String
+
+  @@map("figures")
+}
+
+// ===== COMMUNITY SERVICE JOURNALS =====
+model CommunityServiceJournal {
+  id                String   @id @default(cuid())
+  title             String
+  authors           String[]
+  journal           String
+  year              Int
+  volume            String?
+  issue             String?
+  pages             String?
+  abstract          String   @db.Text
+  keywords          String[]
+  community         String
+  location          String
+  publicationDate   DateTime
+  pdfUrl            String?
+  impactDescription String   @db.Text
+  beneficiaries     String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("community_service_journals")
+}
+
+// ===== BOOK SUBMISSIONS =====
+model BookSubmission {
+  id                String              @id @default(cuid())
+  title             String
+  description       String              @db.Text
+  category          BookCategory
+  language          BookLanguage
+  estimatedPages    Int?
+  manuscriptFile    String?
+  templateUsed      String?             // Template yang digunakan author
+  submissionDate    DateTime            @default(now())
+  status            BookSubmissionStatus @default(SUBMITTED)
+  publishedDate     DateTime?
+  finalDecision     String?             @db.Text
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  // Relations
+  submittedBy       User                @relation(fields: [submittedById], references: [id])
+  submittedById     String
+  authors           BookAuthor[]
+  chapters          BookChapter[]
+  editorActions     BookEditorAction[]
+
+  @@map("book_submissions")
+}
+
+enum BookSubmissionStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  REVISION_REQUIRED
+  ACCEPTED
+  REJECTED
+  PUBLISHED
+}
+
+// ===== BOOK AUTHORS =====
+model BookAuthor {
+  id             String         @id @default(cuid())
+  name           String
+  email          String
+  affiliation    String
+  isPrimaryAuthor Boolean       @default(false)
+  submission     BookSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  submissionId   String
+
+  @@map("book_authors")
+}
+
+// ===== BOOK CHAPTERS =====
+model BookChapter {
+  id           String         @id @default(cuid())
+  title        String
+  chapterNumber Int
+  content      String?        @db.Text
+  fileUrl      String?
+  wordCount    Int?
+  submission   BookSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  submissionId String
+
+  @@map("book_chapters")
+}
+
+// ===== BOOK EDITOR ACTIONS =====
+model BookEditorAction {
+  id             String             @id @default(cuid())
+  submission     BookSubmission     @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  submissionId   String
+  editor         User               @relation(fields: [editorId], references: [id])
+  editorId       String
+  action         BookEditorActionType
+  decision       BookEditorDecision?
+  comments       String?            @db.Text
+  publishDecision Boolean?          // Decision to publish or not
+  actionDate     DateTime           @default(now())
+  
+  @@map("book_editor_actions")
+}
+
+enum BookEditorActionType {
+  REVIEW_SUBMISSION
+  MAKE_DECISION
+  PUBLISH
+  REJECT
+  REQUEST_REVISION
+}
+
+enum BookEditorDecision {
+  ACCEPT
+  REJECT
+  REVISION_REQUIRED
+  PUBLISH
+  UNPUBLISH
+}
+
+// ===== PUBLISHED BOOKS =====
+model Book {
+  id              String           @id @default(cuid())
+  title           String
+  authors         String[]
+  publisher       String
+  publicationYear Int
+  isbn            String           @unique
+  pages           Int
+  language        BookLanguage
+  category        BookCategory
+  description     String           @db.Text
+  keywords        String[]
+  coverImage      String
+  price           Int?
+  availability    BookAvailability @default(AVAILABLE)
+  format          BookFormat
+  previewUrl      String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("books")
+}
+
+enum BookLanguage {
+  ID
+  EN
+}
+
+enum BookCategory {
+  TEXTBOOK
+  REFERENCE
+  MONOGRAPH
+  PROCEEDINGS
+}
+
+enum BookAvailability {
+  AVAILABLE
+  OUT_OF_STOCK
+  PRE_ORDER
+}
+
+enum BookFormat {
+  PRINT
+  DIGITAL
+  BOTH
+}
+
+// ===== ANNOUNCEMENTS (General) =====
+model Announcement {
+  id          String              @id @default(cuid())
+  title       String
+  content     String              @db.Text
+  category    AnnouncementCategory
+  priority    AnnouncementPriority
+  publishDate DateTime
+  author      String
+  tags        String[]
+  isActive    Boolean             @default(true)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@map("announcements")
+}
+
+enum AnnouncementCategory {
+  CALL_FOR_PAPERS
+  SYSTEM_UPDATE
+  PARTNERSHIP
+  EVENT
+  POLICY
+  GENERAL
+}
+
+// ===== JOURNAL CONTENT MANAGEMENT =====
+model JournalContentPage {
+  id          String   @id @default(cuid())
+  pageType    JournalPageType
+  title       String
+  content     String   @db.Text
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+
+  @@map("journal_content_pages")
+}
+
+enum JournalPageType {
+  ABOUT
+  EDITORIAL_POLICY
+  SUBMISSION_GUIDELINES
+  REVIEW_PROCESS
+  PUBLICATION_ETHICS
+  CONTACT_INFO
+}
+
+// ===== ADMIN ACTIVITIES LOG =====
+model AdminActivity {
+  id        String           @id @default(cuid())
+  type      ActivityType
+  action    ActivityAction
+  title     String
+  description String?        @db.Text
+  timestamp DateTime         @default(now())
+  
+  // Relations
+  performedBy User           @relation(fields: [performedById], references: [id])
+  performedById String
+  
+  @@map("admin_activities")
+}
+
+enum ActivityType {
+  LAYANAN
+  IKLAN
+  TESTIMONIAL
+  BERITA
+  JOURNAL_SUBMISSION
+  JOURNAL_REVIEW
+  JOURNAL_CONTENT
+  BOOK_SUBMISSION
+  BOOK_REVIEW
+  USER_MANAGEMENT
+  ANNOUNCEMENT
+}
+
+enum ActivityAction {
+  CREATE
+  UPDATE
+  DELETE
+  PUBLISH
+  UNPUBLISH
+  ASSIGN
+  REVIEW
+  APPROVE
+  REJECT
+  BLOCK
+  UNBLOCK
+  ISSUE_LOA
+}
