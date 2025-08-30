@@ -1,15 +1,42 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Search, User, ArrowLeft } from "lucide-react";
+import { Search, User, ArrowLeft, LogOut } from "lucide-react";
+import { AuthDialog } from "@/components/shared/AuthDialog";
+import { getCurrentUser, logoutUser, type User as UserType } from "@/lib/auth";
+import { toast } from "sonner";
 
 interface JournalHeaderProps {
   activeItem?: string;
 }
 
 export default function JournalHeader({ activeItem = "home" }: JournalHeaderProps) {
+  const [user, setUser] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    setUser(getCurrentUser());
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      toast.success("Berhasil logout! Sampai jumpa lagi! 👋");
+      setUser(null);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error("Logout gagal, tapi data lokal sudah dihapus");
+      setUser(null);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  };
+
   const getNavItemClass = (item: string) => {
     return item === activeItem 
       ? "text-[var(--color-foreground)] hover:text-[var(--color-primary)] font-medium py-2 transition-colors border-b-2 border-[var(--color-primary)]"
@@ -31,10 +58,32 @@ export default function JournalHeader({ activeItem = "home" }: JournalHeaderProp
             <Link href="/publications" className="text-sm hover:opacity-80 transition-opacity">
               Publications
             </Link>
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
-              <User className="w-4 h-4 mr-1" />
-              Login
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 px-3 py-1 bg-white/20 rounded-full">
+                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                    <User className="w-3 h-3 text-[var(--color-primary)]" />
+                  </div>
+                  <span className="text-sm font-medium text-white">{user.name}</span>
+                </div>
+                <Button
+                  onClick={handleLogout}
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-white hover:bg-white/20"
+                >
+                  <LogOut className="w-4 h-4 mr-1" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <AuthDialog defaultMode="login">
+                <Button variant="ghost" size="sm" className="text-white hover:bg-white">
+                  <User className="w-4 h-4 mr-1" />
+                  Login
+                </Button>
+              </AuthDialog>
+            )}
           </div>
         </div>
       </div>

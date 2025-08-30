@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Work_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const workSans = Work_Sans({
   variable: "--font-work-sans",
@@ -29,6 +30,18 @@ export default function RootLayout({
         className={`${workSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: 'var(--background)',
+              border: '1px solid var(--border)',
+              color: 'var(--foreground)',
+            },
+            className: 'my-toast',
+            duration: 4000,
+          }}
+        />
       </body>
     </html>
   );

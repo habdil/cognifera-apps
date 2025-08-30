@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Navbar as RootNavbar,
   NavBody,
@@ -18,9 +18,39 @@ import {
   ProductItem,
 } from "@/components/ui/navbar-menu";
 
+import { AuthDialog } from "@/components/shared/AuthDialog";
+import { getCurrentUser, logoutUser, type User } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { User as UserIcon, LogOut } from "lucide-react";
+import { toast } from "sonner";
+
 export const Navbar = () => {
   const [active, setActive] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    setUser(getCurrentUser());
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      toast.success("Berhasil logout! Sampai jumpa lagi! 👋");
+      setUser(null);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error("Logout gagal, tapi data lokal sudah dihapus");
+      // Even if API call fails, clear local data
+      setUser(null);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  };
 
   const navItems = [
     { name: "Home", link: "/" },
@@ -88,13 +118,46 @@ export const Navbar = () => {
 
         {/* CTA */}
         <div className="flex items-center space-x-4">
-          <NavbarButton
-            href="/#contacts"
-            variant="primary"
-            className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
-          >
-            Try Now
-          </NavbarButton>
+          {user && user.role === "CLIENT" ? (
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 px-3 py-2 bg-gray-100 rounded-full">
+                <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
+                  <UserIcon className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-sm font-medium">{user.name}</span>
+              </div>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="flex items-center space-x-2"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-3">
+              <AuthDialog defaultMode="login">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-[var(--color-foreground)] hover:text-[var(--color-primary)] flex items-center space-x-2"
+                >
+                  <UserIcon className="w-4 h-4" />
+                  <span>Login</span>
+                </Button>
+              </AuthDialog>
+              <AuthDialog>
+                <NavbarButton
+                  variant="primary"
+                  className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)] cursor-pointer"
+                >
+                  Get Started
+                </NavbarButton>
+              </AuthDialog>
+            </div>
+          )}
         </div>
       </NavBody>
 
@@ -130,13 +193,44 @@ export const Navbar = () => {
               {item.name}
             </a>
           ))}
-          <NavbarButton
-            href="/#contacts"
-            variant="primary"
-            className="w-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
-          >
-            Try Now
-          </NavbarButton>
+          {user && user.role === "CLIENT" ? (
+            <div className="w-full space-y-3">
+              <div className="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg">
+                <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
+                  <UserIcon className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-sm font-medium">{user.name}</span>
+              </div>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="w-full flex items-center justify-center space-x-2"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="w-full space-y-3">
+              <AuthDialog defaultMode="login">
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center space-x-2"
+                >
+                  <UserIcon className="w-4 h-4" />
+                  <span>Login</span>
+                </Button>
+              </AuthDialog>
+              <AuthDialog>
+                <NavbarButton
+                  variant="primary"
+                  className="w-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)] cursor-pointer"
+                >
+                  Get Started
+                </NavbarButton>
+              </AuthDialog>
+            </div>
+          )}
         </MobileNavMenu>
       </MobileNav>
     </RootNavbar>
