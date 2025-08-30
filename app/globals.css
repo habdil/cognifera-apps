@@ -123,3 +123,13 @@ html {
   background: var(--color-muted) !important;
   color: var(--color-foreground) !important;
 }
+
+/* Toast description text - make it black */
+[data-sonner-toast] [data-description] {
+  color: #000000 !important;
+}
+
+/* Alternative selector for description */
+[data-sonner-toast] .sonner-toast-description {
+  color: #000000 !important;
+}

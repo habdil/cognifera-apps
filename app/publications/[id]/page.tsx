@@ -6,6 +6,7 @@ import { ArrowLeft, Download, ExternalLink, Share2, Bookmark, AlertTriangle, Eye
 import { Navbar } from "@/components/shared/Navbar";
 import { mockResearchJournals } from "@/mock-data/publications";
 import { ResearchJournalData } from "@/types/publications";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function JournalDetailPage() {
   const params = useParams();
@@ -29,10 +30,53 @@ export default function JournalDetailPage() {
         <Navbar />
         <div className="pt-32 pb-16 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
-              <div className="h-64 bg-gray-200 rounded"></div>
+            <div className="mb-6">
+              <Skeleton className="h-4 w-32" />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              <div className="lg:col-span-3 space-y-8">
+                <div className="space-y-6">
+                  <Skeleton className="h-10 w-3/4" />
+                  <div className="flex flex-wrap items-center gap-4">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-4 w-32" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-20" />
+                    <div className="ml-7">
+                      <Skeleton className="h-4 w-80" />
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-muted rounded-lg p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="text-center space-y-2">
+                        <Skeleton className="h-8 w-16 mx-auto" />
+                        <Skeleton className="h-4 w-20 mx-auto" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-24 w-full" />
+                </div>
+              </div>
+              <div className="lg:col-span-1 space-y-8">
+                <Skeleton className="h-64 w-full rounded-lg" />
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-32" />
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="p-4 border rounded-lg space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-3 w-2/3" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

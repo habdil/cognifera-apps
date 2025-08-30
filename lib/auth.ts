@@ -4,7 +4,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3
 
 export interface User {
   id: string;
-  name: string;
+  name?: string; // Keep for backward compatibility
+  fullName: string;
   email: string;
   role: string;
   status?: string;
