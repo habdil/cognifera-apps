@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { JournalStats } from "@/components/manager-journal/JournalStats";
 import { JournalList } from "@/components/manager-journal/JournalList"; 
 import { JournalEditor } from "@/components/manager-journal/JournalEditor";
-import { JournalContentManager } from "@/components/manager-journal/JournalContentManager";
+import JournalContentManager from "@/components/manager-journal/JournalContentManager";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { BarChart3, FileText, Edit3, Settings, User, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";

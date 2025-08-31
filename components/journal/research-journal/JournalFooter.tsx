@@ -2,6 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { journalConfig } from "@/lib/journal-config";
 
 export default function JournalFooter() {
   return (
@@ -10,45 +12,81 @@ export default function JournalFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-12 h-12 bg-[var(--color-primary)] rounded-lg flex items-center justify-center">
-                <span className="text-xl font-bold text-white">C</span>
-              </div>
+              {journalConfig.logo.type === "image" ? (
+                <div className="flex-shrink-0">
+                  <Image
+                    src={journalConfig.logo.value}
+                    alt="Journal Logo"
+                    width={48}
+                    height={48}
+                    className="object-contain"
+                  />
+                </div>
+              ) : (
+                <div 
+                  className="w-12 h-12 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: journalConfig.colors.primary }}
+                >
+                  <span className="text-xl font-bold text-white">
+                    {journalConfig.logo.value.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
               <div>
-                <h3 className="font-bold text-lg">Cognifera Journal</h3>
-                <p className="text-white/80 text-sm">Open Journal System</p>
+                <h3 className="font-bold text-lg">{journalConfig.title}</h3>
+                <p className="text-white/80 text-sm">{journalConfig.subtitle}</p>
               </div>
             </div>
             <p className="text-white/70 text-sm leading-relaxed mb-4">
-              Platform publikasi ilmiah terkemuka yang menyediakan akses terbuka untuk 
-              penelitian berkualitas tinggi dalam bidang teknologi pendidikan, ilmu komputer, 
-              dan matematika terapan.
+              {journalConfig.footer.description}
             </p>
             <div className="flex space-x-4">
-              <span className="bg-[var(--color-primary)] text-white px-3 py-1 rounded-full text-xs">Open Access</span>
-              <span className="bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] px-3 py-1 rounded-full text-xs">Peer Reviewed</span>
+              {journalConfig.footer.badges.map((badge, index) => (
+                <span 
+                  key={index}
+                  className={`px-3 py-1 rounded-full text-xs ${
+                    badge.variant === "primary" 
+                      ? "text-white" 
+                      : "text-[var(--color-secondary-foreground)]"
+                  }`}
+                  style={{ 
+                    backgroundColor: badge.variant === "primary" 
+                      ? journalConfig.colors.primary 
+                      : journalConfig.colors.secondary 
+                  }}
+                >
+                  {badge.text}
+                </span>
+              ))}
             </div>
           </div>
           
-          <div>
-            <h3 className="font-semibold mb-4 text-white">Quick Links</h3>
-            <div className="space-y-2 text-sm text-white/70">
-              <Link href="/journal/submit" className="block hover:text-white transition-colors">Submit Article</Link>
-              <Link href="/journal/author-guidelines" className="block hover:text-white transition-colors">Author Guidelines</Link>
-              <Link href="/journal/peer-review-process" className="block hover:text-white transition-colors">Review Process</Link>
-              <Link href="/journal/editorial" className="block hover:text-white transition-colors">Editorial Board</Link>
-              <Link href="/publications" className="block hover:text-white transition-colors">All Publications</Link>
+          {journalConfig.footer.quickLinks.map((section, sectionIndex) => (
+            <div key={sectionIndex}>
+              <h3 className="font-semibold mb-4 text-white">{section.title}</h3>
+              <div className="space-y-2 text-sm text-white/70">
+                {section.links.map((link, linkIndex) => (
+                  <Link 
+                    key={linkIndex}
+                    href={link.href} 
+                    className="block hover:text-white transition-colors"
+                  >
+                    {link.text}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
           
           <div>
             <h3 className="font-semibold mb-4 text-white">Contact Info</h3>
             <div className="space-y-2 text-sm text-white/70">
-              <p>Email: journal@cognifera.co.id</p>
-              <p>Phone: +62 21 1234 5678</p>
-              <p>Response: Within 48 hours</p>
+              <p>Email: {journalConfig.footer.contact.email}</p>
+              <p>Phone: {journalConfig.footer.contact.phone}</p>
+              <p>Response: {journalConfig.footer.contact.responseTime}</p>
               <div className="mt-4">
                 <p className="font-medium text-white text-xs mb-1">Publisher</p>
-                <p className="text-xs">Cognifera Education Academy</p>
+                <p className="text-xs">{journalConfig.footer.contact.publisher.fullName}</p>
               </div>
             </div>
           </div>
@@ -56,14 +94,24 @@ export default function JournalFooter() {
         
         <div className="border-t border-white/20 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-white/60 text-center md:text-left">
-            © 2024 Cognifera Journal. All rights reserved.
+            © {journalConfig.footer.copyright.year} {journalConfig.footer.copyright.text}
           </p>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
-            <Link href="/" className="text-sm text-white/60 hover:text-white transition-colors">
-              Back to Cognifera
-            </Link>
+            {journalConfig.footer.bottomLinks.map((link, index) => (
+              <React.Fragment key={index}>
+                <Link 
+                  href={link.href} 
+                  className="text-sm text-white/60 hover:text-white transition-colors"
+                >
+                  {link.text}
+                </Link>
+                {index < journalConfig.footer.bottomLinks.length - 1 && (
+                  <span className="text-white/40">|</span>
+                )}
+              </React.Fragment>
+            ))}
             <span className="text-white/40">|</span>
-            <span className="text-sm text-white/60">Powered by OJS</span>
+            <span className="text-sm text-white/60">{journalConfig.footer.poweredBy}</span>
           </div>
         </div>
       </div>

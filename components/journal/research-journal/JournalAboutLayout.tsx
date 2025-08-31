@@ -20,6 +20,7 @@ import {
   Clock
 } from "lucide-react";
 import { mockEditorialBoard } from "@/mock-data/journal";
+import { journalConfig } from "@/lib/journal-config";
 
 export default function JournalAboutLayout() {
   const editorInChief = mockEditorialBoard.find(member => member.role === 'editor-in-chief');
@@ -105,44 +106,34 @@ export default function JournalAboutLayout() {
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="prose max-w-none">
-                    <p className="text-[var(--color-muted-foreground)] leading-relaxed">
-                      <strong>Cognifera Journal</strong> adalah platform publikasi ilmiah berbasis Open Journal System (OJS) 
-                      yang berfokus pada penelitian-penelitian berkualitas tinggi dalam bidang teknologi pendidikan, 
-                      ilmu komputer, matematika terapan, dan bidang interdisipliner terkait.
-                    </p>
-                    <p className="text-[var(--color-muted-foreground)] leading-relaxed">
-                      Journal ini berkomitmen untuk menyediakan akses terbuka (Open Access) terhadap semua publikasi, 
-                      mendukung penyebaran pengetahuan ilmiah yang lebih luas dan demokratisasi akses terhadap hasil penelitian.
-                    </p>
+                    {journalConfig.aboutPage.journalDescription.paragraphs.map((paragraph, index) => (
+                      <p key={index} className="text-[var(--color-muted-foreground)] leading-relaxed">
+                        {paragraph}
+                      </p>
+                    ))}
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-4">
                       <h3 className="font-semibold text-[var(--color-foreground)] flex items-center">
                         <Award className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-                        Focus & Scope
+                        {journalConfig.aboutPage.journalDescription.focusScope.title}
                       </h3>
                       <ul className="text-sm text-[var(--color-muted-foreground)] space-y-2">
-                        <li>• Educational Technology & E-Learning</li>
-                        <li>• Computer Science & Software Engineering</li>
-                        <li>• Applied Mathematics & Statistical Modeling</li>
-                        <li>• Data Science & Machine Learning</li>
-                        <li>• Information Systems & Technology</li>
-                        <li>• Interdisciplinary Research</li>
+                        {journalConfig.aboutPage.journalDescription.focusScope.items.map((item, index) => (
+                          <li key={index}>• {item}</li>
+                        ))}
                       </ul>
                     </div>
                     <div className="space-y-4">
                       <h3 className="font-semibold text-[var(--color-foreground)] flex items-center">
                         <Clock className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-                        Publication Details
+                        {journalConfig.aboutPage.journalDescription.publicationDetails.title}
                       </h3>
                       <div className="text-sm text-[var(--color-muted-foreground)] space-y-2">
-                        <div><strong>Frequency:</strong> Quarterly (4 issues per year)</div>
-                        <div><strong>Publisher:</strong> Cognifera Education Academy</div>
-                        <div><strong>Language:</strong> Indonesian & English</div>
-                        <div><strong>Access:</strong> Open Access (Free)</div>
-                        <div><strong>Review:</strong> Double-blind peer review</div>
-                        <div><strong>DOI:</strong> Assigned to all articles</div>
+                        {journalConfig.aboutPage.journalDescription.publicationDetails.items.map((item, index) => (
+                          <div key={index}><strong>{item.label}:</strong> {item.value}</div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -253,30 +244,34 @@ export default function JournalAboutLayout() {
                   <div>
                     <h3 className="font-semibold text-lg text-[var(--color-foreground)] mb-4 flex items-center">
                       <Mail className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-                      Contact
+                      {journalConfig.aboutPage.contact.title}
                     </h3>
                     <div className="bg-[var(--color-muted)] rounded-lg p-6">
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-3">
                           <div className="flex items-center text-sm">
                             <Mail className="w-4 h-4 mr-2 text-[var(--color-primary)]" />
-                            <span className="text-[var(--color-muted-foreground)]">journal@cognifera.co.id</span>
+                            <span className="text-[var(--color-muted-foreground)]">{journalConfig.aboutPage.contact.email}</span>
                           </div>
                           <div className="flex items-center text-sm">
                             <Phone className="w-4 h-4 mr-2 text-[var(--color-primary)]" />
-                            <span className="text-[var(--color-muted-foreground)]">+62 21 1234 5678</span>
+                            <span className="text-[var(--color-muted-foreground)]">{journalConfig.aboutPage.contact.phone}</span>
                           </div>
                           <div className="flex items-center text-sm">
                             <Globe className="w-4 h-4 mr-2 text-[var(--color-primary)]" />
-                            <span className="text-[var(--color-muted-foreground)]">journal.cognifera.co.id</span>
+                            <span className="text-[var(--color-muted-foreground)]">{journalConfig.aboutPage.contact.website}</span>
                           </div>
                         </div>
                         <div>
                           <h4 className="font-medium text-[var(--color-foreground)] mb-2">Editorial Office</h4>
                           <p className="text-sm text-[var(--color-muted-foreground)]">
-                            Cognifera Education Academy<br />
-                            Jl. Teknologi No. 123<br />
-                            Jakarta 12345, Indonesia
+                            {journalConfig.aboutPage.contact.editorialOffice.name}<br />
+                            {journalConfig.aboutPage.contact.editorialOffice.address.map((line, index) => (
+                              <span key={index}>
+                                {line}
+                                {index < journalConfig.aboutPage.contact.editorialOffice.address.length - 1 && <br />}
+                              </span>
+                            ))}
                           </p>
                         </div>
                       </div>
@@ -297,75 +292,17 @@ export default function JournalAboutLayout() {
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="grid gap-4">
-                    <Link href="/journal/focus-scope" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Focus and Scope</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Areas of research covered by the journal</p>
+                    {journalConfig.aboutPage.policies.map((policy, index) => (
+                      <Link key={index} href={policy.href} className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">{policy.title}</h4>
+                            <p className="text-sm text-[var(--color-muted-foreground)]">{policy.description}</p>
+                          </div>
+                          <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
                         </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/section-policies" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Section Policies</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Policies for different article types</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/peer-review-process" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Peer Review Process</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Double-blind peer review guidelines</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/publication-frequency" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Publication Frequency</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Quarterly publication schedule</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/open-access-policy" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Open Access Policy</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Free access to all published content</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/archiving" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Archiving</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Digital preservation policies</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/ethics" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Publication Ethics</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Ethical guidelines for authors and reviewers</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
+                      </Link>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -382,35 +319,17 @@ export default function JournalAboutLayout() {
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="grid gap-4">
-                    <Link href="/journal/author-guidelines" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Author Guidelines</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Complete submission guidelines for authors</p>
+                    {journalConfig.aboutPage.submissions.map((submission, index) => (
+                      <Link key={index} href={submission.href} className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">{submission.title}</h4>
+                            <p className="text-sm text-[var(--color-muted-foreground)]">{submission.description}</p>
+                          </div>
+                          <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
                         </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/copyright-notice" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Copyright Notice</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Copyright and licensing information</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/privacy-statement" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Privacy Statement</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">How we handle author and reviewer data</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
+                      </Link>
+                    ))}
                   </div>
                   
                   <div className="bg-[var(--color-primary)]/10 border-l-4 border-[var(--color-primary)] p-6 rounded-r-lg">
@@ -439,25 +358,17 @@ export default function JournalAboutLayout() {
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="grid gap-4">
-                    <Link href="/journal/sponsorship" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Journal Sponsorship</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Support and partnership opportunities</p>
+                    {journalConfig.aboutPage.otherInfo.map((info, index) => (
+                      <Link key={index} href={info.href} className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">{info.title}</h4>
+                            <p className="text-sm text-[var(--color-muted-foreground)]">{info.description}</p>
+                          </div>
+                          <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
                         </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
-                    
-                    <Link href="/journal/sitemap" className="block p-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-muted)] transition-colors group">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-foreground)] group-hover:text-[var(--color-primary)]">Site Map</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">Navigate through all journal sections</p>
-                        </div>
-                        <ExternalLink className="w-4 h-4 text-[var(--color-muted-foreground)] group-hover:text-[var(--color-primary)]" />
-                      </div>
-                    </Link>
+                      </Link>
+                    ))}
                   </div>
                 </CardContent>
               </Card>

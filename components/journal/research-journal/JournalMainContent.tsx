@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, FileText, Calendar, User, Eye, Download, BookOpen } from "lucide-react";
 import { mockResearchJournals } from "@/mock-data/publications";
+import { journalConfig } from "@/lib/journal-config";
 
 export default function JournalMainContent() {
   const recentArticles = mockResearchJournals.slice(0, 3);
@@ -17,50 +18,58 @@ export default function JournalMainContent() {
         <CardHeader className="bg-[var(--color-primary)] text-white rounded-t-lg py-8">
           <div className="text-center">
             <CardTitle className="text-4xl font-bold mb-3">
-              Cognifera Journal
+              {journalConfig.mainContent.heroSection.title}
             </CardTitle>
             <p className="text-white/90 text-xl font-medium">
-              Open Journal System for Academic Publications
+              {journalConfig.mainContent.heroSection.subtitle}
             </p>
           </div>
         </CardHeader>
         <CardContent className="p-8 space-y-6">
           <div className="prose max-w-none">
-            <p className="text-[var(--color-muted-foreground)] leading-relaxed">
-              Cognifera Journal adalah platform publikasi ilmiah berbasis <strong>Open Journal System (OJS)</strong> 
-              yang menyediakan akses terbuka untuk artikel-artikel penelitian berkualitas tinggi dalam berbagai bidang 
-              keilmuan termasuk teknologi pendidikan, ilmu komputer, dan matematika terapan.
-            </p>
-            <p className="text-[var(--color-muted-foreground)] leading-relaxed">
-              Platform ini terintegrasi dengan ekosistem Cognifera untuk mendukung diseminasi ilmu pengetahuan 
-              dan kolaborasi penelitian akademik. Semua artikel yang dipublikasikan telah melalui proses 
-              <strong> peer-review</strong> yang ketat untuk menjamin kualitas dan standar akademik.
-            </p>
+            {journalConfig.mainContent.heroSection.description.map((paragraph, index) => (
+              <p key={index} className="text-[var(--color-muted-foreground)] leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
           </div>
           
           <div className="border-t border-[var(--color-border)] pt-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <h4 className="font-semibold text-[var(--color-foreground)]">Publication Focus</h4>
+                <h4 className="font-semibold text-[var(--color-foreground)]">
+                  {journalConfig.mainContent.heroSection.focusAreas.title}
+                </h4>
                 <p className="text-sm text-[var(--color-muted-foreground)]">
-                  Educational Technology, Computer Science, Applied Mathematics, 
-                  Data Science, Engineering, dan bidang interdisipliner terkait.
+                  {journalConfig.mainContent.heroSection.focusAreas.description}
                 </p>
               </div>
               <div className="space-y-2">
-                <h4 className="font-semibold text-[var(--color-foreground)]">Open Access Policy</h4>
+                <h4 className="font-semibold text-[var(--color-foreground)]">
+                  {journalConfig.mainContent.heroSection.openAccessPolicy.title}
+                </h4>
                 <p className="text-sm text-[var(--color-muted-foreground)]">
-                  Semua artikel dapat diakses secara gratis tanpa biaya berlangganan, 
-                  mendukung penyebaran pengetahuan yang lebih luas.
+                  {journalConfig.mainContent.heroSection.openAccessPolicy.description}
                 </p>
               </div>
             </div>
           </div>
           
           <div className="flex flex-wrap gap-3 pt-4">
-            <span className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-full text-sm font-medium">Open Access</span>
-            <span className="bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] px-4 py-2 rounded-full text-sm font-medium">Peer Reviewed</span>
-            <span className="bg-[var(--color-tertiary)] text-[var(--color-tertiary-foreground)] px-4 py-2 rounded-full text-sm font-medium">Digital First</span>
+            {journalConfig.mainContent.heroSection.badges.map((badge, index) => (
+              <span 
+                key={index}
+                className={`px-4 py-2 rounded-full text-sm font-medium ${
+                  badge.variant === "primary" 
+                    ? "bg-[var(--color-primary)] text-white"
+                    : badge.variant === "secondary"
+                    ? "bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)]"
+                    : "bg-[var(--color-tertiary)] text-[var(--color-tertiary-foreground)]"
+                }`}
+              >
+                {badge.text}
+              </span>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -70,9 +79,9 @@ export default function JournalMainContent() {
         <CardHeader>
           <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
             <FileText className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
-            Recent Publications
+            {journalConfig.mainContent.recentPublications.title}
           </CardTitle>
-          <p className="text-[var(--color-muted-foreground)]">Latest research articles published in Cognifera Journal</p>
+          <p className="text-[var(--color-muted-foreground)]">{journalConfig.mainContent.recentPublications.subtitle}</p>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-6">

@@ -13,10 +13,9 @@ import {
   Users,
   BookOpen
 } from "lucide-react";
-import { mockEditorialBoard } from "@/mock-data/journal";
+import { journalConfig } from "@/lib/journal-config";
 
 export default function JournalSidebar() {
-  const editorInChief = mockEditorialBoard.find(member => member.role === 'editor-in-chief');
 
   return (
     <div className="space-y-6 mt-6">
@@ -25,22 +24,22 @@ export default function JournalSidebar() {
         <CardHeader className="pb-4">
           <CardTitle className="text-xl flex items-center">
             <Send className="w-5 h-5 mr-2" />
-            Submit Your Research
+            {journalConfig.sidebar.submitSection.title}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-white/90 text-sm">
-            Publikasikan penelitian Anda di Cognifera Journal dengan proses review yang berkualitas.
+            {journalConfig.sidebar.submitSection.description}
           </p>
           <div className="space-y-2">
-            <Link href="/journal/submit">
+            <Link href={journalConfig.sidebar.submitSection.submitButtonUrl}>
               <Button className="w-full bg-white text-[var(--color-primary)] hover:bg-white/90 font-semibold">
-                Submit Article
+                {journalConfig.sidebar.submitSection.submitButtonText}
               </Button>
             </Link>
-            <Link href="/journal/guidelines">
+            <Link href={journalConfig.sidebar.submitSection.guidelinesButtonUrl}>
               <Button variant="ghost" className="w-full text-white hover:bg-white/20 text-sm">
-                Author Guidelines
+                {journalConfig.sidebar.submitSection.guidelinesButtonText}
               </Button>
             </Link>
           </div>
@@ -52,27 +51,17 @@ export default function JournalSidebar() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center text-[var(--color-foreground)]">
             <Info className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-            Journal Information
+            {journalConfig.sidebar.journalInfo.title}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 gap-4">
-            <div className="p-4 bg-[var(--color-muted)] rounded-lg">
-              <h4 className="font-semibold text-[var(--color-foreground)] text-sm">Publication</h4>
-              <p className="text-sm text-[var(--color-muted-foreground)]">Quarterly (4 issues/year)</p>
-            </div>
-            <div className="p-4 bg-[var(--color-muted)] rounded-lg">
-              <h4 className="font-semibold text-[var(--color-foreground)] text-sm">Focus Area</h4>
-              <p className="text-sm text-[var(--color-muted-foreground)]">Educational Technology, Computer Science, Applied Mathematics</p>
-            </div>
-            <div className="p-4 bg-[var(--color-muted)] rounded-lg">
-              <h4 className="font-semibold text-[var(--color-foreground)] text-sm">Publisher</h4>
-              <p className="text-sm text-[var(--color-muted-foreground)]">Cognifera Education Academy</p>
-            </div>
-            <div className="p-4 bg-[var(--color-muted)] rounded-lg">
-              <h4 className="font-semibold text-[var(--color-foreground)] text-sm">Open Access</h4>
-              <p className="text-sm text-[var(--color-muted-foreground)]">Free submission & publication</p>
-            </div>
+            {journalConfig.sidebar.journalInfo.items.map((item, index) => (
+              <div key={index} className="p-4 bg-[var(--color-muted)] rounded-lg">
+                <h4 className="font-semibold text-[var(--color-foreground)] text-sm">{item.label}</h4>
+                <p className="text-sm text-[var(--color-muted-foreground)]">{item.value}</p>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -82,32 +71,16 @@ export default function JournalSidebar() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center text-[var(--color-foreground)]">
             <BookOpen className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-            Quick Links
+            {journalConfig.sidebar.quickLinks.title}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="space-y-2">
-            <Link href="/journal/about" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-              <span className="text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]">About Journal</span>
-            </Link>
-            <Link href="/journal/editorial" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-              <span className="text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]">Editorial Board</span>
-            </Link>
-            <Link href="/journal/guidelines" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-              <span className="text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]">Author Guidelines</span>
-            </Link>
-            <Link href="/journal/review-process" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-              <span className="text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]">Review Process</span>
-            </Link>
-            <Link href="/journal/ethics" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-              <span className="text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]">Publication Ethics</span>
-            </Link>
-            <Link href="/journal/archives" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-              <span className="text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]">Journal Archives</span>
-            </Link>
-            <Link href="/journal/contact" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
-              <span className="text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]">Contact Us</span>
-            </Link>
+            {journalConfig.sidebar.quickLinks.links.map((link, index) => (
+              <Link key={index} href={link.href} className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors">
+                <span className="text-sm text-[var(--color-foreground)] hover:text-[var(--color-primary)]">{link.text}</span>
+              </Link>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -117,27 +90,31 @@ export default function JournalSidebar() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center text-[var(--color-foreground)]">
             <Award className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-            Quality Standards
+            {journalConfig.sidebar.qualityStandards.title}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-[var(--color-primary)]/10 text-[var(--color-primary)] px-3 py-2 rounded-lg text-center">
-              <span className="text-xs font-semibold">Open Access</span>
-            </div>
-            <div className="bg-[var(--color-secondary)]/10 text-[var(--color-secondary-foreground)] px-3 py-2 rounded-lg text-center">
-              <span className="text-xs font-semibold">Peer Review</span>
-            </div>
-            <div className="bg-[var(--color-tertiary)]/10 text-[var(--color-tertiary-foreground)] px-3 py-2 rounded-lg text-center">
-              <span className="text-xs font-semibold">Fast Track</span>
-            </div>
-            <div className="bg-green-100 text-green-800 px-3 py-2 rounded-lg text-center">
-              <span className="text-xs font-semibold">DOI Assigned</span>
-            </div>
+            {journalConfig.sidebar.qualityStandards.badges.map((badge, index) => (
+              <div 
+                key={index}
+                className={`px-3 py-2 rounded-lg text-center ${
+                  badge.variant === "primary" 
+                    ? "bg-[var(--color-primary)]/10 text-[var(--color-primary)]"
+                    : badge.variant === "secondary"
+                    ? "bg-[var(--color-secondary)]/10 text-[var(--color-secondary-foreground)]"
+                    : badge.variant === "tertiary"
+                    ? "bg-[var(--color-tertiary)]/10 text-[var(--color-tertiary-foreground)]"
+                    : "bg-green-100 text-green-800"
+                }`}
+              >
+                <span className="text-xs font-semibold">{badge.text}</span>
+              </div>
+            ))}
           </div>
           <div className="text-center pt-2">
             <p className="text-xs text-[var(--color-muted-foreground)]">
-              Semua artikel mendapat DOI dan terindeks secara otomatis
+              {journalConfig.sidebar.qualityStandards.description}
             </p>
           </div>
         </CardContent>
@@ -148,44 +125,34 @@ export default function JournalSidebar() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center text-[var(--color-foreground)]">
             <BarChart3 className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-            Journal Statistics
+            {journalConfig.sidebar.statistics.title}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="text-center p-4 bg-[var(--color-muted)] rounded-lg">
-              <p className="text-2xl font-bold text-[var(--color-primary)]">124</p>
+              <p className="text-2xl font-bold text-[var(--color-primary)]">{journalConfig.sidebar.statistics.publishedArticles}</p>
               <p className="text-xs text-[var(--color-muted-foreground)]">Published Articles</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="text-center p-3 bg-[var(--color-muted)] rounded-lg">
-                <p className="text-lg font-bold text-[var(--color-foreground)]">18</p>
+                <p className="text-lg font-bold text-[var(--color-foreground)]">{journalConfig.sidebar.statistics.countries}</p>
                 <p className="text-xs text-[var(--color-muted-foreground)]">Countries</p>
               </div>
               <div className="text-center p-3 bg-[var(--color-muted)] rounded-lg">
-                <p className="text-lg font-bold text-[var(--color-foreground)]">2.4</p>
+                <p className="text-lg font-bold text-[var(--color-foreground)]">{journalConfig.sidebar.statistics.avgReviewTime}</p>
                 <p className="text-xs text-[var(--color-muted-foreground)]">Avg Review Time (weeks)</p>
               </div>
             </div>
             <div className="space-y-2">
               <h4 className="font-medium text-sm text-[var(--color-foreground)]">Author Distribution</h4>
               <div className="space-y-2 text-xs text-[var(--color-muted-foreground)]">
-                <div className="flex justify-between">
-                  <span>🇮🇩 Indonesia</span>
-                  <span>65%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>🇲🇾 Malaysia</span>
-                  <span>15%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>🇸🇬 Singapore</span>
-                  <span>8%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>🌏 Others</span>
-                  <span>12%</span>
-                </div>
+                {journalConfig.sidebar.statistics.authorDistribution.map((dist, index) => (
+                  <div key={index} className="flex justify-between">
+                    <span>{dist.flag} {dist.country}</span>
+                    <span>{dist.percentage}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -197,29 +164,29 @@ export default function JournalSidebar() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center text-[var(--color-foreground)]">
             <Users className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-            Editorial Contact
+            {journalConfig.sidebar.editorialContact.title}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="space-y-2 text-sm">
             <div>
               <p className="font-medium text-[var(--color-foreground)]">Email</p>
-              <p className="text-[var(--color-muted-foreground)]">cognifera.edu@gmail.com</p>
+              <p className="text-[var(--color-muted-foreground)]">{journalConfig.sidebar.editorialContact.email}</p>
             </div>
             <div>
               <p className="font-medium text-[var(--color-foreground)]">Editor-in-Chief</p>
               <p className="text-[var(--color-muted-foreground)]">
-                {editorInChief ? editorInChief.name : "Dr. Hardianto, S.Pd., M.Pd."}
+                {journalConfig.sidebar.editorialContact.editorInChief}
               </p>
             </div>
             <div>
               <p className="font-medium text-[var(--color-foreground)]">Response Time</p>
-              <p className="text-[var(--color-muted-foreground)]">Within 48 hours</p>
+              <p className="text-[var(--color-muted-foreground)]">{journalConfig.sidebar.editorialContact.responseTime}</p>
             </div>
           </div>
-          <Link href="/journal/contact">
+          <Link href={journalConfig.sidebar.editorialContact.contactButtonUrl}>
             <Button variant="outline" className="w-full mt-3">
-              Contact Editorial Team
+              {journalConfig.sidebar.editorialContact.contactButtonText}
             </Button>
           </Link>
         </CardContent>

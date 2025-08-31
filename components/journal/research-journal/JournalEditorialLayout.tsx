@@ -5,6 +5,7 @@ import Link from "next/link";
 import JournalHeader from "./JournalHeader";
 import JournalFooter from "./JournalFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { journalConfig } from "@/lib/journal-config";
 import { 
   Settings,
   BookOpen,
@@ -19,6 +20,19 @@ import {
   AlertCircle
 } from "lucide-react";
 
+// Dynamic icon mapping
+const iconMap = {
+  BookOpen,
+  Users,
+  FileText,
+  Clock,
+  Shield,
+  Eye,
+  Archive,
+  DollarSign,
+  AlertCircle
+} as const;
+
 export default function JournalEditorialLayout() {
   return (
     <div className="min-h-screen bg-white">
@@ -32,7 +46,7 @@ export default function JournalEditorialLayout() {
             <span>/</span>
             <Link href="/journal" className="hover:text-[var(--color-primary)] transition-colors">Journal</Link>
             <span>/</span>
-            <span className="text-[var(--color-foreground)] font-medium">Editorial Policies</span>
+            <span className="text-[var(--color-foreground)] font-medium">{journalConfig.editorialPolicies.pageTitle}</span>
           </div>
         </nav>
 
@@ -43,33 +57,18 @@ export default function JournalEditorialLayout() {
               {/* Navigation Card */}
               <Card className="border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-[var(--color-foreground)]">Editorial Policies</CardTitle>
+                  <CardTitle className="text-lg text-[var(--color-foreground)]">{journalConfig.editorialPolicies.pageTitle}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <a href="#focus-scope" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
-                    Focus and Scope
-                  </a>
-                  <a href="#section-policies" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
-                    Section Policies
-                  </a>
-                  <a href="#peer-review" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
-                    Peer Review Process
-                  </a>
-                  <a href="#publication-frequency" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
-                    Publication Frequency
-                  </a>
-                  <a href="#open-access" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
-                    Open Access Policy
-                  </a>
-                  <a href="#archiving" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
-                    Archiving
-                  </a>
-                  <a href="#plagiarism" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
-                    Plagiarism Policy
-                  </a>
-                  <a href="#author-fees" className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm">
-                    Author Fees
-                  </a>
+                  {journalConfig.editorialPolicies.navigation.map((navItem) => (
+                    <a 
+                      key={navItem.id}
+                      href={navItem.href} 
+                      className="block p-2 rounded-lg hover:bg-[var(--color-muted)] transition-colors text-sm"
+                    >
+                      {navItem.title}
+                    </a>
+                  ))}
                 </CardContent>
               </Card>
             </div>
@@ -84,41 +83,32 @@ export default function JournalEditorialLayout() {
               <Card className="border-0 shadow-lg">
                 <CardHeader className="bg-[var(--color-primary)] text-white rounded-t-lg">
                   <CardTitle className="text-2xl flex items-center">
-                    <BookOpen className="w-6 h-15 mr-3" />
-                    Focus and Scope
+                    {React.createElement(iconMap[journalConfig.editorialPolicies.focusScope.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3" })}
+                    {journalConfig.editorialPolicies.focusScope.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="prose max-w-none">
                     <p className="text-[var(--color-muted-foreground)] leading-relaxed mb-4">
-                      Cognifera Journal mempublikasikan artikel original tentang isu-isu terkini dan 
-                      mengutamakan internasionalitas dalam pendidikan, metodologi, pelatihan guru, 
-                      dan persiapan guru sains dengan tujuan untuk memajukan pengetahuan tentang 
-                      teori dan praktik pendidikan sains.
+                      {journalConfig.editorialPolicies.focusScope.description}
                     </p>
                     
                     <div className="grid md:grid-cols-2 gap-6 mt-6">
                       <div className="space-y-4">
-                        <h3 className="font-semibold text-[var(--color-foreground)] mb-3">Ruang Lingkup Penelitian:</h3>
+                        <h3 className="font-semibold text-[var(--color-foreground)] mb-3">{journalConfig.editorialPolicies.focusScope.researchAreas.title}</h3>
                         <ul className="space-y-2 text-sm text-[var(--color-muted-foreground)]">
-                          <li>• <strong>Learning consisting of theoretical and empirical research</strong> - Pembelajaran yang terdiri dari penelitian teoretis dan empiris dalam pembelajaran sains</li>
-                          <li>• <strong>Teacher education and development</strong> - Pendidikan dan pengembangan guru sains</li>
-                          <li>• <strong>Educational technology</strong> - Teknologi pendidikan dalam pembelajaran sains</li>
-                          <li>• <strong>Assessment and evaluation</strong> - Penilaian dan evaluasi pembelajaran sains</li>
-                          <li>• <strong>Science curriculum development</strong> - Pengembangan kurikulum sains</li>
-                          <li>• <strong>Environmental education</strong> - Pendidikan lingkungan dan sains lingkungan</li>
+                          {journalConfig.editorialPolicies.focusScope.researchAreas.items.map((item, index) => (
+                            <li key={index}>• <strong>{item.title}</strong> - {item.description}</li>
+                          ))}
                         </ul>
                       </div>
                       
                       <div className="space-y-4">
-                        <h3 className="font-semibold text-[var(--color-foreground)] mb-3">Jenis Kontribusi:</h3>
+                        <h3 className="font-semibold text-[var(--color-foreground)] mb-3">{journalConfig.editorialPolicies.focusScope.contributionTypes.title}</h3>
                         <ul className="space-y-2 text-sm text-[var(--color-muted-foreground)]">
-                          <li>• <strong>Original Research Articles</strong> - Artikel penelitian original</li>
-                          <li>• <strong>Review Articles</strong> - Artikel tinjauan komprehensif</li>
-                          <li>• <strong>Case Studies</strong> - Studi kasus dalam pendidikan sains</li>
-                          <li>• <strong>Educational Innovations</strong> - Inovasi dalam pendidikan sains</li>
-                          <li>• <strong>Technology Integration</strong> - Integrasi teknologi dalam pembelajaran</li>
-                          <li>• <strong>Cross-cultural Studies</strong> - Studi lintas budaya dalam pendidikan sains</li>
+                          {journalConfig.editorialPolicies.focusScope.contributionTypes.items.map((item, index) => (
+                            <li key={index}>• <strong>{item.title}</strong> - {item.description}</li>
+                          ))}
                         </ul>
                       </div>
                     </div>
@@ -132,44 +122,26 @@ export default function JournalEditorialLayout() {
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
-                    <FileText className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
-                    Section Policies
+                    {React.createElement(iconMap[journalConfig.editorialPolicies.sectionPolicies.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3 text-[var(--color-primary)]" })}
+                    {journalConfig.editorialPolicies.sectionPolicies.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="space-y-6">
-                    <h3 className="font-semibold text-lg text-[var(--color-foreground)] mb-4">Articles</h3>
+                    <h3 className="font-semibold text-lg text-[var(--color-foreground)] mb-4">{journalConfig.editorialPolicies.sectionPolicies.subtitle}</h3>
                     
                     <div className="grid md:grid-cols-3 gap-4">
-                      <div className="p-4 border border-[var(--color-border)] rounded-lg">
-                        <div className="flex items-center mb-3">
-                          <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                          <span className="font-medium text-[var(--color-foreground)]">Open Submissions</span>
+                      {journalConfig.editorialPolicies.sectionPolicies.policies.map((policy, index) => (
+                        <div key={index} className="p-4 border border-[var(--color-border)] rounded-lg">
+                          <div className="flex items-center mb-3">
+                            <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                            <span className="font-medium text-[var(--color-foreground)]">{policy.title}</span>
+                          </div>
+                          <p className="text-sm text-[var(--color-muted-foreground)]">
+                            {policy.description}
+                          </p>
                         </div>
-                        <p className="text-sm text-[var(--color-muted-foreground)]">
-                          Submission terbuka untuk semua peneliti dan akademisi
-                        </p>
-                      </div>
-                      
-                      <div className="p-4 border border-[var(--color-border)] rounded-lg">
-                        <div className="flex items-center mb-3">
-                          <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                          <span className="font-medium text-[var(--color-foreground)]">Indexed</span>
-                        </div>
-                        <p className="text-sm text-[var(--color-muted-foreground)]">
-                          Semua artikel terindeks dengan DOI assignment
-                        </p>
-                      </div>
-                      
-                      <div className="p-4 border border-[var(--color-border)] rounded-lg">
-                        <div className="flex items-center mb-3">
-                          <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                          <span className="font-medium text-[var(--color-foreground)]">Peer Reviewed</span>
-                        </div>
-                        <p className="text-sm text-[var(--color-muted-foreground)]">
-                          Double-blind peer review process
-                        </p>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 </CardContent>
@@ -181,77 +153,36 @@ export default function JournalEditorialLayout() {
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
-                    <Users className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
-                    Peer Review Process
+                    {React.createElement(iconMap[journalConfig.editorialPolicies.peerReview.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3 text-[var(--color-primary)]" })}
+                    {journalConfig.editorialPolicies.peerReview.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="prose max-w-none">
                     <p className="text-[var(--color-muted-foreground)] leading-relaxed mb-6">
-                      Cognifera Journal menggunakan sistem <strong>double-blind review</strong> untuk menjamin 
-                      kualitas dan objektivitas proses evaluasi. Manuscript yang diterima akan melalui 
-                      proses review berikut:
+                      {journalConfig.editorialPolicies.peerReview.description}
                     </p>
                     
                     <div className="space-y-4">
-                      <div className="flex items-start space-x-4 p-4 bg-[var(--color-muted)] rounded-lg">
-                        <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                          1
+                      {journalConfig.editorialPolicies.peerReview.process.map((step, index) => (
+                        <div key={index} className="flex items-start space-x-4 p-4 bg-[var(--color-muted)] rounded-lg">
+                          <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            {step.step}
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-[var(--color-foreground)] mb-2">{step.title}</h4>
+                            <p className="text-sm text-[var(--color-muted-foreground)]">
+                              {step.description}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Initial Review</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">
-                            Editor melakukan review awal untuk memastikan manuscript sesuai dengan scope journal 
-                            dan memenuhi standar format yang ditetapkan.
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start space-x-4 p-4 bg-[var(--color-muted)] rounded-lg">
-                        <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                          2
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Peer Review Assignment</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">
-                            Manuscript dikirim kepada minimal 2 reviewer ahli dalam bidang terkait. 
-                            Review dilakukan secara anonymous (double-blind).
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start space-x-4 p-4 bg-[var(--color-muted)] rounded-lg">
-                        <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                          3
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Review Decision</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">
-                            Berdasarkan feedback reviewer, editor akan membuat keputusan: Accept, Minor Revision, 
-                            Major Revision, atau Reject.
-                          </p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start space-x-4 p-4 bg-[var(--color-muted)] rounded-lg">
-                        <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                          4
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Final Publication</h4>
-                          <p className="text-sm text-[var(--color-muted-foreground)]">
-                            Manuscript yang diterima akan melalui proses copyediting dan published online 
-                            dengan DOI assignment.
-                          </p>
-                        </div>
-                      </div>
+                      ))}
                     </div>
                     
                     <div className="bg-[var(--color-primary)]/10 border-l-4 border-[var(--color-primary)] p-6 rounded-r-lg mt-6">
-                      <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Review Timeline</h4>
+                      <h4 className="font-semibold text-[var(--color-foreground)] mb-2">{journalConfig.editorialPolicies.peerReview.timeline.title}</h4>
                       <p className="text-sm text-[var(--color-muted-foreground)]">
-                        Proses review biasanya memakan waktu 4-8 minggu setelah submission. 
-                        Authors akan mendapat notifikasi update setiap tahap review.
+                        {journalConfig.editorialPolicies.peerReview.timeline.description}
                       </p>
                     </div>
                   </div>
@@ -264,48 +195,37 @@ export default function JournalEditorialLayout() {
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
-                    <Clock className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
-                    Publication Frequency
+                    {React.createElement(iconMap[journalConfig.editorialPolicies.publicationFrequency.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3 text-[var(--color-primary)]" })}
+                    {journalConfig.editorialPolicies.publicationFrequency.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="prose max-w-none">
                     <p className="text-[var(--color-muted-foreground)] leading-relaxed mb-6">
-                      Cognifera Journal dipublikasikan <strong>4 kali dalam setahun</strong> (Quarterly) 
-                      dengan jadwal sebagai berikut:
+                      {journalConfig.editorialPolicies.publicationFrequency.description}
                     </p>
                     
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-4">
-                        <h3 className="font-semibold text-[var(--color-foreground)]">Jadwal Publikasi 2024:</h3>
+                        <h3 className="font-semibold text-[var(--color-foreground)]">{journalConfig.editorialPolicies.publicationFrequency.schedule.title}</h3>
                         <div className="space-y-3">
-                          <div className="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
-                            <span className="font-medium text-[var(--color-foreground)]">Vol 1, No 1</span>
-                            <span className="text-sm text-[var(--color-muted-foreground)]">Maret 2024</span>
-                          </div>
-                          <div className="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
-                            <span className="font-medium text-[var(--color-foreground)]">Vol 1, No 2</span>
-                            <span className="text-sm text-[var(--color-muted-foreground)]">Juni 2024</span>
-                          </div>
-                          <div className="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
-                            <span className="font-medium text-[var(--color-foreground)]">Vol 1, No 3</span>
-                            <span className="text-sm text-[var(--color-muted-foreground)]">September 2024</span>
-                          </div>
-                          <div className="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
-                            <span className="font-medium text-[var(--color-foreground)]">Vol 1, No 4</span>
-                            <span className="text-sm text-[var(--color-muted-foreground)]">Desember 2024</span>
-                          </div>
+                          {journalConfig.editorialPolicies.publicationFrequency.schedule.issues.map((issue, index) => (
+                            <div key={index} className="flex items-center justify-between p-3 bg-[var(--color-muted)] rounded-lg">
+                              <span className="font-medium text-[var(--color-foreground)]">{issue.volume}</span>
+                              <span className="text-sm text-[var(--color-muted-foreground)]">{issue.month}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                       
                       <div className="space-y-4">
-                        <h3 className="font-semibold text-[var(--color-foreground)]">Target Publikasi:</h3>
+                        <h3 className="font-semibold text-[var(--color-foreground)]">{journalConfig.editorialPolicies.publicationFrequency.targets.title}</h3>
                         <ul className="space-y-2 text-sm text-[var(--color-muted-foreground)]">
-                          <li>• <strong>Minimal 20 artikel per tahun</strong></li>
-                          <li>• <strong>5-8 artikel per issue</strong></li>
-                          <li>• <strong>Online first publication</strong> - Artikel dipublikasikan online segera setelah diterima</li>
-                          <li>• <strong>DOI assignment</strong> - Setiap artikel mendapat DOI</li>
-                          <li>• <strong>Indexing</strong> - Semua artikel terindeks di database akademik</li>
+                          {journalConfig.editorialPolicies.publicationFrequency.targets.items.map((item, index) => (
+                            <li key={index}>
+                              • <strong>{item.title}</strong>{item.description && ` - ${item.description}`}
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </div>
@@ -319,44 +239,40 @@ export default function JournalEditorialLayout() {
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
-                    <Eye className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
-                    Open Access Policy
+                    {React.createElement(iconMap[journalConfig.editorialPolicies.openAccess.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3 text-[var(--color-primary)]" })}
+                    {journalConfig.editorialPolicies.openAccess.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="prose max-w-none">
                     <p className="text-[var(--color-muted-foreground)] leading-relaxed mb-6">
-                      Cognifera Journal menerapkan kebijakan <strong>Open Access</strong> yang memungkinkan 
-                      akses gratis terhadap seluruh konten yang dipublikasikan, mendukung pertukaran 
-                      pengetahuan yang lebih luas.
+                      {journalConfig.editorialPolicies.openAccess.description}
                     </p>
                     
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-4">
                         <h3 className="font-semibold text-[var(--color-foreground)] flex items-center">
                           <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                          Keuntungan Open Access:
+                          {journalConfig.editorialPolicies.openAccess.benefits.title}
                         </h3>
                         <ul className="space-y-2 text-sm text-[var(--color-muted-foreground)]">
-                          <li>• <strong>Akses gratis</strong> untuk semua pembaca</li>
-                          <li>• <strong>Visibilitas tinggi</strong> dan potensi sitasi lebih besar</li>
-                          <li>• <strong>Distribusi global</strong> tanpa batasan geografis</li>
-                          <li>• <strong>Archiving permanen</strong> untuk preservasi jangka panjang</li>
-                          <li>• <strong>Compliance</strong> dengan policy funding agency</li>
+                          {journalConfig.editorialPolicies.openAccess.benefits.items.map((item, index) => (
+                            <li key={index}>• <strong>{item.title}</strong> {item.description}</li>
+                          ))}
                         </ul>
                       </div>
                       
                       <div className="space-y-4">
                         <h3 className="font-semibold text-[var(--color-foreground)] flex items-center">
                           <Shield className="w-5 h-5 text-[var(--color-primary)] mr-2" />
-                          Copyright & Licensing:
+                          {journalConfig.editorialPolicies.openAccess.copyright.title}
                         </h3>
                         <ul className="space-y-2 text-sm text-[var(--color-muted-foreground)]">
-                          <li>• <strong>Creative Commons License</strong> - CC BY 4.0</li>
-                          <li>• <strong>Author retains copyright</strong></li>
-                          <li>• <strong>Attribution required</strong> untuk penggunaan kembali</li>
-                          <li>• <strong>Commercial use allowed</strong> dengan proper attribution</li>
-                          <li>• <strong>Derivative works permitted</strong></li>
+                          {journalConfig.editorialPolicies.openAccess.copyright.items.map((item, index) => (
+                            <li key={index}>
+                              • <strong>{item.title}</strong>{item.description && ` - ${item.description}`}
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </div>
@@ -370,16 +286,14 @@ export default function JournalEditorialLayout() {
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
-                    <Archive className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
-                    Archiving
+                    {React.createElement(iconMap[journalConfig.editorialPolicies.archiving.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3 text-[var(--color-primary)]" })}
+                    {journalConfig.editorialPolicies.archiving.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="prose max-w-none">
                     <p className="text-[var(--color-muted-foreground)] leading-relaxed">
-                      Cognifera Journal menggunakan sistem LOCKSS untuk membuat distributed archiving system 
-                      di antara library berpartisipasi dan memungkinkan library tersebut untuk menciptakan 
-                      arsip permanen dari journal untuk tujuan preservasi dan restorasi.
+                      {journalConfig.editorialPolicies.archiving.description}
                     </p>
                   </div>
                 </CardContent>
@@ -391,23 +305,20 @@ export default function JournalEditorialLayout() {
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
-                    <AlertCircle className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
-                    Policy of Screening for Plagiarism
+                    {React.createElement(iconMap[journalConfig.editorialPolicies.plagiarism.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3 text-[var(--color-primary)]" })}
+                    {journalConfig.editorialPolicies.plagiarism.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="prose max-w-none">
                     <p className="text-[var(--color-muted-foreground)] leading-relaxed mb-4">
-                      Semua manuscript harus bebas dari plagiarisme. Authors diharuskan untuk menggunakan 
-                      software deteksi plagiarisme untuk mengecek originalitas manuscript sebelum submission.
+                      {journalConfig.editorialPolicies.plagiarism.description}
                     </p>
                     
                     <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg">
-                      <h4 className="font-semibold text-red-800 mb-2">Toleransi Plagiarisme</h4>
+                      <h4 className="font-semibold text-red-800 mb-2">{journalConfig.editorialPolicies.plagiarism.tolerancePolicy.title}</h4>
                       <p className="text-sm text-red-700">
-                        Manuscript dengan similarity index <strong>lebih dari 25%</strong> akan ditolak 
-                        tanpa review lebih lanjut. Gunakan tools seperti Turnitin atau Grammarly 
-                        untuk mengecek sebelum submission.
+                        {journalConfig.editorialPolicies.plagiarism.tolerancePolicy.description}
                       </p>
                     </div>
                   </div>
@@ -420,32 +331,29 @@ export default function JournalEditorialLayout() {
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center text-[var(--color-foreground)]">
-                    <DollarSign className="w-6 h-6 mr-3 text-[var(--color-primary)]" />
-                    Author Fees
+                    {React.createElement(iconMap[journalConfig.editorialPolicies.authorFees.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3 text-[var(--color-primary)]" })}
+                    {journalConfig.editorialPolicies.authorFees.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="prose max-w-none">
                     <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
-                      <h4 className="font-semibold text-green-800 mb-2">No Publication Charges</h4>
+                      <h4 className="font-semibold text-green-800 mb-2">{journalConfig.editorialPolicies.authorFees.policyStatement.title}</h4>
                       <p className="text-sm text-green-700 mb-4">
-                        Cognifera Journal <strong>TIDAK mengenakan biaya apapun</strong> untuk submission, 
-                        review process, dan publication. Semua layanan tersedia secara gratis.
+                        {journalConfig.editorialPolicies.authorFees.policyStatement.description}
                       </p>
                       
                       <div className="space-y-2 text-sm text-green-700">
-                        <p>• <strong>Submission Fee:</strong> GRATIS (0 IDR)</p>
-                        <p>• <strong>Article Processing Charge:</strong> GRATIS (0 IDR)</p>
-                        <p>• <strong>Review Process:</strong> GRATIS (0 IDR)</p>
-                        <p>• <strong>Publication Fee:</strong> GRATIS (0 IDR)</p>
+                        {journalConfig.editorialPolicies.authorFees.policyStatement.fees.map((fee, index) => (
+                          <p key={index}>• <strong>{fee.type}</strong> {fee.amount}</p>
+                        ))}
                       </div>
                     </div>
                     
                     <div className="mt-6 p-4 bg-[var(--color-muted)] rounded-lg">
-                      <h4 className="font-semibold text-[var(--color-foreground)] mb-2">Commitment to Open Science</h4>
+                      <h4 className="font-semibold text-[var(--color-foreground)] mb-2">{journalConfig.editorialPolicies.authorFees.commitment.title}</h4>
                       <p className="text-sm text-[var(--color-muted-foreground)]">
-                        Sebagai bagian dari komitmen terhadap Open Science, kami percaya bahwa 
-                        knowledge sharing harus dapat diakses oleh semua kalangan tanpa barrier finansial.
+                        {journalConfig.editorialPolicies.authorFees.commitment.description}
                       </p>
                     </div>
                   </div>
