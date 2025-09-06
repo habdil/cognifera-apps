@@ -34,7 +34,7 @@ export const MenuItem = ({
       </motion.p>
       {active !== null && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.85, y: 10 }}
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={transition}
         >
@@ -42,13 +42,10 @@ export const MenuItem = ({
             <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
               <motion.div
                 transition={transition}
-                layoutId="active" // layoutId ensures smooth animation
-                className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] shadow-xl"
+                layoutId="active"
+                className="bg-white backdrop-blur-sm rounded-2xl border border-black/[0.2] shadow-xl"
               >
-                <motion.div
-                  layout // layout ensures smooth animation
-                  className="w-max h-full p-4"
-                >
+                <motion.div layout className="w-max h-full p-4">
                   {children}
                 </motion.div>
               </motion.div>
@@ -109,13 +106,108 @@ export const ProductItem = ({
   );
 };
 
-export const HoveredLink = ({ children, ...rest }: any) => {
+// Context for managing secondary menu state
+const SecondaryMenuContext = React.createContext<{
+  activeSecondary: string | null;
+  setActiveSecondary: (item: string | null) => void;
+} | null>(null);
+
+export const HoveredLink = ({ 
+  children, 
+  subItems,
+  ...rest 
+}: {
+  children: React.ReactNode;
+  subItems?: { title: string; href: string; description?: string }[];
+  [key: string]: any;
+}) => {
+  // Use context if available, otherwise fall back to local state
+  const context = React.useContext(SecondaryMenuContext);
+  const [localActiveSecondary, setLocalActiveSecondary] = React.useState<string | null>(null);
+  
+  const activeSecondary = context?.activeSecondary ?? localActiveSecondary;
+  const setActiveSecondary = context?.setActiveSecondary ?? setLocalActiveSecondary;
+
+  const linkKey = String(children); // Use children as unique key
+
+  if (!subItems || subItems.length === 0) {
+    // Original behavior for items without subItems
+    return (
+      <a
+        {...rest}
+        className="text-neutral-700 hover:text-black"
+      >
+        {children}
+      </a>
+    );
+  }
+
   return (
-    <a
-      {...rest}
-      className="text-neutral-700 hover:text-black "
+    <div 
+      className="relative group" 
+      onMouseEnter={() => setActiveSecondary(linkKey)}
+      onMouseLeave={() => setActiveSecondary(null)}
     >
+      <a
+        {...rest}
+        className="text-neutral-700 hover:text-black flex items-center justify-between w-full"
+      >
+        <span>{children}</span>
+        <svg 
+          className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+      
+        {activeSecondary !== null && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, x: -10 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={transition}
+          >
+            {activeSecondary === linkKey && (
+              <div className="absolute left-full ml-2 -translate-y-20 z-[9999]">
+                <motion.div
+                  transition={transition}
+                  layoutId="activeSecondary"
+                  className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] shadow-xl min-w-[250px]"
+                >
+                <motion.div layout className="w-max h-full p-4">
+                  <div className="space-y-2">
+                    {subItems.map((item, idx) => (
+                      <a
+                        key={idx}
+                        href={item.href}
+                        className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="font-medium text-sm text-black">{item.title}</div>
+                        {item.description && (
+                          <div className="text-xs text-neutral-600 mt-1">{item.description}</div>
+                        )}
+                      </a>
+                    ))}
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          )}
+        </motion.div>
+      )}
+    </div>
+  );
+};
+
+// Wrapper component to provide secondary menu context
+export const SecondaryMenuProvider = ({ children }: { children: React.ReactNode }) => {
+  const [activeSecondary, setActiveSecondary] = React.useState<string | null>(null);
+  
+  return (
+    <SecondaryMenuContext.Provider value={{ activeSecondary, setActiveSecondary }}>
       {children}
-    </a>
+    </SecondaryMenuContext.Provider>
   );
 };

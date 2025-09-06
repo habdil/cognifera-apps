@@ -16,6 +16,7 @@ import {
   MenuItem,
   HoveredLink,
   ProductItem,
+  SecondaryMenuProvider,
 } from "@/components/ui/navbar-menu";
 
 import { AuthDialog } from "@/components/shared/AuthDialog";
@@ -98,13 +99,26 @@ export const Navbar = () => {
           </MenuItem>
 
           <MenuItem setActive={setActive} active={active} item="Publications">
-            <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="/publications">All Publications</HoveredLink>
-              <HoveredLink href="https://ojs.cognifera.web.id">Journal Al-Musannif</HoveredLink>
-              <HoveredLink href="/publications?section=research-journals">Research Journals</HoveredLink>
-              <HoveredLink href="/publications?section=community-service-journals">Community Service Journals</HoveredLink>
-              <HoveredLink href="/publications?section=books">Books</HoveredLink>
-            </div>
+            <SecondaryMenuProvider>
+              <div className="flex flex-col space-y-4 text-sm">
+                <HoveredLink href="/publications">All Publications</HoveredLink>
+                <HoveredLink 
+                  href="/publications?section=books"
+                >
+                  Books
+                </HoveredLink>
+                <HoveredLink 
+                  href="/publications"
+                  subItems={[
+                    { title: "Global Journal of Science Education", href: "/publications?section=research-journals", description: "International journal focused on science education research and methodology" },
+                    { title: "Journal of Social Responsibility and Service", href: "/publications?section=community-service-journals", description: "Community service and social responsibility research publications" },
+                    { title: "Journal Al-Musannif", href: "/publications?section=al-musannif", description: "Islamic studies and scholarly research journal" }
+                  ]}
+                >
+                  Journals
+                </HoveredLink>
+              </div>
+            </SecondaryMenuProvider>
           </MenuItem>
 
           <MenuItem setActive={setActive} active={active} item="News">
