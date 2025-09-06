@@ -43,16 +43,6 @@ export default function JournalArchivesLayout() {
       <JournalHeader activeItem="archives" />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
-          <div className="flex items-center space-x-2 text-sm text-[var(--color-muted-foreground)]">
-            <Link href="/journal" className="hover:text-[var(--color-primary)] transition-colors">Home</Link>
-            <span>/</span>
-            <Link href="/journal" className="hover:text-[var(--color-primary)] transition-colors">Journal</Link>
-            <span>/</span>
-            <span className="text-[var(--color-foreground)] font-medium">Archives</span>
-          </div>
-        </nav>
 
         {/* Header */}
         <div className="text-center mb-12">

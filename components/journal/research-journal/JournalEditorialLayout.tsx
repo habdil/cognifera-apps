@@ -39,16 +39,6 @@ export default function JournalEditorialLayout() {
       <JournalHeader activeItem="editorial" />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
-          <div className="flex items-center space-x-2 text-sm text-[var(--color-muted-foreground)]">
-            <Link href="/journal" className="hover:text-[var(--color-primary)] transition-colors">Home</Link>
-            <span>/</span>
-            <Link href="/journal" className="hover:text-[var(--color-primary)] transition-colors">Journal</Link>
-            <span>/</span>
-            <span className="text-[var(--color-foreground)] font-medium">{journalConfig.editorialPolicies.pageTitle}</span>
-          </div>
-        </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
@@ -81,7 +71,7 @@ export default function JournalEditorialLayout() {
             {/* Focus and Scope */}
             <section id="focus-scope">
               <Card className="border-0 shadow-lg">
-                <CardHeader className="bg-[var(--color-primary)] text-white rounded-t-lg">
+                <CardHeader className="bg-[var(--color-primary)] text-white rounded-t-lg pt-2 pb-1">
                   <CardTitle className="text-2xl flex items-center">
                     {React.createElement(iconMap[journalConfig.editorialPolicies.focusScope.icon as keyof typeof iconMap], { className: "w-6 h-6 mr-3" })}
                     {journalConfig.editorialPolicies.focusScope.title}

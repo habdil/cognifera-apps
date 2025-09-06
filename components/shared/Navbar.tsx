@@ -100,6 +100,7 @@ export const Navbar = () => {
           <MenuItem setActive={setActive} active={active} item="Publications">
             <div className="flex flex-col space-y-4 text-sm">
               <HoveredLink href="/publications">All Publications</HoveredLink>
+              <HoveredLink href="https://ojs.cognifera.web.id">Journal Al-Musannif</HoveredLink>
               <HoveredLink href="/publications?section=research-journals">Research Journals</HoveredLink>
               <HoveredLink href="/publications?section=community-service-journals">Community Service Journals</HoveredLink>
               <HoveredLink href="/publications?section=books">Books</HoveredLink>
