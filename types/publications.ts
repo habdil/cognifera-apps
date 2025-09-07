@@ -81,12 +81,16 @@ export interface CommunityServiceJournalData {
   pages?: string;
   abstract: string;
   keywords: string[];
+  category: string;
   community: string;
   location: string;
   publicationDate: string;
   pdfUrl?: string;
   impactDescription: string;
   beneficiaries: string[];
+  fullTextViews?: number;
+  isOpenAccess?: boolean;
+  communityImpact?: boolean;
 }
 
 export interface BookData {

@@ -681,7 +681,11 @@ export const mockSocialServiceJournals: CommunityServiceJournalData[] = [
     publicationDate: "2024-02-15",
     pdfUrl: "/journal-social/publications/disaster-preparedness.pdf",
     impactDescription: "Established early warning systems in 12 villages, trained 400+ community members in disaster response, and reduced potential casualty risk by 65%",
-    beneficiaries: ["coastal residents", "fishermen", "local government", "school children", "elderly population"]
+    beneficiaries: ["coastal residents", "fishermen", "local government", "school children", "elderly population"],
+    category: "Disaster Management",
+    fullTextViews: 245,
+    isOpenAccess: true,
+    communityImpact: true
   },
   {
     id: "jsr-002",
@@ -699,7 +703,11 @@ export const mockSocialServiceJournals: CommunityServiceJournalData[] = [
     publicationDate: "2023-12-20",
     pdfUrl: "/journal-social/publications/women-microfinance.pdf",
     impactDescription: "Provided microloans to 85 women entrepreneurs, achieved 78% business sustainability rate, and improved digital marketing skills for 120+ participants",
-    beneficiaries: ["women entrepreneurs", "small business owners", "rural families", "local cooperatives"]
+    beneficiaries: ["women entrepreneurs", "small business owners", "rural families", "local cooperatives"],
+    category: "Economic Empowerment",
+    fullTextViews: 198,
+    isOpenAccess: true,
+    communityImpact: true
   },
   {
     id: "jsr-003",
@@ -717,7 +725,11 @@ export const mockSocialServiceJournals: CommunityServiceJournalData[] = [
     publicationDate: "2023-09-15",
     pdfUrl: "/journal-social/publications/healthcare-access.pdf",
     impactDescription: "Established telemedicine services in 8 islands, reduced emergency medical transport needs by 45%, and provided regular health screening for 600+ residents",
-    beneficiaries: ["island residents", "children", "elderly", "pregnant women", "fishermen families"]
+    beneficiaries: ["island residents", "children", "elderly", "pregnant women", "fishermen families"],
+    category: "Healthcare Access",
+    fullTextViews: 165,
+    isOpenAccess: true,
+    communityImpact: true
   },
   {
     id: "jsr-004",
@@ -735,7 +747,11 @@ export const mockSocialServiceJournals: CommunityServiceJournalData[] = [
     publicationDate: "2023-06-30",
     pdfUrl: "/journal-social/publications/sustainable-agriculture.pdf",
     impactDescription: "Successfully transitioned 45 farms to organic certification, increased average farm income by 32%, and reduced pesticide use by 80% across participating farms",
-    beneficiaries: ["traditional farmers", "farming families", "local consumers", "agricultural cooperatives", "environment"]
+    beneficiaries: ["traditional farmers", "farming families", "local consumers", "agricultural cooperatives", "environment"],
+    category: "Sustainable Agriculture",
+    fullTextViews: 132,
+    isOpenAccess: true,
+    communityImpact: true
   },
   {
     id: "jsr-005",
@@ -753,7 +769,11 @@ export const mockSocialServiceJournals: CommunityServiceJournalData[] = [
     publicationDate: "2023-03-15",
     pdfUrl: "/journal-social/publications/youth-digital-skills.pdf",
     impactDescription: "Trained 200+ young people in digital skills, achieved 60% employment rate among graduates, and established 5 youth-led digital service cooperatives",
-    beneficiaries: ["urban youth", "unemployed teenagers", "school dropouts", "young parents", "local businesses"]
+    beneficiaries: ["urban youth", "unemployed teenagers", "school dropouts", "young parents", "local businesses"],
+    category: "Youth Development",
+    fullTextViews: 278,
+    isOpenAccess: true,
+    communityImpact: true
   }
 ];
 
@@ -774,7 +794,11 @@ export const mockCommunityServiceJournals: CommunityServiceJournalData[] = [
     publicationDate: "2024-01-15",
     pdfUrl: "/publications/community/digital-literacy-training.pdf",
     impactDescription: "Successfully trained 150+ community members in basic computer skills and internet usage",
-    beneficiaries: ["farmers", "small business owners", "housewives", "youth"]
+    beneficiaries: ["farmers", "small business owners", "housewives", "youth"],
+    category: "Digital Literacy",
+    fullTextViews: 189,
+    isOpenAccess: true,
+    communityImpact: true
   },
   {
     id: "csj-002",
@@ -792,7 +816,11 @@ export const mockCommunityServiceJournals: CommunityServiceJournalData[] = [
     publicationDate: "2023-12-10",
     pdfUrl: "/publications/community/waste-management-slums.pdf",
     impactDescription: "Reduced waste accumulation by 60% and established 3 community recycling centers",
-    beneficiaries: ["slum residents", "children", "local government"]
+    beneficiaries: ["slum residents", "children", "local government"],
+    category: "Environmental Management",
+    fullTextViews: 156,
+    isOpenAccess: true,
+    communityImpact: true
   }
 ];
 
