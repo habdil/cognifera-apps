@@ -110,8 +110,8 @@ export const Navbar = () => {
                 <HoveredLink 
                   href="/publications"
                   subItems={[
-                    { title: "Global Journal of Science Education", href: "/publications?section=research-journals", description: "International journal focused on science education research and methodology" },
-                    { title: "Journal of Social Responsibility and Service", href: "/publications?section=community-service-journals", description: "Community service and social responsibility research publications" },
+                    { title: "Global Journal of Science Education", href: "/journal", description: "International journal focused on science education research and methodology" },
+                    { title: "Journal of Social Responsibility and Service", href: "/journal-social", description: "Community service and social responsibility research publications" },
                     { title: "Journal Al-Musannif", href: "https://ojs.cognifera.web.id", description: "Islamic studies and scholarly research journal" }
                   ]}
                 >

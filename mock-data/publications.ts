@@ -290,6 +290,473 @@ export const mockResearchJournals: ResearchJournalData[] = [
   }
 ];
 
+// Global Journal of Science Education publications
+export const mockScienceEducationJournals: ResearchJournalData[] = [
+  {
+    id: "gse-001",
+    title: "Innovative STEM Teaching Methods Using Virtual Reality in Indonesian Secondary Schools",
+    authors: ["Dr. Sari Wijaya", "Prof. Ahmad Hendri", "Dr. Fitri Sari"],
+    journal: "Global Journal of Science Education",
+    year: 2024,
+    volume: "12",
+    issue: "2",
+    pages: "45-62",
+    doi: "10.1234/gjse.2024.002",
+    abstract: "This study explores the implementation of virtual reality technology in STEM education across Indonesian secondary schools. We examine student engagement, learning outcomes, and teacher adaptation to VR-enhanced curricula, demonstrating significant improvements in scientific understanding and problem-solving skills.",
+    keywords: ["STEM education", "virtual reality", "secondary education", "innovative teaching", "Indonesia"],
+    category: "other",
+    publicationDate: "2024-06-15",
+    pdfUrl: "/journal/publications/vr-stem-education.pdf",
+    citationCount: 8,
+    isOpenAccess: true,
+    
+    conferenceLocation: "Surabaya, Indonesia",
+    dateAddedToLibrary: "2024-06-20",
+    fullTextViews: 245,
+    conferenceDate: "2024-06-10",
+    fundingAgency: "Ministry of Education, Culture, Research and Technology",
+    
+    introduction: "The integration of emerging technologies in science education has become crucial for preparing students for the digital age. Virtual reality offers immersive experiences that can enhance understanding of complex scientific concepts.",
+    methodology: "We conducted a quasi-experimental study involving 240 students from 6 secondary schools across Java and Sumatra. Students were divided into control and experimental groups, with the latter receiving VR-enhanced STEM lessons.",
+    results: "Students using VR technology showed 34% improvement in conceptual understanding, 28% increase in engagement levels, and 42% better retention rates compared to traditional teaching methods.",
+    conclusion: "Virtual reality technology significantly enhances STEM education effectiveness in Indonesian secondary schools. However, teacher training and infrastructure development remain critical success factors.",
+    
+    figures: [
+      {
+        id: "fig-1",
+        title: "Figure 1",
+        caption: "Comparison of learning outcomes between traditional and VR-enhanced STEM education"
+      },
+      {
+        id: "fig-2",
+        title: "Figure 2",
+        caption: "Student engagement levels during VR science lessons"
+      }
+    ],
+    
+    references: [
+      {
+        id: "ref-1",
+        authors: ["Johnson, M.", "Smith, K."],
+        title: "Virtual Reality in Science Education: A Systematic Review",
+        publication: "Computers & Education",
+        year: 2023,
+        doi: "10.1016/j.compedu.2023.001"
+      },
+      {
+        id: "ref-2",
+        authors: ["Chen, L.", "Wang, H."],
+        title: "STEM Education in Southeast Asia: Current Trends and Future Directions",
+        publication: "International Journal of STEM Education",
+        year: 2023,
+        doi: "10.1186/s40594-023-001"
+      }
+    ],
+    
+    citations: [
+      {
+        id: "cit-1",
+        authors: ["Rahman, A.", "Putri, D."],
+        title: "Implementing VR Technology in Indonesian Classrooms: A Pilot Study",
+        publication: "Educational Technology Research Indonesia",
+        year: 2024,
+        citedBy: 5
+      }
+    ]
+  },
+  {
+    id: "gse-002",
+    title: "Climate Change Education Through Project-Based Learning in Primary Schools",
+    authors: ["Prof. Maya Kusuma", "Dr. Budi Hartono", "Devi Anggraini, M.Pd"],
+    journal: "Global Journal of Science Education",
+    year: 2024,
+    volume: "12",
+    issue: "1",
+    pages: "12-28",
+    doi: "10.1234/gjse.2024.001",
+    abstract: "This research investigates the effectiveness of project-based learning approaches in teaching climate change concepts to primary school students. The study demonstrates how hands-on environmental projects enhance scientific literacy and environmental awareness among young learners.",
+    keywords: ["climate change education", "project-based learning", "primary education", "environmental science", "scientific literacy"],
+    category: "other",
+    publicationDate: "2024-03-20",
+    pdfUrl: "/journal/publications/climate-change-pbl.pdf",
+    citationCount: 15,
+    isOpenAccess: true,
+    
+    conferenceLocation: "Bandung, Indonesia",
+    dateAddedToLibrary: "2024-03-25",
+    fullTextViews: 387,
+    conferenceDate: "2024-03-15",
+    fundingAgency: "UNESCO Education for Sustainable Development Program",
+    
+    introduction: "Climate change education has become increasingly important in primary curricula worldwide. Project-based learning offers an engaging approach to help young students understand complex environmental concepts through hands-on experiences.",
+    methodology: "A mixed-methods study was conducted with 180 primary students aged 9-11 years from 4 schools in West Java. Students participated in 8-week climate change projects including school gardens, weather monitoring, and waste reduction initiatives.",
+    results: "Participating students showed 45% improvement in climate science knowledge, 38% increase in pro-environmental behavior, and significantly higher motivation to engage in environmental protection activities.",
+    conclusion: "Project-based learning effectively enhances climate change education in primary schools. The approach not only improves scientific understanding but also develops environmental citizenship among young learners.",
+    
+    figures: [
+      {
+        id: "fig-1",
+        title: "Figure 1",
+        caption: "Pre- and post-assessment results of climate science knowledge"
+      },
+      {
+        id: "fig-2",
+        title: "Figure 2",
+        caption: "Student engagement levels during different project activities"
+      },
+      {
+        id: "fig-3",
+        title: "Figure 3",
+        caption: "Environmental behavior changes after project participation"
+      }
+    ],
+    
+    references: [
+      {
+        id: "ref-1",
+        authors: ["Thompson, R.", "Green, S."],
+        title: "Project-Based Learning in Environmental Education: A Meta-Analysis",
+        publication: "Environmental Education Research",
+        year: 2023,
+        doi: "10.1080/13504622.2023.001"
+      },
+      {
+        id: "ref-2",
+        authors: ["Liu, X.", "Zhang, Y."],
+        title: "Climate Change Education in Primary Schools: Global Perspectives",
+        publication: "International Research in Geographical Education",
+        year: 2022,
+        doi: "10.1080/10382046.2022.001"
+      }
+    ]
+  },
+  {
+    id: "gse-003",
+    title: "Enhancing Mathematics Learning Through Gamification in Indonesian Elementary Education",
+    authors: ["Dr. Andi Setiawan", "Prof. Ratna Dewi", "Sinta Maharani, S.Pd"],
+    journal: "Global Journal of Science Education",
+    year: 2023,
+    volume: "11",
+    issue: "4",
+    pages: "78-95",
+    doi: "10.1234/gjse.2023.004",
+    abstract: "This study examines the impact of gamification strategies on mathematics learning outcomes in Indonesian elementary schools. Through the development and implementation of educational games, we explore how game-based learning can address common challenges in mathematics education and improve student performance.",
+    keywords: ["mathematics education", "gamification", "elementary education", "educational games", "learning outcomes"],
+    category: "mathematics",
+    publicationDate: "2023-11-30",
+    pdfUrl: "/journal/publications/math-gamification.pdf",
+    citationCount: 22,
+    isOpenAccess: true,
+    
+    conferenceLocation: "Jakarta, Indonesia",
+    dateAddedToLibrary: "2023-12-05",
+    fullTextViews: 512,
+    conferenceDate: "2023-11-25",
+    fundingAgency: "Indonesian Education Research Foundation",
+    
+    introduction: "Mathematics education faces persistent challenges in maintaining student engagement and achievement. Gamification offers promising solutions by incorporating game elements into learning processes, making abstract mathematical concepts more accessible and enjoyable.",
+    methodology: "We developed and tested educational mathematics games with 320 elementary students (grades 3-5) across 8 schools in Jakarta and surrounding areas. The study employed a randomized controlled trial design comparing gamified versus traditional instruction methods.",
+    results: "Students in the gamified group demonstrated 29% higher mathematics achievement scores, 41% increased engagement levels, and 35% improvement in problem-solving skills compared to the control group.",
+    conclusion: "Gamification significantly enhances mathematics learning in Indonesian elementary education. The approach shows particular promise for addressing math anxiety and improving computational fluency among young learners.",
+    
+    figures: [
+      {
+        id: "fig-1",
+        title: "Figure 1",
+        caption: "Mathematics achievement scores comparison between gamified and traditional groups"
+      },
+      {
+        id: "fig-2",
+        title: "Figure 2",
+        caption: "Student engagement metrics throughout the intervention period"
+      }
+    ],
+    
+    references: [
+      {
+        id: "ref-1",
+        authors: ["Martinez, A.", "Rodriguez, C."],
+        title: "Gamification in Mathematics Education: A Systematic Review",
+        publication: "Educational Psychology Review",
+        year: 2023,
+        doi: "10.1007/s10648-023-001"
+      }
+    ]
+  }
+];
+
+// Journal of Social Responsibility and Service publications
+// Journal staff and editorial data
+export interface JournalStaff {
+  id: string;
+  name: string;
+  title: string;
+  affiliation: string;
+  email: string;
+  expertise: string[];
+  imageUrl?: string;
+  bio: string;
+}
+
+export interface JournalIssue {
+  id: string;
+  volume: number;
+  issue: number;
+  year: number;
+  publishDate: string;
+  coverImage?: string;
+  description: string;
+  articles: string[]; // Article IDs
+  downloadUrl?: string;
+}
+
+export interface JournalAnnouncement {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+  type: "news" | "call-for-papers" | "event" | "update";
+  urgent?: boolean;
+}
+
+export const mockJournalStaff: JournalStaff[] = [
+  {
+    id: "editor-001",
+    name: "Prof. Dr. Indira Sari, M.Pd",
+    title: "Editor-in-Chief",
+    affiliation: "Cognifera Academy",
+    email: "editor.chief@cognifera.org",
+    expertise: ["Community Development", "Social Responsibility", "Educational Leadership"],
+    bio: "Prof. Dr. Indira Sari is a distinguished academic with over 20 years of experience in community development and social responsibility research. She has led numerous community engagement projects across Indonesia and published extensively on sustainable development practices.",
+    imageUrl: "/staff/indira-sari.jpg"
+  },
+  {
+    id: "editor-002",
+    name: "Dr. Budi Prasetyo, M.Si",
+    title: "Associate Editor",
+    affiliation: "University of Indonesia",
+    email: "budi.prasetyo@ui.ac.id",
+    expertise: ["Social Innovation", "Community Health", "Public Policy"],
+    bio: "Dr. Budi Prasetyo specializes in social innovation and community health initiatives. His research focuses on sustainable healthcare delivery systems in rural and underserved communities.",
+    imageUrl: "/staff/budi-prasetyo.jpg"
+  },
+  {
+    id: "editor-003",
+    name: "Dr. Maya Putri, M.A",
+    title: "Managing Editor",
+    affiliation: "Cognifera Academy",
+    email: "managing.editor@cognifera.org",
+    expertise: ["Women Empowerment", "Microfinance", "Rural Development"],
+    bio: "Dr. Maya Putri is an expert in women empowerment and microfinance programs. She has worked extensively with rural communities to develop sustainable economic development initiatives.",
+    imageUrl: "/staff/maya-putri.jpg"
+  },
+  {
+    id: "board-001",
+    name: "Prof. Dr. Ahmad Fauzi, Ph.D",
+    title: "Editorial Board Member",
+    affiliation: "Bandung Institute of Technology",
+    email: "ahmad.fauzi@itb.ac.id",
+    expertise: ["Environmental Sustainability", "Green Technology", "Climate Action"],
+    bio: "Prof. Ahmad Fauzi is a leading researcher in environmental sustainability and green technology applications in community development projects."
+  },
+  {
+    id: "board-002",
+    name: "Dr. Sari Kusuma, M.Sc",
+    title: "Editorial Board Member",
+    affiliation: "Gadjah Mada University",
+    email: "sari.kusuma@ugm.ac.id",
+    expertise: ["Agricultural Development", "Food Security", "Rural Innovation"],
+    bio: "Dr. Sari Kusuma focuses on agricultural development and food security initiatives, working with farming communities to implement sustainable practices."
+  },
+  {
+    id: "reviewer-001",
+    name: "Dr. Eko Susanto, M.A",
+    title: "Senior Reviewer",
+    affiliation: "Jakarta State University",
+    email: "eko.susanto@unj.ac.id",
+    expertise: ["Urban Development", "Waste Management", "Community Planning"],
+    bio: "Dr. Eko Susanto specializes in urban development and waste management solutions for urban communities."
+  }
+];
+
+export const mockJournalIssues: JournalIssue[] = [
+  {
+    id: "issue-2024-1",
+    volume: 8,
+    issue: 1,
+    year: 2024,
+    publishDate: "2024-03-15",
+    description: "Community Resilience and Disaster Preparedness",
+    articles: ["jsr-001", "jsr-003"],
+    downloadUrl: "/journal-social/issues/vol8-issue1.pdf"
+  },
+  {
+    id: "issue-2023-4",
+    volume: 7,
+    issue: 4,
+    year: 2023,
+    publishDate: "2023-12-20",
+    description: "Women Empowerment and Economic Development",
+    articles: ["jsr-002"],
+    downloadUrl: "/journal-social/issues/vol7-issue4.pdf"
+  },
+  {
+    id: "issue-2023-3",
+    volume: 7,
+    issue: 3,
+    year: 2023,
+    publishDate: "2023-09-15",
+    description: "Healthcare Access and Telemedicine",
+    articles: ["jsr-003"],
+    downloadUrl: "/journal-social/issues/vol7-issue3.pdf"
+  },
+  {
+    id: "issue-2023-2",
+    volume: 7,
+    issue: 2,
+    year: 2023,
+    publishDate: "2023-06-30",
+    description: "Sustainable Agriculture and Rural Development",
+    articles: ["jsr-004"],
+    downloadUrl: "/journal-social/issues/vol7-issue2.pdf"
+  },
+  {
+    id: "issue-2023-1",
+    volume: 7,
+    issue: 1,
+    year: 2023,
+    publishDate: "2023-03-15",
+    description: "Youth Empowerment and Digital Skills",
+    articles: ["jsr-005"],
+    downloadUrl: "/journal-social/issues/vol7-issue1.pdf"
+  }
+];
+
+export const mockJournalAnnouncements: JournalAnnouncement[] = [
+  {
+    id: "ann-001",
+    title: "Call for Papers: Special Issue on Climate Change and Community Adaptation",
+    content: "We invite submissions for our special issue focusing on community-based climate change adaptation strategies. Deadline for submissions: December 31, 2024. We particularly welcome case studies from Southeast Asian communities.",
+    date: "2024-09-01",
+    type: "call-for-papers",
+    urgent: true
+  },
+  {
+    id: "ann-002",
+    title: "New Open Access Policy Implementation",
+    content: "Starting January 2024, all articles published in the Journal of Social Responsibility and Service will be available under our new open access policy, ensuring broader dissemination of community service research.",
+    date: "2024-08-15",
+    type: "update"
+  },
+  {
+    id: "ann-003",
+    title: "Community Service Research Conference 2024",
+    content: "Join us at the inaugural Community Service Research Conference on November 15-17, 2024, in Jakarta. Submit your abstracts by October 1, 2024. Registration now open at conference.cognifera.org",
+    date: "2024-08-01",
+    type: "event"
+  },
+  {
+    id: "ann-004",
+    title: "New Editorial Board Members",
+    content: "We are pleased to welcome three new members to our editorial board: Dr. Lisa Wijaya (Social Innovation), Prof. Rahmat Hidayat (Community Health), and Dr. Fitri Yanti (Youth Development).",
+    date: "2024-07-20",
+    type: "news"
+  }
+];
+
+export const mockSocialServiceJournals: CommunityServiceJournalData[] = [
+  {
+    id: "jsr-001",
+    title: "Community-Based Disaster Preparedness Program in Coastal Areas of Central Java",
+    authors: ["Prof. Indira Sari", "Dr. Eko Prasetyo", "Rina Handayani, S.Sos"],
+    journal: "Journal of Social Responsibility and Service",
+    year: 2024,
+    volume: "8",
+    issue: "1",
+    pages: "15-32",
+    abstract: "This community service initiative developed and implemented a comprehensive disaster preparedness program for coastal communities in Central Java, focusing on tsunami and flood risk reduction through education, early warning systems, and community organization.",
+    keywords: ["disaster preparedness", "coastal communities", "tsunami risk", "community resilience", "early warning systems"],
+    community: "Coastal Villages in Cilacap Regency",
+    location: "Cilacap, Central Java",
+    publicationDate: "2024-02-15",
+    pdfUrl: "/journal-social/publications/disaster-preparedness.pdf",
+    impactDescription: "Established early warning systems in 12 villages, trained 400+ community members in disaster response, and reduced potential casualty risk by 65%",
+    beneficiaries: ["coastal residents", "fishermen", "local government", "school children", "elderly population"]
+  },
+  {
+    id: "jsr-002",
+    title: "Microfinance and Digital Literacy Program for Women Entrepreneurs in Rural Indonesia",
+    authors: ["Dr. Maya Putri", "Prof. Budi Santoso", "Dewi Kartika, M.Si"],
+    journal: "Journal of Social Responsibility and Service",
+    year: 2024,
+    volume: "7",
+    issue: "4",
+    pages: "45-63",
+    abstract: "A comprehensive community service program combining microfinance support with digital literacy training for women entrepreneurs in rural areas, aimed at enhancing economic empowerment and business sustainability through technology adoption.",
+    keywords: ["women empowerment", "microfinance", "digital literacy", "rural entrepreneurship", "economic development"],
+    community: "Women Entrepreneur Groups in Gunungkidul",
+    location: "Gunungkidul, Yogyakarta",
+    publicationDate: "2023-12-20",
+    pdfUrl: "/journal-social/publications/women-microfinance.pdf",
+    impactDescription: "Provided microloans to 85 women entrepreneurs, achieved 78% business sustainability rate, and improved digital marketing skills for 120+ participants",
+    beneficiaries: ["women entrepreneurs", "small business owners", "rural families", "local cooperatives"]
+  },
+  {
+    id: "jsr-003",
+    title: "Healthcare Access Improvement Initiative in Remote Island Communities",
+    authors: ["Dr. Rahmat Hidayat", "Prof. Lisa Wijaya", "Ahmad Fauzi, dr."],
+    journal: "Journal of Social Responsibility and Service",
+    year: 2023,
+    volume: "7",
+    issue: "3",
+    pages: "22-40",
+    abstract: "This community service project addressed healthcare access challenges in remote island communities through telemedicine implementation, health worker training, and mobile clinic services, significantly improving health outcomes and emergency response capabilities.",
+    keywords: ["healthcare access", "telemedicine", "remote communities", "health equity", "mobile clinics"],
+    community: "Remote Island Communities",
+    location: "Thousand Islands, Jakarta",
+    publicationDate: "2023-09-15",
+    pdfUrl: "/journal-social/publications/healthcare-access.pdf",
+    impactDescription: "Established telemedicine services in 8 islands, reduced emergency medical transport needs by 45%, and provided regular health screening for 600+ residents",
+    beneficiaries: ["island residents", "children", "elderly", "pregnant women", "fishermen families"]
+  },
+  {
+    id: "jsr-004",
+    title: "Sustainable Agriculture Training and Organic Farming Transition Program",
+    authors: ["Prof. Andi Setiawan", "Dr. Sari Kusuma", "Teguh Wibowo, S.P"],
+    journal: "Journal of Social Responsibility and Service",
+    year: 2023,
+    volume: "7",
+    issue: "2",
+    pages: "58-75",
+    abstract: "A community-based agricultural development program focused on transitioning traditional farmers to sustainable organic farming practices, providing training, resources, and market linkage support to improve farm productivity and environmental sustainability.",
+    keywords: ["sustainable agriculture", "organic farming", "farmer training", "environmental sustainability", "rural development"],
+    community: "Traditional Farming Communities",
+    location: "Magelang, Central Java",
+    publicationDate: "2023-06-30",
+    pdfUrl: "/journal-social/publications/sustainable-agriculture.pdf",
+    impactDescription: "Successfully transitioned 45 farms to organic certification, increased average farm income by 32%, and reduced pesticide use by 80% across participating farms",
+    beneficiaries: ["traditional farmers", "farming families", "local consumers", "agricultural cooperatives", "environment"]
+  },
+  {
+    id: "jsr-005",
+    title: "Youth Empowerment Through Digital Skills Training in Urban Slums",
+    authors: ["Dr. Fitri Yanti", "Prof. Maya Indah", "Rizki Pratama, S.Kom"],
+    journal: "Journal of Social Responsibility and Service",
+    year: 2023,
+    volume: "7",
+    issue: "1",
+    pages: "8-25",
+    abstract: "This community service initiative provided comprehensive digital skills training to urban youth in slum areas, focusing on job-relevant technologies, entrepreneurship development, and creating pathways to formal employment and higher education.",
+    keywords: ["youth empowerment", "digital skills", "urban slums", "job training", "social mobility"],
+    community: "Youth in Urban Slum Areas",
+    location: "North Jakarta, DKI Jakarta",
+    publicationDate: "2023-03-15",
+    pdfUrl: "/journal-social/publications/youth-digital-skills.pdf",
+    impactDescription: "Trained 200+ young people in digital skills, achieved 60% employment rate among graduates, and established 5 youth-led digital service cooperatives",
+    beneficiaries: ["urban youth", "unemployed teenagers", "school dropouts", "young parents", "local businesses"]
+  }
+];
+
 export const mockCommunityServiceJournals: CommunityServiceJournalData[] = [
   {
     id: "csj-001",

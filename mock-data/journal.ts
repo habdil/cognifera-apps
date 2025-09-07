@@ -146,6 +146,100 @@ export const mockEditorialBoard: EditorialBoardMember[] = [
   }
 ];
 
+// Social Journal Editorial Board
+export const mockSocialEditorialBoard: EditorialBoardMember[] = [
+  {
+    id: "seb-001",
+    name: "Dr. Sari Wijaya, S.Sos., M.Si.",
+    title: "Editor-in-Chief",
+    affiliation: "Cognifera Community Service Center",
+    specialization: ["Community Development", "Social Responsibility", "Public Policy"],
+    email: "social@cognifera.co.id",
+    role: "editor-in-chief"
+  },
+  {
+    id: "seb-002",
+    name: "Prof. Dr. Indira Kusuma, M.A.",
+    title: "Associate Editor",
+    affiliation: "University of Indonesia - Social Sciences",
+    specialization: ["Social Impact Assessment", "Community Engagement", "NGO Management"],
+    email: "indira.kusuma@ui.ac.id",
+    role: "associate-editor"
+  },
+  {
+    id: "seb-003",
+    name: "Dr. Ahmad Rahman, S.Sos., M.Pd.",
+    title: "Associate Editor",
+    affiliation: "Gadjah Mada University - Community Development",
+    specialization: ["Rural Development", "Social Entrepreneurship", "Community Empowerment"],
+    email: "ahmad.rahman@ugm.ac.id",
+    role: "associate-editor"
+  },
+  {
+    id: "seb-004",
+    name: "Prof. Dr. Maria Santos, Ph.D.",
+    title: "Editorial Board Member",
+    affiliation: "Southeast Asian Community Development Institute",
+    specialization: ["Cross-cultural Community Work", "International Development", "Social Innovation"],
+    email: "maria.santos@sacdi.org",
+    role: "editorial-board"
+  },
+  {
+    id: "seb-005",
+    name: "Dr. Budi Hartono, S.Sos., M.Si.",
+    title: "Editorial Board Member", 
+    affiliation: "Institute of Technology Bandung - Social Sciences",
+    specialization: ["Technology for Social Good", "Digital Inclusion", "Social Media Impact"],
+    email: "budi.hartono@itb.ac.id",
+    role: "editorial-board"
+  },
+  {
+    id: "seb-006",
+    name: "Dr. Rina Astuti, M.A.",
+    title: "Editorial Board Member",
+    affiliation: "Universitas Brawijaya - Social Work Department",
+    specialization: ["Healthcare Access", "Community Health", "Social Welfare"],
+    email: "rina.astuti@ub.ac.id",
+    role: "editorial-board"
+  },
+  {
+    id: "seb-007",
+    name: "Prof. Dr. Agus Setiawan, Ph.D.",
+    title: "Editorial Board Member",
+    affiliation: "Universitas Padjadjaran - Environmental Studies",
+    specialization: ["Environmental Justice", "Sustainable Communities", "Green Technology"],
+    email: "agus.setiawan@unpad.ac.id",
+    role: "editorial-board"
+  },
+  {
+    id: "seb-008",
+    name: "Dr. Lestari Ningrum, S.Pd., M.Ed.",
+    title: "Editorial Board Member",
+    affiliation: "Yogyakarta State University - Community Education",
+    specialization: ["Adult Education", "Community Learning", "Literacy Programs"],
+    email: "lestari.ningrum@uny.ac.id",
+    role: "editorial-board"
+  },
+  {
+    id: "seb-009",
+    name: "Dr. Farid Maulana, S.E., M.Si.",
+    title: "Senior Reviewer",
+    affiliation: "Jakarta Social Enterprise Network",
+    specialization: ["Social Enterprise", "Impact Measurement", "Sustainable Business"],
+    email: "farid.maulana@jsen.org",
+    role: "reviewer"
+  },
+  {
+    id: "seb-010",
+    name: "Dr. Siti Nurhaliza, M.Pd.",
+    title: "Senior Reviewer",
+    affiliation: "Indonesian Community Development Association",
+    specialization: ["Women Empowerment", "Gender Equality", "Community Organizing"],
+    email: "siti.nurhaliza@icda.or.id",
+    role: "reviewer"
+  }
+];
+
 export const mockJournalAnnouncements: JournalAnnouncement[] = [
   {
     id: "ann-001",
@@ -192,6 +286,54 @@ export const journalStats = {
     Philippines: 4,
     Others: 3
   }
+};
+
+// Function to create social journal issues with dynamic article references  
+export const createSocialJournalIssues = (mockCommunityServiceJournals: any[]): JournalIssue[] => {
+  return [
+    {
+      id: "vs1n2-2024",
+      volume: "1",
+      number: "2",
+      year: "2024",
+      title: "Community Resilience and Disaster Preparedness",
+      publishDate: "December 2024",
+      description: "This issue focuses on community resilience building, disaster preparedness initiatives, and social responsibility in crisis management across Southeast Asian communities.",
+      articleCount: mockCommunityServiceJournals.length,
+      pageCount: 142,
+      coverColor: "#16a085",
+      isCurrentIssue: true,
+      articles: mockCommunityServiceJournals
+    },
+    {
+      id: "vs1n1-2024",
+      volume: "1",
+      number: "1",
+      year: "2024", 
+      title: "Digital Inclusion and Community Empowerment",
+      publishDate: "September 2024",
+      description: "Exploring digital inclusion initiatives, community empowerment through technology, and bridging the digital divide in rural communities.",
+      articleCount: 4,
+      pageCount: 118,
+      coverColor: "#3498db",
+      isCurrentIssue: false,
+      articles: mockCommunityServiceJournals.slice(0, 2)
+    },
+    {
+      id: "vs0n4-2023",
+      volume: "0",
+      number: "4",
+      year: "2023",
+      title: "Women Empowerment and Economic Development",
+      publishDate: "December 2023",
+      description: "Research on women empowerment programs, economic development initiatives, and gender equality in community development projects.",
+      articleCount: 3,
+      pageCount: 96,
+      coverColor: "#e74c3c",
+      isCurrentIssue: false,
+      articles: mockCommunityServiceJournals.slice(1, 2)
+    }
+  ];
 };
 
 // Function to create journal issues with dynamic article references

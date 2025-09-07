@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Filter, ExternalLink, Download, Users, Calendar, Tag, Settings } from "lucide-react";
-import { mockResearchJournals } from "@/mock-data/publications";
-import { ResearchJournalData } from "@/types/publications";
+import { Search, Filter, ExternalLink, Download, Users, Calendar, Tag, Settings, MapPin, Heart, Target } from "lucide-react";
+import { mockResearchJournals, mockCommunityServiceJournals } from "@/mock-data/publications";
+import { ResearchJournalData, CommunityServiceJournalData } from "@/types/publications";
 import { AdvancedSearch, AdvancedSearchFilters } from "./AdvancedSearch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
-export const ResearchJournalsSection = () => {
+type JournalType = ResearchJournalData | CommunityServiceJournalData;
+
+export const JournalsSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedType, setSelectedType] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"year" | "citations" | "title">("year");
   const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(false);
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedSearchFilters | null>(null);
@@ -23,6 +26,12 @@ export const ResearchJournalsSection = () => {
     { id: "other", label: "Other" }
   ];
 
+  const types = [
+    { id: "all", label: "All Types" },
+    { id: "research", label: "Research Journals" },
+    { id: "community", label: "Community Service" }
+  ];
+
   // Advanced search handler
   const handleAdvancedSearch = (filters: AdvancedSearchFilters) => {
     setAdvancedFilters(filters);
@@ -33,20 +42,40 @@ export const ResearchJournalsSection = () => {
     setAdvancedFilters(null);
   };
 
+  // Combine both journal types
+  const allJournals: (JournalType & { type: 'research' | 'community' })[] = [
+    ...mockResearchJournals.map(journal => ({ ...journal, type: 'research' as const })),
+    ...mockCommunityServiceJournals.map(journal => ({ ...journal, type: 'community' as const }))
+  ];
+
   // Enhanced filtering logic
-  const filteredJournals = mockResearchJournals
+  const filteredJournals = allJournals
     .filter((journal) => {
+      // Type filter
+      if (selectedType !== "all" && journal.type !== selectedType) return false;
+
       // Basic search logic
       if (!advancedFilters && searchQuery) {
         const matchesSearch = journal.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           journal.authors.some(author => author.toLowerCase().includes(searchQuery.toLowerCase())) ||
           journal.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()));
         
-        if (!matchesSearch) return false;
+        // Additional search fields for community service journals
+        if (journal.type === 'community') {
+          const communityJournal = journal as CommunityServiceJournalData & { type: 'community' };
+          const communityMatches = communityJournal.community.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            communityJournal.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            communityJournal.beneficiaries.some(b => b.toLowerCase().includes(searchQuery.toLowerCase()));
+          
+          if (!matchesSearch && !communityMatches) return false;
+        } else {
+          if (!matchesSearch) return false;
+        }
       }
 
-      // Advanced search logic
-      if (advancedFilters && advancedFilters.searchTerms.length > 0) {
+      // Advanced search logic (primarily for research journals)
+      if (advancedFilters && advancedFilters.searchTerms.length > 0 && journal.type === 'research') {
+        const researchJournal = journal as ResearchJournalData;
         const matchesAdvancedSearch = advancedFilters.searchTerms.every((searchTerm, index) => {
           if (!searchTerm.term.trim()) return true;
 
@@ -55,30 +84,30 @@ export const ResearchJournalsSection = () => {
 
           switch (searchTerm.field) {
             case 'all':
-              fieldMatches = journal.title.toLowerCase().includes(term) ||
-                journal.abstract.toLowerCase().includes(term) ||
-                journal.authors.some(author => author.toLowerCase().includes(term)) ||
-                journal.keywords.some(keyword => keyword.toLowerCase().includes(term)) ||
-                journal.journal.toLowerCase().includes(term) ||
-                Boolean(journal.doi && journal.doi.toLowerCase().includes(term));
+              fieldMatches = researchJournal.title.toLowerCase().includes(term) ||
+                researchJournal.abstract.toLowerCase().includes(term) ||
+                researchJournal.authors.some(author => author.toLowerCase().includes(term)) ||
+                researchJournal.keywords.some(keyword => keyword.toLowerCase().includes(term)) ||
+                researchJournal.journal.toLowerCase().includes(term) ||
+                Boolean(researchJournal.doi && researchJournal.doi.toLowerCase().includes(term));
               break;
             case 'title':
-              fieldMatches = journal.title.toLowerCase().includes(term);
+              fieldMatches = researchJournal.title.toLowerCase().includes(term);
               break;
             case 'abstract':
-              fieldMatches = journal.abstract.toLowerCase().includes(term);
+              fieldMatches = researchJournal.abstract.toLowerCase().includes(term);
               break;
             case 'authors':
-              fieldMatches = journal.authors.some(author => author.toLowerCase().includes(term));
+              fieldMatches = researchJournal.authors.some(author => author.toLowerCase().includes(term));
               break;
             case 'keywords':
-              fieldMatches = journal.keywords.some(keyword => keyword.toLowerCase().includes(term));
+              fieldMatches = researchJournal.keywords.some(keyword => keyword.toLowerCase().includes(term));
               break;
             case 'journal':
-              fieldMatches = journal.journal.toLowerCase().includes(term);
+              fieldMatches = researchJournal.journal.toLowerCase().includes(term);
               break;
             case 'doi':
-              fieldMatches = journal.doi ? journal.doi.toLowerCase().includes(term) : false;
+              fieldMatches = researchJournal.doi ? researchJournal.doi.toLowerCase().includes(term) : false;
               break;
           }
 
@@ -100,9 +129,12 @@ export const ResearchJournalsSection = () => {
         if (!matchesAdvancedSearch) return false;
       }
 
-      // Category filter
-      const matchesCategory = selectedCategory === "all" || journal.category === selectedCategory;
-      if (!matchesCategory) return false;
+      // Category filter (only for research journals)
+      if (journal.type === 'research') {
+        const researchJournal = journal as ResearchJournalData;
+        const matchesCategory = selectedCategory === "all" || researchJournal.category === selectedCategory;
+        if (!matchesCategory) return false;
+      }
 
       // Date filters from advanced search
       if (advancedFilters) {
@@ -112,7 +144,6 @@ export const ResearchJournalsSection = () => {
         if (advancedFilters.publicationYearTo && journal.year > parseInt(advancedFilters.publicationYearTo)) {
           return false;
         }
-        // Note: Date added filter would require additional data field
       }
       
       return true;
@@ -122,7 +153,12 @@ export const ResearchJournalsSection = () => {
         case "year":
           return b.year - a.year;
         case "citations":
-          return b.citationCount - a.citationCount;
+          // Only research journals have citation count
+          if (a.type === 'research' && b.type === 'research') {
+            return (b as ResearchJournalData).citationCount - (a as ResearchJournalData).citationCount;
+          }
+          // Fallback to year for community journals or mixed sorting
+          return b.year - a.year;
         case "title":
           return a.title.localeCompare(b.title);
         default:
@@ -135,39 +171,11 @@ export const ResearchJournalsSection = () => {
       {/* Section Header */}
       <div className="text-center">
         <h2 className="text-3xl font-bold text-[var(--color-foreground)] mb-4">
-          Research Journals
+          Journals
         </h2>
         <p className="text-[var(--color-muted-foreground)] max-w-2xl mx-auto">
-          Discover our peer-reviewed academic publications contributing to scientific knowledge across various disciplines.
+          Discover our comprehensive collection of research publications and community service journals that contribute to scientific knowledge and community development.
         </p>
-      </div>
-
-      {/* Journal System Access Banner */}
-      <div className="bg-gradient-to-r from-[var(--color-primary)]/5 to-[var(--color-secondary)]/5 border border-[var(--color-primary)]/20 rounded-2xl p-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-center md:text-left">
-            <h3 className="text-xl font-bold text-[var(--color-foreground)] mb-2">
-              🎓 Access Cognifera Journal System
-            </h3>
-            <p className="text-[var(--color-muted-foreground)] max-w-md">
-              Visit our Open Journal System for article submissions, current issues, archives, and editorial information.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <a
-              href="/journal"
-              className="px-6 py-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-[var(--color-primary-foreground)] rounded-lg font-medium transition-colors text-center"
-            >
-              Browse Journal →
-            </a>
-            <a
-              href="/journal/submit"
-              className="px-6 py-3 border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 rounded-lg font-medium transition-colors text-center"
-            >
-              Submit Article
-            </a>
-          </div>
-        </div>
       </div>
 
       {/* Search and Filter Controls */}
@@ -179,7 +187,7 @@ export const ResearchJournalsSection = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)]" />
               <input
                 type="text"
-                placeholder={advancedFilters ? "Advanced search is active" : "Search by title, authors, or keywords..."}
+                placeholder={advancedFilters ? "Advanced search is active" : "Search by title, authors, keywords, community, or location..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 disabled={!!advancedFilters}
@@ -200,25 +208,47 @@ export const ResearchJournalsSection = () => {
               Advanced Search
             </button>
 
-            {/* Category Filter */}
+            {/* Type Filter */}
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)] z-10" />
               <Select
-                value={selectedCategory}
-                onValueChange={setSelectedCategory}
+                value={selectedType}
+                onValueChange={setSelectedType}
               >
-                <SelectTrigger className="pl-10 pr-8 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[200px]">
-                  <SelectValue placeholder="All Categories" />
+                <SelectTrigger className="pl-10 pr-8 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[180px]">
+                  <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent className="border-none">
-                  {categories.map((category) => (
-                    <SelectItem className="bg-white hover:bg-gray-100 border-none" key={category.id} value={category.id}>
-                      {category.label}
+                  {types.map((type) => (
+                    <SelectItem className="bg-white hover:bg-gray-100 border-none" key={type.id} value={type.id}>
+                      {type.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Category Filter (only show for research or all) */}
+            {(selectedType === "all" || selectedType === "research") && (
+              <div className="relative">
+                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[var(--color-muted-foreground)] z-10" />
+                <Select
+                  value={selectedCategory}
+                  onValueChange={setSelectedCategory}
+                >
+                  <SelectTrigger className="pl-10 pr-8 py-6 border border-[var(--color-border)] rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none bg-white min-w-[200px]">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent className="border-none">
+                    {categories.map((category) => (
+                      <SelectItem className="bg-white hover:bg-gray-100 border-none" key={category.id} value={category.id}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             {/* Sort */}
             <div className="relative">
@@ -279,7 +309,11 @@ export const ResearchJournalsSection = () => {
       {/* Journal List */}
       <div className="grid gap-6">
         {filteredJournals.map((journal) => (
-          <JournalCard key={journal.id} journal={journal} />
+          journal.type === 'research' ? (
+            <ResearchJournalCard key={journal.id} journal={journal as ResearchJournalData} />
+          ) : (
+            <CommunityServiceCard key={journal.id} journal={journal as CommunityServiceJournalData} />
+          )
         ))}
       </div>
 
@@ -301,7 +335,7 @@ export const ResearchJournalsSection = () => {
   );
 };
 
-const JournalCard = ({ journal }: { journal: ResearchJournalData }) => {
+const ResearchJournalCard = ({ journal }: { journal: ResearchJournalData }) => {
   const handleCardClick = (e: React.MouseEvent) => {
     // Don't navigate if clicking on buttons or links
     const target = e.target as HTMLElement;
@@ -316,18 +350,23 @@ const JournalCard = ({ journal }: { journal: ResearchJournalData }) => {
          onClick={handleCardClick}>
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 space-y-4">
-          {/* Title and Open Access Badge */}
+          {/* Title and Badges */}
           <div className="flex items-start justify-between gap-4">
             <h3 className="text-xl font-bold text-[var(--color-foreground)] leading-tight hover:text-[var(--color-primary)] transition-colors">
               <a href={`/publications/${journal.id}`}>
                 {journal.title}
               </a>
             </h3>
-            {journal.isOpenAccess && (
-              <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap">
-                Open Access
+            <div className="flex gap-2 flex-wrap">
+              <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                Research
               </span>
-            )}
+              {journal.isOpenAccess && (
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                  Open Access
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Authors */}
@@ -397,6 +436,119 @@ const JournalCard = ({ journal }: { journal: ResearchJournalData }) => {
             <ExternalLink className="h-4 w-4" />
             View Online
           </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CommunityServiceCard = ({ journal }: { journal: CommunityServiceJournalData }) => {
+  return (
+    <div className="bg-white rounded-2xl p-6 shadow-sm border border-[var(--color-border)] hover:shadow-md transition-shadow">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex-1 space-y-4">
+          {/* Title with Community Service Badge */}
+          <div className="flex items-start justify-between gap-4">
+            <h3 className="text-xl font-bold text-[var(--color-foreground)] leading-tight">
+              {journal.title}
+            </h3>
+            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap flex items-center gap-1">
+              <Heart className="h-3 w-3" />
+              Community Service
+            </span>
+          </div>
+
+          {/* Authors */}
+          <div className="flex items-center gap-2 text-[var(--color-muted-foreground)]">
+            <Users className="h-4 w-4" />
+            <span>{journal.authors.join(", ")}</span>
+          </div>
+
+          {/* Location and Community */}
+          <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--color-muted-foreground)]">
+            <div className="flex items-center gap-1">
+              <MapPin className="h-4 w-4" />
+              <span>{journal.location}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Target className="h-4 w-4" />
+              <span>{journal.community}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Calendar className="h-4 w-4" />
+              <span>{journal.journal} ({journal.year})</span>
+            </div>
+          </div>
+
+          {/* Abstract */}
+          <p className="text-[var(--color-muted-foreground)] leading-relaxed">
+            {journal.abstract}
+          </p>
+
+          {/* Impact Description */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h4 className="font-semibold text-green-800 mb-2">Community Impact</h4>
+            <p className="text-green-700 text-sm">
+              {journal.impactDescription}
+            </p>
+          </div>
+
+          {/* Beneficiaries */}
+          <div className="space-y-2">
+            <h4 className="font-semibold text-[var(--color-foreground)] text-sm">Beneficiaries:</h4>
+            <div className="flex flex-wrap gap-2">
+              {journal.beneficiaries.map((beneficiary, index) => (
+                <span
+                  key={index}
+                  className="bg-[var(--color-tertiary)] text-[var(--color-tertiary-foreground)] px-3 py-1 rounded-full text-sm font-medium"
+                >
+                  {beneficiary}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Keywords */}
+          <div className="flex flex-wrap gap-2">
+            {journal.keywords.map((keyword, index) => (
+              <span
+                key={index}
+                className="bg-[var(--color-muted)] text-[var(--color-muted-foreground)] px-2 py-1 rounded-md text-sm"
+              >
+                #{keyword}
+              </span>
+            ))}
+          </div>
+
+          {/* Journal Details */}
+          <div className="text-sm text-[var(--color-muted-foreground)] space-y-1">
+            {journal.volume && journal.issue && (
+              <div>Vol. {journal.volume}, Issue {journal.issue}</div>
+            )}
+            {journal.pages && (
+              <div>Pages: {journal.pages}</div>
+            )}
+            <div>Published: {new Date(journal.publicationDate).toLocaleDateString('id-ID', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}</div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex lg:flex-col gap-3 lg:w-40">
+          {journal.pdfUrl && (
+            <a
+              href={journal.pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-primary)] text-[var(--color-primary-foreground)] rounded-lg hover:opacity-90 transition-opacity text-sm font-medium"
+            >
+              <Download className="h-4 w-4" />
+              Download PDF
+            </a>
+          )}
         </div>
       </div>
     </div>

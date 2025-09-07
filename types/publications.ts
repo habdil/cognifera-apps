@@ -108,4 +108,4 @@ export interface BookData {
   previewUrl?: string;
 }
 
-export type PublicationType = 'research-journals' | 'community-service-journals' | 'books';
+export type PublicationType = 'journals' | 'books';

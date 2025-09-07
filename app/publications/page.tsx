@@ -3,34 +3,27 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Navbar } from "@/components/shared/Navbar";
-import { ResearchJournalsSection } from "@/components/publications/ResearchJournalsSection";
-import { CommunityServiceSection } from "@/components/publications/CommunityServiceSection";
+import { JournalsSection } from "@/components/publications/JournalsSection";
 import { BooksSection } from "@/components/publications/BooksSection";
 import { PublicationType } from "@/types/publications";
-import { Skeleton } from "@/components/ui/skeleton";
 
 function PublicationsContent() {
-  const [activeSection, setActiveSection] = useState<PublicationType>("research-journals");
+  const [activeSection, setActiveSection] = useState<PublicationType>("journals");
   const searchParams = useSearchParams();
 
   // Handle section parameter from URL
   useEffect(() => {
     const section = searchParams.get("section") as PublicationType;
-    if (section && ["research-journals", "community-service-journals", "books"].includes(section)) {
+    if (section && ["journals", "books"].includes(section)) {
       setActiveSection(section);
     }
   }, [searchParams]);
 
   const sections = [
     {
-      id: "research-journals" as PublicationType,
-      label: "Research Journals",
-      description: "Peer-reviewed academic publications"
-    },
-    {
-      id: "community-service-journals" as PublicationType,
-      label: "Community Service Journals", 
-      description: "Community engagement and service publications"
+      id: "journals" as PublicationType,
+      label: "Journals",
+      description: "Research publications and community service journals"
     },
     {
       id: "books" as PublicationType,
@@ -75,8 +68,7 @@ function PublicationsContent() {
       {/* Dynamic Content Section */}
       <section className="pb-20">
         <div className="max-w-7xl mx-auto px-4">
-          {activeSection === "research-journals" && <ResearchJournalsSection />}
-          {activeSection === "community-service-journals" && <CommunityServiceSection />}
+          {activeSection === "journals" && <JournalsSection />}
           {activeSection === "books" && <BooksSection />}
         </div>
       </section>
@@ -87,32 +79,39 @@ function PublicationsContent() {
 export default function PublicationsPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-white">
+      <>
         <Navbar />
-        <div className="pt-32 pb-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <Skeleton className="h-14 w-80 mx-auto mb-6" />
-              <Skeleton className="h-6 w-96 mx-auto mb-12" />
-              <div className="flex justify-center gap-4 mb-16">
-                <Skeleton className="h-12 w-40" />
-                <Skeleton className="h-12 w-48" />
-                <Skeleton className="h-12 w-32" />
+        <div className="min-h-screen bg-gray-50 pt-20">
+          <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="animate-pulse">
+              {/* Header skeleton */}
+              <div className="text-center mb-12">
+                <div className="h-12 bg-gray-200 rounded w-64 mx-auto mb-6"></div>
+                <div className="w-24 h-1 bg-gray-200 mx-auto mb-8 rounded-full"></div>
+                <div className="h-6 bg-gray-200 rounded w-96 mx-auto"></div>
               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="border rounded-lg p-4 space-y-3">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                  <Skeleton className="h-16 w-full" />
-                  <Skeleton className="h-4 w-2/3" />
-                </div>
-              ))}
+              
+              {/* Navigation buttons skeleton */}
+              <div className="flex justify-center gap-4 mb-16">
+                <div className="h-12 bg-gray-200 rounded-full w-40"></div>
+                <div className="h-12 bg-gray-200 rounded-full w-48"></div>
+                <div className="h-12 bg-gray-200 rounded-full w-32"></div>
+              </div>
+              
+              {/* Content grid skeleton */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="bg-white rounded-xl p-6">
+                    <div className="h-48 bg-gray-200 rounded mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     }>
       <PublicationsContent />
     </Suspense>
