@@ -51,7 +51,7 @@ export default function JournalSocialCurrentLayout() {
           <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-6">
               {/* Issue Cover */}
-              <Card className="border-0 shadow-lg">
+              <Card className="border-0 shadow-lg p-0">
                 <CardContent className="p-6">
                   <div className="text-center">
                     <div 
@@ -80,7 +80,7 @@ export default function JournalSocialCurrentLayout() {
                         Download Issue
                       </Button>
                       
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline-2" className="w-full">
                         <Share2 className="w-4 h-4 mr-2" />
                         Share Issue
                       </Button>
@@ -307,7 +307,7 @@ export default function JournalSocialCurrentLayout() {
                               Read Full Text
                             </Button>
                           </Link>
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline-2" size="sm">
                             <Download className="w-4 h-4 mr-1" />
                             Download PDF
                           </Button>
@@ -392,7 +392,7 @@ export default function JournalSocialCurrentLayout() {
                     </Button>
                   </Link>
                   <Link href="/journal-social/editorial">
-                    <Button variant="outline">
+                    <Button variant="outline-2">
                       View Community Guidelines
                     </Button>
                   </Link>

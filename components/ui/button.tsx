@@ -15,12 +15,16 @@ const buttonVariants = cva(
           "bg-red-500 text-white shadow-lg hover:bg-red-600 hover:shadow-xl transform hover:scale-105 focus-visible:ring-red-500/50",
         outline:
           "border-2 border-primary bg-transparent text-primary shadow-sm hover:bg-primary hover:text-white transform hover:scale-105 focus-visible:ring-primary/50",
+        "outline-2":
+          "border-2 border-primary-v2 bg-transparent text-primary-v2 shadow-sm hover:bg-primary-v2 hover:text-white transform hover:scale-105 focus-visible:ring-primary-v2/50",
         secondary:
           "bg-secondary text-gray-800 shadow-lg hover:bg-secondary/80 hover:shadow-xl transform hover:scale-105 focus-visible:ring-secondary/50",
         tertiary:
           "bg-tertiary text-gray-800 shadow-lg hover:bg-tertiary/80 hover:shadow-xl transform hover:scale-105 focus-visible:ring-tertiary/50",
         ghost:
           "text-gray-600 hover:bg-primary/10 hover:text-primary transform hover:scale-105",
+        "ghost-2":
+          "text-gray-600 hover:bg-primary-v2/10 hover:text-white transform hover:scale-105",
         link: "text-primary underline-offset-4 hover:underline hover:text-primary/80",
       },
       size: {

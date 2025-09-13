@@ -182,7 +182,7 @@ export default function JournalSocialMainContent() {
                 View All Community Research
               </Button>
             </Link>
-            <Button variant="outline" className="w-full sm:w-auto">
+            <Button variant="outline-2" className="w-full sm:w-auto">
               <Download className="w-4 h-4 mr-2" />
               Download Community Impact Report
             </Button>

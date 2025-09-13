@@ -142,7 +142,7 @@ export default function JournalSocialArchivesLayout() {
                   
                   {/* Issue Details */}
                   <div className="p-6">
-                    <h4 className="font-semibold text-[var(--color-foreground)] mb-2 group-hover:text-[var(--color-primary)] transition-colors line-clamp-2">
+                    <h4 className="font-semibold text-[var(--color-foreground)] mb-2 group-hover:text-[var(--color-primary-v2)] transition-colors line-clamp-2">
                       {issue.title}
                     </h4>
                     <p className="text-sm text-[var(--color-muted-foreground)] mb-4 line-clamp-3">
@@ -176,7 +176,7 @@ export default function JournalSocialArchivesLayout() {
                             View Issue
                           </Button>
                         </Link>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline-2" size="sm">
                           <Download className="w-4 h-4" />
                         </Button>
                       </div>

@@ -40,7 +40,7 @@ export default function JournalSocialSidebar() {
               </Button>
             </Link>
             <Link href={journalSocialConfig.sidebar.submitSection.guidelinesButtonUrl}>
-              <Button variant="ghost" className="w-full text-white hover:bg-white/20 text-sm">
+              <Button variant="ghost-2" className="w-full text-white hover:bg-white/20 text-sm">
                 {journalSocialConfig.sidebar.submitSection.guidelinesButtonText}
               </Button>
             </Link>
@@ -232,7 +232,7 @@ export default function JournalSocialSidebar() {
             </div>
           </div>
           <Link href={journalSocialConfig.sidebar.editorialContact.contactButtonUrl}>
-            <Button variant="outline" className="w-full mt-3">
+            <Button variant="outline-2" className="w-full mt-3">
               {journalSocialConfig.sidebar.editorialContact.contactButtonText}
             </Button>
           </Link>
