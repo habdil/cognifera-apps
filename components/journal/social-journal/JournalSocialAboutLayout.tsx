@@ -88,10 +88,9 @@ export default function JournalSocialAboutLayout() {
           <div className="lg:col-span-3 space-y-12">
             {/* About the Journal */}
             <section id="about-journal">
-              <Card className="border-0 shadow-lg">
-                <CardHeader className="text-white rounded-t-lg" style={{ backgroundColor: journalSocialConfig.colors.primary }}>
+              <Card className="border-0 shadow-lg p-0">
+                <CardHeader className="text-white rounded-t-lg p-2" style={{ backgroundColor: journalSocialConfig.colors.primary }}>
                   <CardTitle className="text-2xl flex items-center">
-                    <Heart className="w-6 h-6 mr-3" />
                     About the Journal
                   </CardTitle>
                 </CardHeader>

@@ -141,7 +141,7 @@ export default function JournalSocialHeader({ activeItem = "home" }: JournalSoci
             <div className="relative max-w-md w-full lg:w-auto">
               <input
                 placeholder={journalSocialConfig.searchPlaceholder}
-                className="w-full px-4 py-3 pr-12 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                className="w-full px-4 py-3 pr-12 border border-[var(--color-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-v2)] focus:border-transparent"
               />
               <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[var(--color-muted-foreground)]" />
             </div>
@@ -181,8 +181,8 @@ export default function JournalSocialHeader({ activeItem = "home" }: JournalSoci
                   key={index}
                   href={navItem.href}
                   className={isActive
-                    ? "text-[var(--color-foreground)] hover:text-[var(--color-primary)] font-medium py-2 transition-colors border-b-2 border-[var(--color-primary)]"
-                    : "text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] py-2 transition-colors"
+                    ? "text-[var(--color-foreground)] hover:text-[var(--color-primary-v2)] font-medium py-2 transition-colors border-b-2 border-[var(--color-primary-v2)]"
+                    : "text-[var(--color-muted-foreground)] hover:text-[var(--color-primary-v2)] py-2 transition-colors"
                   }
                 >
                   {navItem.label}

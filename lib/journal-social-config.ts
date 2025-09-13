@@ -286,8 +286,8 @@ export const journalSocialConfig: JournalConfig = {
       phone: "+62 21 1234 5678", 
       responseTime: "Within 48 hours",
       publisher: {
-        name: "Cognifera Community Service Center",
-        fullName: "Cognifera Community Service Center"
+        name: "Cognifera Education Academy",
+        fullName: "Cognifera Education Academy"
       }
     },
     copyright: {
@@ -300,7 +300,7 @@ export const journalSocialConfig: JournalConfig = {
         "href": "/"
       }
     ],
-    poweredBy: "Powered by Open Community Science"
+    poweredBy: "Cognifera Education Academy"
   },
   
   // Meta
