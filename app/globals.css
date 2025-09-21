@@ -136,3 +136,12 @@ html {
 [data-sonner-toast] .sonner-toast-description {
   color: #000000 !important;
 }
+
+/* Hero Headline Styling */
+.hero-headline .split-word:nth-child(2), /* Riset */
+.hero-headline .split-word:nth-child(4), /* Publikasi */
+.hero-headline .split-word:nth-child(5), /* Jurnal */
+.hero-headline .split-word:nth-child(8), /* Penerbitan */
+.hero-headline .split-word:nth-child(9) { /* Buku */
+  color: var(--color-primary);
+}

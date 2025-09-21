@@ -14,7 +14,7 @@ export function Footer() {
                 height={32}
                 className="object-contain"
               />
-              <h3 className="text-xl font-bold">Cognifera</h3>
+              <h3 className="text-xl font-bold">PT COGNIFERA EDUCATION ACADEMY</h3>
             </div>
             <p className="text-gray-300">
               Layanan riset dan konsultasi profesional untuk mendukung kebutuhan bisnis dan akademik Anda.
@@ -52,7 +52,7 @@ export function Footer() {
         </div>
         
         <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-          <p>&copy; 2024 Cognifera. All rights reserved.</p>
+          <p>&copy; 2024 PT COGNIFERA EDUCATION ACADEMY. All rights reserved.</p>
         </div>
       </div>
     </footer>

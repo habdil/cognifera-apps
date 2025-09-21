@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { LayananData } from "@/types";
 import { layananAPI } from "@/lib/api-dummy";
+import { Button } from "../ui/button";
+import { Link } from "lucide-react";
 
 export function LayananSection() {
   const [layanan, setLayanan] = useState<LayananData[]>([]);
@@ -148,9 +150,11 @@ export function LayananSection() {
               Konsultasikan kebutuhan riset Anda dengan tim ahli kami. 
               Dapatkan rekomendasi layanan yang sesuai dengan tujuan penelitian Anda.
             </p>
-            <button className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] shadow-sm hover:shadow-md">
-              Konsultasi Gratis Sekarang
-            </button>
+            <Button className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-[1.02] shadow-sm hover:shadow-md">
+              <a href="https://wa.me/message/VRRB5IFQ7LQ4A1">
+                Konsultasi Gratis Sekarang
+              </a>
+            </Button>
           </div>
         </div>
       </div>

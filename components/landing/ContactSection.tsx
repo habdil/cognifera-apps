@@ -52,7 +52,7 @@ export function ContactSection() {
     {
       icon: '📍',
       title: 'Alamat',
-      content: 'Jl. Penelitian No. 123, Jakarta Selatan, Indonesia 12345'
+      content: 'Griya Sudiang Mandiri Blok B No. 12, Makassar, Indonesia'
     },
     {
       icon: '📞',
@@ -69,13 +69,6 @@ export function ContactSection() {
       title: 'WhatsApp',
       content: '+62 813 5551 5694'
     }
-  ];
-
-  const socialLinks = [
-    { icon: 'LinkedIn', name: 'LinkedIn', url: '#' },
-    { icon: 'Instagram', name: 'Instagram', url: '#' },
-    { icon: 'Youtube', name: 'YouTube', url: '#' },
-    { icon: 'Twitter', name: 'Twitter', url: '#' }
   ];
 
   return (
@@ -242,55 +235,6 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Social Media */}
-            <Card className="border-gray-300">
-              <CardContent>
-                <h4 className="font-semibold text-[var(--color-text)] mb-4">Ikuti Kami</h4>
-                <div className="flex space-x-4">
-                  {socialLinks.map((social, index) => (
-                    <a
-                      key={index}
-                      href={social.url}
-                      className="w-12 h-12 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-300 transform hover:scale-110 shadow-sm hover:shadow-lg"
-                      title={social.name}
-                    >
-                      <span className="text-sm font-medium">{social.icon.charAt(0)}</span>
-                    </a>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card className="border-gray-300">
-              <CardContent className="space-y-4">
-                <h4 className="font-semibold text-[var(--color-text)]">Aksi Cepat</h4>
-                <div className="space-y-3">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-gray-950 hover:border-gray-400"
-                  >
-                    <span className="mr-3">💬</span>
-                    Chat via WhatsApp
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-950"
-                  >
-                    <span className="mr-3">📞</span>
-                    Jadwalkan Video Call
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start rounded-lg h-12 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 hover:text-gray-950"
-                  >
-                    <span className="mr-3">📧</span>
-                    Email Langsung
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
 
@@ -303,7 +247,7 @@ export function ContactSection() {
               </h3>
               <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
                 Jangan biarkan impian publikasi internasional hanya menjadi mimpi. 
-                Bergabunglah dengan ratusan peneliti yang telah merasakan kesuksesan bersama Cognifera.
+                Bergabunglah dengan ratusan peneliti yang telah merasakan kesuksesan bersama PT Cognifera Education Academy.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Button 
@@ -311,14 +255,18 @@ export function ContactSection() {
                   size="lg" 
                   className="px-8 font-semibold rounded-full bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] hover:bg-[var(--color-secondary)]/90"
                 >
-                  Konsultasi Gratis Sekarang
+                  <a href="https://wa.me/message/VRRB5IFQ7LQ4A1">
+                    Konsultasi Gratis Sekarang
+                  </a>
                 </Button>
                 <Button 
                   variant="outline" 
                   size="lg" 
                   className="px-8 font-semibold rounded-full border-[var(--color-primary-foreground)] text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary-foreground)] hover:text-[var(--color-primary)]"
                 >
-                  Lihat Portfolio Kami
+                  <a href="https://www.instagram.com/cognifera_edu/">
+                    Lihat Portfolio Kami
+                  </a>
                 </Button>
               </div>
             </CardContent>

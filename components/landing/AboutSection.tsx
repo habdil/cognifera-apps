@@ -30,9 +30,9 @@ export function AboutSection() {
       <div className="max-w-6xl mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-            Tentang <span className="text-primary">Cognifera</span>
-          </h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
+            Tentang <br /> <span className="text-primary">COGNIFERA EDUCATION ACADEMY</span>
+            </h2>
           <div className="w-24 h-1 bg-primary mx-auto mb-8 rounded-full"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Platform layanan penelitian terintegrasi yang mengubah perjalanan riset Anda 
@@ -43,11 +43,11 @@ export function AboutSection() {
         {/* Stats Counter */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
           <div className="text-center p-6 bg-primary/5 rounded-2xl">
-            <div className="text-4xl md:text-5xl font-bold text-primary mb-2">500+</div>
+            <div className="text-4xl md:text-5xl font-bold text-primary mb-2">10+</div>
             <div className="text-gray-600 font-medium">Klien Terlayani</div>
           </div>
           <div className="text-center p-6 bg-secondary/5 rounded-2xl">
-            <div className="text-4xl md:text-5xl font-bold text-secondary mb-2">200+</div>
+            <div className="text-4xl md:text-5xl font-bold text-secondary mb-2">5+</div>
             <div className="text-gray-600 font-medium">Publikasi Berhasil</div>
           </div>
           <div className="text-center p-6 bg-tertiary/5 rounded-2xl">
@@ -63,7 +63,7 @@ export function AboutSection() {
         {/* Why Choose Us */}
         <div>
           <h3 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-12">
-            Mengapa Memilih <span className="text-primary">Cognifera?</span>
+            Mengapa Memilih Kami?
           </h3>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">

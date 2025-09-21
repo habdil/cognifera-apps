@@ -15,7 +15,6 @@ import {
   Menu,
   MenuItem,
   HoveredLink,
-  ProductItem,
   SecondaryMenuProvider,
 } from "@/components/ui/navbar-menu";
 
@@ -83,9 +82,9 @@ export const Navbar = () => {
         <Menu setActive={setActive}>
           <MenuItem setActive={setActive} active={active} item="About">
             <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="#profile">Profile</HoveredLink>
-              <HoveredLink href="#vision">Visi dan Misi</HoveredLink>
-              <HoveredLink href="#team">Our Team</HoveredLink>
+              <HoveredLink href="/profile">Profile</HoveredLink>
+              <HoveredLink href="/visi-misi">Visi dan Misi</HoveredLink>
+              <HoveredLink href="/our-team">Our Team</HoveredLink>
             </div>
           </MenuItem>
 

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { IklanData, LayananData } from "@/types";
 import { iklanAPI, layananAPI } from "@/lib/api-dummy";
+import { Button } from "../ui/button";
 
 export function PromoSection() {
   const [promos, setPromos] = useState<IklanData[]>([]);
@@ -174,7 +175,7 @@ export function PromoSection() {
           {promos.length > 1 && (
             <div className="flex justify-center mt-8 space-x-2">
               {promos.map((_, index) => (
-                <button
+                <Button
                   key={index}
                   onClick={() => setCurrentPromo(index)}
                   className={`w-3 h-3 rounded-full transition-all duration-300 ${

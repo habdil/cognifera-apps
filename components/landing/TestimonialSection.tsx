@@ -43,14 +43,75 @@ export function TestimonialSection() {
     );
   }
 
+  // Array data social proof dengan nama dan foto yang sesuai
+  const socialProofData = [
+    {
+      name: "Asih Luklu Susiati",
+      position: "Dosen",
+      institution: "Universitas Negeri Malang",
+      photo: "/social-proof/Asih Luklu Susiati.jpeg"
+    },
+    {
+      name: "Zakia Asrifah Ramly",
+      position: "Dosen",
+      institution: "Universitas Negeri Malang",
+      photo: "/social-proof/Zakia Asrifah Ramly.jpeg"
+    },
+    {
+      name: "Oriny Tri Ananda",
+      position: "Peneliti",
+      institution: "Universitas Negeri Malang",
+      photo: "/social-proof/Oriny Tri Ananda.jpeg"
+    },
+    {
+      name: "Hikmah Nur Fadillah",
+      position: "Peneliti",
+      institution: "Universitas Negeri Malang",
+      photo: "/social-proof/Hikmah Nur Fadillah.jpeg"
+    },
+    {
+      name: "Fitrah Amalia Salim",
+      position: "Peneliti",
+      institution: "Universitas Negeri Malang",
+      photo: "/social-proof/Fitrah Amalia Salim.jpeg"
+    },
+    {
+      name: "Arifah Novia Arifin",
+      position: "Dosen",
+      institution: "Universitas Negeri Malang",
+      photo: "/social-proof/Arifah Novia Arifin.jpeg"
+    },
+    {
+      name: "Dr. Hardianto",
+      position: "Direktur",
+      institution: "PT Cognifera Education Academy",
+      photo: "/social-proof/Hardianto.jpeg"
+    },
+    {
+      name: "Maisuna Kundariati",
+      position: "Dosen",
+      institution: "Universitas Negeri Malang",
+      photo: "/social-proof/Maisuna Kundariati.jpeg"
+    },
+    {
+      name: "Wahyudi Jasman",
+      position: "Peneliti",
+      institution: "Universitas Negeri Malang",
+      photo: "/social-proof/Wahyudi Jasman.jpg"
+    }
+  ];
+
   // Transform testimonial data to match AnimatedTestimonials format
-  const formattedTestimonials = testimonials.map((testimonial, index) => ({
-    id: testimonial.id,
-    quote: testimonial.testimonialText,
-    name: testimonial.clientName,
-    designation: `${testimonial.position} • ${testimonial.institution}`,
-    src: index % 2 === 0 ? "/example-photo/people-1.png" : "/example-photo/people-2.png"
-  }));
+  const formattedTestimonials = testimonials.map((testimonial, index) => {
+    const socialProofPerson = socialProofData[index % socialProofData.length];
+    return {
+      id: testimonial.id,
+      quote: testimonial.testimonialText,
+      name: socialProofPerson.name,
+      designation: `${socialProofPerson.position} • ${socialProofPerson.institution}`,
+      src: socialProofPerson.photo
+    };
+  });
 
   return (
     <section id="testimonial" className="py-20 bg-white">
