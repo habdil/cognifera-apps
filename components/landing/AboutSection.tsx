@@ -31,7 +31,7 @@ export function AboutSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-            Tentang <br /> <span className="text-primary">COGNIFERA EDUCATION ACADEMY</span>
+            Tentang <br /> <span className="text-primary">PT COGNIFERA EDUCATION ACADEMY</span>
             </h2>
           <div className="w-24 h-1 bg-primary mx-auto mb-8 rounded-full"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
