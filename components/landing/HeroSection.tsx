@@ -41,7 +41,9 @@ export function HeroSection() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-primary hover:bg-white hover:text-primary hover:border-1 text-white px-8 py-4 rounded-lg font-semibold text-lg">
+                <a href="https://wa.me/message/VRRB5IFQ7LQ4A1">
                 Konsultasi Gratis
+                </a>
               </Button>
               <Button variant="outline" size="lg" className="border-1 text-primary px-8 py-4 rounded-lg font-semibold text-lg">
                 Lihat Layanan
