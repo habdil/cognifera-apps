@@ -6,7 +6,11 @@ import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen w-full bg-gray-50 overflow-hidden">
+    <section
+      className="relative min-h-screen w-full bg-gray-50 overflow-hidden"
+      itemScope
+      itemType="https://schema.org/Organization"
+    >
       <BackgroundRippleEffect />
       <div className="container mx-auto px-6 pt-8">
         <div className="relative pt-10 flex items-center justify-center">
@@ -31,10 +35,14 @@ export function HeroSection() {
               from={{ opacity: 0, y: 50 }}
               to={{ opacity: 1, y: 0 }}
               threshold={0.2}
+              itemProp="name"
             />
 
             {/* Subheadline */}
-            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+            <p
+              className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto"
+              itemProp="description"
+            >
               Satu-satunya platform terintegrasi yang mendampingi perjalanan lengkap riset Anda: dari bimbingan penelitian, publikasi jurnal internasional, hingga penerbitan buku ilmiah.
             </p>
 

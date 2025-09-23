@@ -15,8 +15,61 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cognifera Education Academy",
-  description: "Learn and grow with Cognifera",
+  metadataBase: new URL('https://www.cognifera.web.id'),
+  title: {
+    default: "Cognifera - Riset, Publikasi Jurnal & Penerbitan Buku",
+    template: "%s | Cognifera"
+  },
+  description: "Cognifera menyediakan layanan riset akademik, konsultasi, dan pendidikan berkualitas tinggi. Solusi terpercaya untuk kebutuhan penelitian dan pengembangan organisasi Anda.",
+  keywords: [
+    "jasa riset", "konsultasi akademik", "pendidikan", "penelitian akademik",
+    "analisis data", "riset pasar", "konsultasi manajemen", "training",
+    "cognifera", "research service", "business consulting"
+  ],
+  authors: [{ name: "Cognifera Team" }],
+  creator: "Cognifera",
+  publisher: "Cognifera",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    url: 'https://www.cognifera.web.id',
+    title: 'Cognifera - Riset, Publikasi Jurnal & Penerbitan Buku',
+    description: 'Cognifera menyediakan layanan riset akademik, konsultasi bisnis, dan pendidikan berkualitas tinggi. Solusi terpercaya untuk kebutuhan penelitian dan pengembangan organisasi Anda.',
+    siteName: 'Cognifera',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Cognifera - Riset, Publikasi Jurnal & Penerbitan Buku',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cognifera - Riset, Publikasi Jurnal & Penerbitan Buku',
+    description: 'Cognifera menyediakan layanan riset akademik, konsultasi, dan pendidikan berkualitas tinggi.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
 };
 
 export default function RootLayout({
@@ -25,7 +78,54 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="id">
+      <head>
+        <link rel="canonical" href="https://www.cognifera.web.id" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Cognifera",
+              "url": "https://www.cognifera.web.id",
+              "logo": "https://www.cognifera.web.id/logo.png",
+              "description": "Cognifera menyediakan layanan riset akademik, konsultasi, dan pendidikan berkualitas tinggi.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Jakarta",
+                "addressCountry": "ID"
+              },
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "availableLanguage": ["Indonesian", "English"]
+              },
+              "sameAs": [
+                "https://www.linkedin.com/company/cognifera",
+                "https://www.instagram.com/cognifera_official"
+              ],
+              "offers": [
+                {
+                  "@type": "Service",
+                  "name": "Jasa Riset Akademik",
+                  "description": "Layanan penelitian akademik profesional"
+                },
+                {
+                  "@type": "Service",
+                  "name": "Konsultasi Akademik",
+                  "description": "Konsultasi strategi dan manajemen akademik"
+                },
+                {
+                  "@type": "Service",
+                  "name": "Pelatihan & Pendidikan",
+                  "description": "Program pelatihan dan pengembangan SDM"
+                }
+              ]
+            })
+          }}
+        />
+      </head>
       <body
         className={`${workSans.variable} ${geistMono.variable} antialiased`}
       >
