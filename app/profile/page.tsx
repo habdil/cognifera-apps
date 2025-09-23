@@ -1,8 +1,5 @@
 "use client";
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Navbar } from "@/components/shared/Navbar";
 import { Footer } from "@/components/shared/Footer";
 
@@ -15,20 +12,6 @@ export default function ProfilePage() {
       <section className="bg-white py-20">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center">
-            <div className="mb-12">
-              <img 
-                src="/logo/cognifera-logo.png" 
-                alt="PT Cognifera Education Academy"
-                className="h-20 mx-auto mb-8"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                }}
-              />
-              <div className="w-20 h-20 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center mb-8" style={{display: 'none'}}>
-                <span className="text-3xl font-bold text-primary">C</span>
-              </div>
-            </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               PT <span className="text-primary">COGNIFERA</span>
