@@ -1,86 +1,30 @@
-"use client";
+import { Suspense } from "react";
+import { Metadata } from "next";
+import PublicationsContent from "./components/PublicationsContent";
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { Navbar } from "@/components/shared/Navbar";
-import { JournalsSection } from "@/components/publications/JournalsSection";
-import { BooksSection } from "@/components/publications/BooksSection";
-import { PublicationType } from "@/types/publications";
+export const metadata: Metadata = {
+  title: "Publikasi - Jurnal & Buku Akademik",
+  description: "Jelajahi koleksi publikasi kami meliputi jurnal penelitian, layanan komunitas, dan buku akademik yang berkontribusi pada pengetahuan ilmiah dan pengembangan masyarakat.",
+  keywords: [
+    "publikasi", "jurnal akademik", "buku ilmiah", "penelitian", "riset",
+    "publikasi jurnal", "penerbitan buku", "karya ilmiah", "cognifera publications"
+  ],
+  openGraph: {
+    title: "Publikasi - Jurnal & Buku Akademik | Cognifera",
+    description: "Jelajahi koleksi publikasi kami meliputi jurnal penelitian, layanan komunitas, dan buku akademik yang berkontribusi pada pengetahuan ilmiah.",
+    url: "https://www.cognifera.web.id/publications",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://www.cognifera.web.id/publications",
+  },
+};
 
-function PublicationsContent() {
-  const [activeSection, setActiveSection] = useState<PublicationType>("journals");
-  const searchParams = useSearchParams();
-
-  // Handle section parameter from URL
-  useEffect(() => {
-    const section = searchParams.get("section") as PublicationType;
-    if (section && ["journals", "books"].includes(section)) {
-      setActiveSection(section);
-    }
-  }, [searchParams]);
-
-  const sections = [
-    {
-      id: "journals" as PublicationType,
-      label: "Journals",
-      description: "Research publications and community service journals"
-    },
-    {
-      id: "books" as PublicationType,
-      label: "Books",
-      description: "Published textbooks, monographs, and proceedings"
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-16 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl lg:text-6xl font-bold text-[var(--color-foreground)] mb-6">
-            Publications
-          </h1>
-          <p className="text-xl text-[var(--color-muted-foreground)] max-w-3xl mx-auto mb-12">
-            Explore our collection of research journals, community service publications, and academic books that contribute to scientific knowledge and community development.
-          </p>
-          
-          {/* Section Navigation */}
-          <div className="flex flex-wrap justify-center gap-4 mb-16">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id)}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
-                  activeSection === section.id
-                    ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-lg"
-                    : "bg-white hover:bg-[var(--color-muted)] text-[var(--color-foreground)] border border-[var(--color-border)]"
-                }`}
-              >
-                {section.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Dynamic Content Section */}
-      <section className="pb-20">
-        <div className="max-w-7xl mx-auto px-4">
-          {activeSection === "journals" && <JournalsSection />}
-          {activeSection === "books" && <BooksSection />}
-        </div>
-      </section>
-    </div>
-  );
-}
 
 export default function PublicationsPage() {
   return (
     <Suspense fallback={
       <>
-        <Navbar />
         <div className="min-h-screen bg-gray-50 pt-20">
           <div className="max-w-7xl mx-auto px-6 py-12">
             <div className="animate-pulse">
@@ -90,14 +34,14 @@ export default function PublicationsPage() {
                 <div className="w-24 h-1 bg-gray-200 mx-auto mb-8 rounded-full"></div>
                 <div className="h-6 bg-gray-200 rounded w-96 mx-auto"></div>
               </div>
-              
+
               {/* Navigation buttons skeleton */}
               <div className="flex justify-center gap-4 mb-16">
                 <div className="h-12 bg-gray-200 rounded-full w-40"></div>
                 <div className="h-12 bg-gray-200 rounded-full w-48"></div>
                 <div className="h-12 bg-gray-200 rounded-full w-32"></div>
               </div>
-              
+
               {/* Content grid skeleton */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {Array.from({ length: 6 }).map((_, index) => (

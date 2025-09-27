@@ -3,13 +3,10 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Home, ArrowLeft, Search } from 'lucide-react'
-import { Navbar } from '@/components/shared/Navbar'
-import { Footer } from '@/components/shared/Footer'
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-[var(--color-background)] flex flex-col">
-      <Navbar />
       
       <main className="flex-1 flex items-center justify-center px-4 py-20">
         <div className="max-w-lg w-full text-center space-y-12">
@@ -58,8 +55,6 @@ export default function NotFound() {
 
         </div>
       </main>
-      
-      <Footer />
     </div>
   )
 }

@@ -1,131 +1,179 @@
-"use client";
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/shared/Navbar";
-import { Footer } from "@/components/shared/Footer";
+import { Metadata } from "next";
+import OurTeamContent from "./components/OurTeamContent";
 
-const teamData = [
+// Team data for SEO
+const teamMembers = [
   {
-    name: "Dr. Muhammad Alqadri Burga, S.Pd.I., M.Pd",
+    name: "Dr. Muhammad Alqadri Burga",
     position: "Komisaris / Ketua Dewan Pengawas",
-    image: "/photo-team/Qadri.png"
+    credentials: "S.Pd.I., M.Pd, Doktor"
   },
   {
-    name: "Dr. Hardianto, S.Pd., M.Pd",
-    position: "Direktur Utama / Chief Executive Officer (CEO)",
-    image: "/photo-team/Hardianto.png"
+    name: "Dr. Hardianto",
+    position: "CEO Cognifera",
+    credentials: "S.Pd., M.Pd, Doktor"
   },
   {
-    name: "Musa, S.Kom., M.M",
-    position: "Direktur Operasional / Chief Operating Officer (COO)",
-    image: "/photo-team/Musa.png"
+    name: "Musa",
+    position: "COO Cognifera",
+    credentials: "S.Kom., M.M"
   },
   {
-    name: "Ar. Nur Al Huda Asrul, S.T",
-    position: "Direktur Keuangan / Chief Financial Officer (CFO)",
-    image: "/photo-team/Huda.png"
+    name: "Ar. Nur Al Huda Asrul",
+    position: "CFO Cognifera",
+    credentials: "S.T, Arsitek"
   },
   {
-    name: "Nurhinayah Burga, S.Pd., M.Pd",
-    position: "Direktur Pemasaran / Chief Marketing Officer (CMO)",
-    image: "/photo-team/Nurhinayah Burga.png"
+    name: "Nurhinayah Burga",
+    position: "CMO Cognifera",
+    credentials: "S.Pd., M.Pd"
   },
   {
     name: "Habdil Iqrawardana",
-    position: "Direktur Teknologi / Chief Technology Officer (CTO)",
-    image: "/photo-team/Habdil Iqrawardana.png"
+    position: "CTO Cognifera",
+    credentials: "Technology Expert"
   }
 ];
 
+export const metadata: Metadata = {
+  title: "Tim Ahli",
+  description: `Bertemu dengan tim ahli Cognifera Academy: Dr. Muhammad Alqadri Burga (Komisaris), Dr. Hardianto (CEO), Musa (COO), Ar. Nur Al Huda Asrul (CFO), Nurhinayah Burga (CMO), dan Habdil Iqrawardana (CTO). Tim profesional berpengalaman dalam riset, konsultasi, dan teknologi pendidikan.`,
+  keywords: [
+    // Individual names for Google indexing
+    "Habdil Iqrawardana", "Dr. Hardianto", "Dr. Muhammad Alqadri Burga",
+    "Nurhinayah Burga", "Musa Cognifera", "Ar. Nur Al Huda Asrul",
+
+    // Positions and roles
+    "CTO Cognifera", "CEO Cognifera", "Direktur Teknologi Cognifera",
+    "Tim Cognifera", "Expert Team Cognifera", "Komisaris Cognifera",
+
+    // Professional terms
+    "ahli teknologi pendidikan", "expert riset akademik", "konsultan pendidikan",
+    "technology leader Indonesia", "CEO pendidikan", "CTO startup pendidikan",
+
+    // Company and services
+    "Cognifera Academy team", "tim ahli riset", "konsultan akademik Indonesia",
+    "expert team research", "professional education consultant"
+  ],
+  openGraph: {
+    title: "Tim Ahli Cognifera Academy - Expert Team",
+    description: "Tim profesional Cognifera Academy dengan Dr. Hardianto (CEO), Habdil Iqrawardana (CTO), dan expert team berpengalaman dalam riset, konsultasi, dan teknologi pendidikan.",
+    url: "https://www.cognifera.web.id/our-team",
+    type: "website",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Tim Ahli Cognifera Academy - Expert Team"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tim Ahli Cognifera Academy - Expert Team",
+    description: "Tim profesional Cognifera Academy dengan expertise dalam riset, konsultasi, dan teknologi pendidikan.",
+    images: ["/og-team.png"]
+  },
+  alternates: {
+    canonical: "https://www.cognifera.web.id/our-team"
+  },
+  other: {
+    // Additional SEO tags for team members
+    "team-members": teamMembers.map(member => member.name).join(", "),
+    "team-expertise": "Research, Education Technology, Business Consulting, Academic Services"
+  }
+};
 
 export default function OurTeamPage() {
+  // Structured Data for Team Members (JSON-LD)
+  const teamStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Cognifera Academy",
+    "url": "https://www.cognifera.web.id",
+    "employee": teamMembers.map(member => ({
+      "@type": "Person",
+      "name": member.name,
+      "jobTitle": member.position,
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Cognifera Academy",
+        "url": "https://www.cognifera.web.id"
+      },
+      "alumniOf": member.credentials,
+      "knowsAbout": member.name === "Habdil Iqrawardana"
+        ? ["Software Development", "Education Technology", "Digital Innovation", "Full Stack Development"]
+        : member.name === "Dr. Hardianto"
+        ? ["Executive Leadership", "Education Innovation", "Organizational Management"]
+        : ["Education", "Research", "Academic Services"]
+    }))
+  };
+
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-50">
-        
-        {/* Hero Section */}
-        <section className="bg-white py-20">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                Tim <span className="text-primary">Cognifera Academy</span>
-              </h1>
-              <div className="w-24 h-1 bg-primary mx-auto mb-8 rounded-full"></div>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Dibalik kesuksesan Cognifera, terdapat tim kepemimpinan yang berpengalaman dan berdedikasi untuk memajukan ekosistem riset Indonesia.
-              </p>
-            </div>
-          </div>
-        </section>
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(teamStructuredData)
+        }}
+      />
 
-        {/* Team Grid */}
-        <section className="py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {teamData.map((member, index) => (
-                <div key={index} className="text-center group">
-                  <div className="mb-6">
-                    <div className="relative w-48 h-48 mx-auto mb-6 overflow-hidden rounded-2xl bg-gray-100 shadow-lg group-hover:shadow-xl transition-all duration-300">
-                      <img 
-                        src={member.image} 
-                        alt={member.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = `data:image/svg+xml;base64,${btoa(`
-                            <svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <rect width="192" height="192" fill="#f3f4f6"/>
-                              <circle cx="96" cy="70" r="30" fill="#d1d5db"/>
-                              <path d="M96 110c-30 0-52 15-52 37v12h104v-12c0-22-22-37-52-37z" fill="#d1d5db"/>
-                            </svg>
-                          `)}`;
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-                    {member.name}
-                  </h3>
-                  <div className="mb-2">
-                    <p className="text-primary font-semibold mb-1">
-                      {member.position.split(' / ')[0]}
-                    </p>
-                    {member.position.includes(' / ') && (
-                      <p className="text-sm text-gray-500">
-                        {member.position.split(' / ')[1]}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+      {/* Individual Person Schema for key members */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Habdil Iqrawardana",
+            "jobTitle": "Chief Technology Officer",
+            "description": "Technology leader dan CTO di Cognifera Academy dengan keahlian dalam pengembangan software, teknologi pendidikan, dan inovasi digital.",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "Cognifera Academy",
+              "url": "https://www.cognifera.web.id"
+            },
+            "knowsAbout": [
+              "Software Development",
+              "Education Technology",
+              "Digital Innovation",
+              "Full Stack Development",
+              "Technology Leadership"
+            ],
+            "sameAs": [
+              "https://www.cognifera.web.id/our-team"
+            ]
+          })
+        }}
+      />
 
-        {/* Leadership Message */}
-        <section className="py-20 bg-white">
-          <div className="max-w-4xl mx-auto px-6">
-            <div className="text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Pesan dari <span className="text-primary">Kepemimpinan</span>
-              </h2>
-              <div className="w-24 h-1 bg-primary mx-auto mb-8 rounded-full"></div>
-              <blockquote className="text-xl text-gray-600 italic leading-relaxed mb-8">
-                "Kami berkomitmen untuk membangun ekosistem riset yang berkelanjutan dan berkualitas tinggi. 
-                Melalui platform terintegrasi Cognifera, kami ingin menjadi jembatan yang menghubungkan 
-                akademisi Indonesia dengan standar publikasi internasional."
-              </blockquote>
-              <div className="text-center">
-                <p className="font-semibold text-gray-900">Tim Kepemimpinan</p>
-                <p className="text-gray-600">PT Cognifera Education Academy</p>
-              </div>
-            </div>
-          </div>
-        </section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Dr. Hardianto",
+            "jobTitle": "Chief Executive Officer",
+            "description": "CEO Cognifera Academy dengan gelar Doktor, memimpin inovasi dalam pendidikan dan pengembangan organisasi.",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "Cognifera Academy",
+              "url": "https://www.cognifera.web.id"
+            },
+            "knowsAbout": [
+              "Executive Leadership",
+              "Education Innovation",
+              "Organizational Management",
+              "Strategic Planning"
+            ]
+          })
+        }}
+      />
 
-      </div>
-      <Footer />
+      <OurTeamContent />
     </>
   );
 }

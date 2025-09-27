@@ -3,7 +3,6 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ArrowLeft, Download, ExternalLink, Share2, Bookmark, AlertTriangle, Eye, Users, Calendar, MapPin, Quote, ChevronDown, ChevronUp } from "lucide-react";
-import { Navbar } from "@/components/shared/Navbar";
 import { mockResearchJournals } from "@/mock-data/publications";
 import { ResearchJournalData } from "@/types/publications";
 
@@ -26,7 +25,6 @@ export default function JournalDetailPage() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <div className="min-h-screen bg-gray-50 pt-20">
           <div className="max-w-4xl mx-auto px-6 py-12">
             <div className="animate-pulse">
