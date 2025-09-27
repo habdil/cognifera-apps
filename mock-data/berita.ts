@@ -190,7 +190,7 @@ Daftar Sekarang!
 
 Kesempatan emas ini terbatas! Daftarkan diri Anda sekarang dan wujudkan impian publikasi internasional bersama Cognifera.
 
-Info lengkap: www.cognifera.com/beasiswa`,
+Info lengkap: www.www.cognifera.web.id/beasiswa`,
     featuredImage: "/images/news/beasiswa-cognifera.jpg",
     category: "company",
     tags: ["beasiswa", "mahasiswa", "riset", "Cognifera"],
@@ -316,7 +316,7 @@ Sebagai kompensasi atas ketidaknyamanan ini, semua klien aktif akan mendapat:
 Kontak Darurat
 
 Jika ada kebutuhan urgent selama maintenance:
-- Email: emergency@cognifera.com  
+- Email: emergency@www.cognifera.web.id  
 - WhatsApp: +62 812-3456-7890
 
 Terima kasih atas pengertian dan kerjasamanya.

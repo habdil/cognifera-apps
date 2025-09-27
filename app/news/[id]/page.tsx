@@ -56,11 +56,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: article.judul,
       description: excerpt.replace(/<[^>]*>/g, ''),
-      url: `https://cognifera.com/news/${article.id}`,
+      url: `https://www.cognifera.web.id/news/${article.id}`,
       siteName: "Cognifera Education Academy",
       images: [
         {
-          url: `https://cognifera.com/og-news-${article.id}.jpg`,
+          url: `https://www.cognifera.web.id/og-news-${article.id}.jpg`,
           width: 1200,
           height: 630,
           alt: article.judul,
@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: article.judul,
       description: excerpt.replace(/<[^>]*>/g, ''),
-      images: [`https://cognifera.com/twitter-news-${article.id}.jpg`],
+      images: [`https://www.cognifera.web.id/twitter-news-${article.id}.jpg`],
       creator: "@cogniferedu",
       site: "@cogniferedu",
     },
@@ -93,10 +93,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     alternates: {
-      canonical: `https://cognifera.com/news/${article.id}`,
+      canonical: `https://www.cognifera.web.id/news/${article.id}`,
       languages: {
-        "id-ID": `https://cognifera.com/news/${article.id}`,
-        "en-US": `https://cognifera.com/en/news/${article.id}`,
+        "id-ID": `https://www.cognifera.web.id/news/${article.id}`,
+        "en-US": `https://www.cognifera.web.id/en/news/${article.id}`,
       },
     },
     other: {
@@ -140,7 +140,7 @@ export default async function NewsDetailPage({ params }: Props) {
     "@type": "NewsArticle",
     "headline": article.judul,
     "description": article.konten.substring(0, 160).replace(/<[^>]*>/g, ''),
-    "image": `https://cognifera.com/news-image-${article.id}.jpg`,
+    "image": `https://www.cognifera.web.id/news-image-${article.id}.jpg`,
     "author": {
       "@type": "Person",
       "name": article.author
@@ -150,16 +150,16 @@ export default async function NewsDetailPage({ params }: Props) {
       "name": "PT Cognifera Education Academy",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://cognifera.com/logo.png"
+        "url": "https://www.cognifera.web.id/logo.png"
       }
     },
     "datePublished": article.publicationDate,
     "dateModified": article.publicationDate,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://cognifera.com/news/${article.id}`
+      "@id": `https://www.cognifera.web.id/news/${article.id}`
     },
-    "url": `https://cognifera.com/news/${article.id}`,
+    "url": `https://www.cognifera.web.id/news/${article.id}`,
     "articleSection": getCategoryLabel(article.category),
     "keywords": article.tags.join(", "),
     "articleBody": article.konten.replace(/<[^>]*>/g, ''),
@@ -172,7 +172,7 @@ export default async function NewsDetailPage({ params }: Props) {
     "isPartOf": {
       "@type": "WebSite",
       "name": "Cognifera Education Academy",
-      "url": "https://cognifera.com"
+      "url": "https://www.cognifera.web.id"
     }
   };
 
@@ -184,19 +184,19 @@ export default async function NewsDetailPage({ params }: Props) {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://cognifera.com"
+        "item": "https://www.cognifera.web.id"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Berita & Artikel",
-        "item": "https://cognifera.com/news"
+        "item": "https://www.cognifera.web.id/news"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": article.judul,
-        "item": `https://cognifera.com/news/${article.id}`
+        "item": `https://www.cognifera.web.id/news/${article.id}`
       }
     ]
   };

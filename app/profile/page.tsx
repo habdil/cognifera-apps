@@ -28,11 +28,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Profil PT Cognifera Education Academy - Platform Riset Terintegrasi Terdepan",
     description: "Perusahaan teknologi pendidikan yang menghubungkan akademisi Indonesia dengan publikasi berkualitas internasional. Layanan bimbingan riset, publikasi jurnal, dan penerbitan buku dengan tingkat keberhasilan 98%.",
-    url: "https://cognifera.com/profile",
+    url: "https://www.cognifera.web.id/profile",
     siteName: "Cognifera Education Academy",
     images: [
       {
-        url: "https://cognifera.com/og-profile.jpg",
+        url: "https://www.cognifera.web.id/og-profile.jpg",
         width: 1200,
         height: 630,
         alt: "PT Cognifera Education Academy - Platform Riset Terintegrasi",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Profil PT Cognifera Education Academy - Platform Riset Terintegrasi",
     description: "Perusahaan teknologi pendidikan terdepan untuk akademisi Indonesia. Layanan riset terintegrasi dengan tingkat keberhasilan 98%.",
-    images: ["https://cognifera.com/twitter-profile.jpg"],
+    images: ["https://www.cognifera.web.id/twitter-profile.jpg"],
     creator: "@cogniferedu",
     site: "@cogniferedu",
   },
@@ -65,10 +65,10 @@ export const metadata: Metadata = {
     yahoo: "yahoo-verification-code",
   },
   alternates: {
-    canonical: "https://cognifera.com/profile",
+    canonical: "https://www.cognifera.web.id/profile",
     languages: {
-      "id-ID": "https://cognifera.com/profile",
-      "en-US": "https://cognifera.com/en/profile",
+      "id-ID": "https://www.cognifera.web.id/profile",
+      "en-US": "https://www.cognifera.web.id/en/profile",
     },
   },
   other: {
@@ -84,8 +84,8 @@ export default function ProfilePage() {
     "@type": "Organization",
     "name": "PT Cognifera Education Academy",
     "alternateName": "Cognifera Education",
-    "url": "https://cognifera.com",
-    "logo": "https://cognifera.com/logo.png",
+    "url": "https://www.cognifera.web.id",
+    "logo": "https://www.cognifera.web.id/logo.png",
     "description": "Platform riset terintegrasi yang menghubungkan akademisi Indonesia dengan publikasi berkualitas internasional",
     "foundingDate": "2025",
     "industry": "Educational Technology",

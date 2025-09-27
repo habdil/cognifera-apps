@@ -32,11 +32,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Berita & Artikel Riset Terbaru - Cognifera Education Academy",
     description: "Perkembangan terbaru di dunia riset, teknologi pendidikan, dan inovasi akademik. Artikel pilihan, berita industri, dan pengumuman dari platform riset terintegrasi terdepan.",
-    url: "https://cognifera.com/news",
+    url: "https://www.cognifera.web.id/news",
     siteName: "Cognifera Education Academy",
     images: [
       {
-        url: "https://cognifera.com/og-news.jpg",
+        url: "https://www.cognifera.web.id/og-news.jpg",
         width: 1200,
         height: 630,
         alt: "Berita & Artikel Riset Terbaru - Cognifera Education Academy",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Berita & Artikel Riset Terbaru - Cognifera Education",
     description: "Ikuti perkembangan terbaru di dunia riset dan teknologi pendidikan. Artikel pilihan dan berita industri dari platform riset terintegrasi.",
-    images: ["https://cognifera.com/twitter-news.jpg"],
+    images: ["https://www.cognifera.web.id/twitter-news.jpg"],
     creator: "@cogniferedu",
     site: "@cogniferedu",
   },
@@ -65,10 +65,10 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://cognifera.com/news",
+    canonical: "https://www.cognifera.web.id/news",
     languages: {
-      "id-ID": "https://cognifera.com/news",
-      "en-US": "https://cognifera.com/en/news",
+      "id-ID": "https://www.cognifera.web.id/news",
+      "en-US": "https://www.cognifera.web.id/en/news",
     },
   },
   other: {
@@ -82,11 +82,11 @@ export default function NewsPage() {
     "@type": "CollectionPage",
     "name": "Berita & Artikel Riset",
     "description": "Kumpulan berita dan artikel terbaru tentang riset, teknologi pendidikan, dan inovasi akademik",
-    "url": "https://cognifera.com/news",
+    "url": "https://www.cognifera.web.id/news",
     "isPartOf": {
       "@type": "WebSite",
       "name": "Cognifera Education Academy",
-      "url": "https://cognifera.com"
+      "url": "https://www.cognifera.web.id"
     },
     "mainEntity": {
       "@type": "ItemList",
@@ -101,13 +101,13 @@ export default function NewsPage() {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://cognifera.com"
+          "item": "https://www.cognifera.web.id"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "Berita & Artikel",
-          "item": "https://cognifera.com/news"
+          "item": "https://www.cognifera.web.id/news"
         }
       ]
     },
@@ -116,7 +116,7 @@ export default function NewsPage() {
       "name": "PT Cognifera Education Academy",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://cognifera.com/logo.png"
+        "url": "https://www.cognifera.web.id/logo.png"
       }
     }
   };

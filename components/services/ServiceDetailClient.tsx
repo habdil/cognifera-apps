@@ -295,11 +295,11 @@ export function ServiceDetailClient({ initialService }: ServiceDetailClientProps
                   <span>+62 811-234-567</span>
                 </a>
                 <a
-                  href="mailto:info@cognifera.com"
+                  href="mailto:cognifera.edu@gmail.com"
                   className="flex items-center text-gray-600 hover:text-primary transition-colors"
                 >
                   <Mail className="w-4 h-4 mr-3" />
-                  <span>info@cognifera.com</span>
+                  <span>cognifera.edu@gmail.com</span>
                 </a>
               </div>
 

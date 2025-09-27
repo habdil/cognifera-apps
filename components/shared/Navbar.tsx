@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -21,13 +22,14 @@ import {
 import { AuthDialog } from "@/components/shared/AuthDialog";
 import { getCurrentUser, logoutUser, type User } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { User as UserIcon, LogOut } from "lucide-react";
+import { User as UserIcon, LogOut, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 
 export const Navbar = () => {
   const [active, setActive] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [expandedMobileMenu, setExpandedMobileMenu] = useState<string | null>(null);
 
   useEffect(() => {
     setUser(getCurrentUser());
@@ -197,16 +199,190 @@ export const Navbar = () => {
 
         {/* Mobile menu */}
         <MobileNavMenu isOpen={mobileOpen} onClose={() => setMobileOpen(false)}>
-          {navItems.map((item, idx) => (
-            <a
-              key={idx}
-              href={item.link}
-              className="w-full rounded-md px-4 py-2 text-base font-medium text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
-              onClick={() => setMobileOpen(false)}
+          {/* Home */}
+          <a
+            href="/"
+            className="w-full rounded-md px-4 py-2 text-base font-medium text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
+            onClick={() => setMobileOpen(false)}
+          >
+            Home
+          </a>
+
+          {/* About Section with Sub-items */}
+          <div className="w-full">
+            <button
+              onClick={() => setExpandedMobileMenu(expandedMobileMenu === 'about' ? null : 'about')}
+              className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-[var(--color-foreground)] border-b border-gray-200 hover:bg-gray-50"
             >
-              {item.name}
-            </a>
-          ))}
+              <span>About</span>
+              {expandedMobileMenu === 'about' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+            {expandedMobileMenu === 'about' && (
+              <div className="pl-6 py-1 space-y-1 bg-gray-50">
+                <a
+                  href="/profile"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Profile
+                </a>
+                <a
+                  href="/visi-misi"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Visi dan Misi
+                </a>
+                <a
+                  href="/our-team"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Our Team
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* Services Section with Sub-items */}
+          <div className="w-full">
+            <button
+              onClick={() => setExpandedMobileMenu(expandedMobileMenu === 'services' ? null : 'services')}
+              className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-[var(--color-foreground)] border-b border-gray-200 hover:bg-gray-50"
+            >
+              <span>Services</span>
+              {expandedMobileMenu === 'services' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+            {expandedMobileMenu === 'services' && (
+              <div className="pl-6 py-1 space-y-1 bg-gray-50">
+                <a
+                  href="/services/feradata"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  FERADATA
+                </a>
+                <a
+                  href="/services/feraguide"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  FERAGUIDE
+                </a>
+                <a
+                  href="/services/ferapub"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  FERAPUB
+                </a>
+                <a
+                  href="/services/feragrant"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  FERAGRANT
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* Publications Section with Sub-items */}
+          <div className="w-full">
+            <button
+              onClick={() => setExpandedMobileMenu(expandedMobileMenu === 'publications' ? null : 'publications')}
+              className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-[var(--color-foreground)] border-b border-gray-200 hover:bg-gray-50"
+            >
+              <span>Publications</span>
+              {expandedMobileMenu === 'publications' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+            {expandedMobileMenu === 'publications' && (
+              <div className="pl-6 py-1 space-y-1 bg-gray-50">
+                <a
+                  href="/publications"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  All Publications
+                </a>
+                <a
+                  href="/publications?section=books"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Books
+                </a>
+                <a
+                  href="/publications?section=journals"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Journals
+                </a>
+                <a
+                  href="https://ojs.cognifera.web.id"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Journal Al-Musannif ↗
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* News Section with Sub-items */}
+          <div className="w-full">
+            <button
+              onClick={() => setExpandedMobileMenu(expandedMobileMenu === 'news' ? null : 'news')}
+              className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-[var(--color-foreground)] border-b border-gray-200 hover:bg-gray-50"
+            >
+              <span>News</span>
+              {expandedMobileMenu === 'news' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+            {expandedMobileMenu === 'news' && (
+              <div className="pl-6 py-1 space-y-1 bg-gray-50">
+                <a
+                  href="/news"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  All News
+                </a>
+                <a
+                  href="/news?category=industry"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Industry News
+                </a>
+                <a
+                  href="/news?category=research"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Research News
+                </a>
+                <a
+                  href="/news?category=company"
+                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Company News
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* Contacts */}
+          <a
+            href="/#contacts"
+            className="w-full rounded-md px-4 py-2 text-base font-medium text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
+            onClick={() => setMobileOpen(false)}
+          >
+            Contacts
+          </a>
           {user && user.role === "CLIENT" ? (
             <div className="w-full space-y-3">
               <div className="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg">
