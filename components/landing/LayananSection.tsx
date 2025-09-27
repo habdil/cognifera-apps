@@ -78,6 +78,7 @@ export function LayananSection() {
                       src={`/hero/hero-${service.id}.png`}
                       alt={`${service.nama} icon`}
                       className="w-8 h-8 object-contain"
+                      loading="lazy"
                     />
                   </div>
                   {service.successRate && (

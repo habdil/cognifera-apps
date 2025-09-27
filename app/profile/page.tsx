@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: "Cognifera Education Academy",
     images: [
       {
-        url: "https://www.cognifera.web.id/og-profile.jpg",
+        url: "https://www.cognifera.web.id/og-profile.png",
         width: 1200,
         height: 630,
         alt: "PT Cognifera Education Academy - Platform Riset Terintegrasi",

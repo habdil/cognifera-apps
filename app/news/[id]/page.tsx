@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: "Cognifera Education Academy",
       images: [
         {
-          url: `https://www.cognifera.web.id/og-news-${article.id}.jpg`,
+          url: `https://www.cognifera.web.id/og-news.jpg`,
           width: 1200,
           height: 630,
           alt: article.judul,
