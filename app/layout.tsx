@@ -3,6 +3,7 @@ import { Work_Sans, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/shared/Navbar";
 import { Footer } from "@/components/shared/Footer";
+import PromoPopupProvider from "@/components/PromoPopupProvider";
 import "./globals.css";
 
 const workSans = Work_Sans({
@@ -134,6 +135,7 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <PromoPopupProvider />
         <Toaster
           position="top-right"
           toastOptions={{
