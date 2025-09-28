@@ -250,16 +250,10 @@ export const logoutUser = async (): Promise<void> => {
 
 export const getDashboardUrl = (role: string): string => {
   const roleRoutes: Record<string, string> = {
-    'AUTHOR_JOURNAL': '/dashboard/author-journal',
-    'REVIEWER_JOURNAL': '/dashboard/reviewer-journal',
-    'EDITOR_JOURNAL': '/dashboard/editor-journal',
-    'MANAGER_JOURNAL': '/dashboard/manager-journal',
-    'AUTHOR_BOOK': '/dashboard/author-book',
-    'EDITOR_BOOK': '/dashboard/editor-book',
-    'MANAGER_BOOK': '/dashboard/manager-book',
-    'AUTHOR_NEWS': '/dashboard/author-news',
-    'ADMIN_COGNIFERA': '/dashboard/admin',
-    'CLIENT': '/' // CLIENT stays on main page with updated navbar
+    'AUTHOR': '/dashboard/author',
+    'ADMIN': '/dashboard/admin',
+    'READER': '/', // Reader stays on main page
+    'CLIENT': '/' // CLIENT stays on main page with updated navbar (backward compatibility)
   };
 
   return roleRoutes[role] || '/';

@@ -48,7 +48,7 @@ export default function JournalSocialHeader({ activeItem = "home" }: JournalSoci
   return (
     <header className="bg-white border-b border-[var(--color-border)]">
       {/* Top Navigation Bar */}
-      <div className="bg-[var(--color-primary)] text-white py-2" style={{ backgroundColor: journalSocialConfig.colors.primary }}>
+      {/* <div className="bg-[var(--color-primary)] text-white py-2" style={{ backgroundColor: journalSocialConfig.colors.primary }}>
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <Link 
@@ -97,7 +97,7 @@ export default function JournalSocialHeader({ activeItem = "home" }: JournalSoci
             )}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Header */}
       <div className="py-6 bg-white">

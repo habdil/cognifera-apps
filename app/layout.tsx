@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Work_Sans, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
-import { Navbar } from "@/components/shared/Navbar";
-import { Footer } from "@/components/shared/Footer";
 import PromoPopupProvider from "@/components/PromoPopupProvider";
 import "./globals.css";
 
@@ -132,9 +130,7 @@ export default function RootLayout({
       <body
         className={`${workSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+        {children}
         <PromoPopupProvider />
         <Toaster
           position="top-right"

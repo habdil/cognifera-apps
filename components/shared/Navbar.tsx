@@ -20,26 +20,42 @@ import {
 } from "@/components/ui/navbar-menu";
 
 import { AuthDialog } from "@/components/shared/AuthDialog";
-import { getCurrentUser, logoutUser, type User } from "@/lib/auth";
+import { getCurrentUser, logout, type UnifiedUser } from "@/lib/auth-config";
 import { Button } from "@/components/ui/button";
-import { User as UserIcon, LogOut, ChevronDown, ChevronUp } from "lucide-react";
+import { User as UserIcon, LogOut, ChevronDown, ChevronUp, BookOpen, Heart, Settings } from "lucide-react";
 import { toast } from "sonner";
 
 export const Navbar = () => {
   const [active, setActive] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UnifiedUser | null>(null);
   const [expandedMobileMenu, setExpandedMobileMenu] = useState<string | null>(null);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   useEffect(() => {
     setUser(getCurrentUser());
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showUserDropdown && !(event.target as Element).closest('.relative')) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserDropdown]);
+
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await logout();
       toast.success("Berhasil logout! Sampai jumpa lagi! 👋");
       setUser(null);
+      setShowUserDropdown(false);
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -48,9 +64,47 @@ export const Navbar = () => {
       toast.error("Logout gagal, tapi data lokal sudah dihapus");
       // Even if API call fails, clear local data
       setUser(null);
+      setShowUserDropdown(false);
       setTimeout(() => {
         window.location.reload();
       }, 1000);
+    }
+  };
+
+  const getUserDropdownItems = (userRole: string) => {
+    switch (userRole) {
+      case 'READER':
+      case 'CLIENT':
+        return [
+          {
+            label: 'Berita Tersimpan',
+            href: '/dashboard/reader/saved-news',
+            icon: Heart
+          },
+          {
+            label: 'Terbitkan Buku',
+            href: '/dashboard/reader/publish-book',
+            icon: BookOpen
+          }
+        ];
+      case 'AUTHOR':
+        return [
+          {
+            label: 'Dashboard',
+            href: '/dashboard/author',
+            icon: Settings
+          }
+        ];
+      case 'ADMIN':
+        return [
+          {
+            label: 'Dashboard Admin',
+            href: '/dashboard/admin',
+            icon: Settings
+          }
+        ];
+      default:
+        return [];
     }
   };
 
@@ -134,23 +188,57 @@ export const Navbar = () => {
 
         {/* CTA */}
         <div className="flex items-center space-x-4">
-          {user && user.role === "CLIENT" ? (
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2 px-3 py-2 bg-gray-100 rounded-full">
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setShowUserDropdown(!showUserDropdown)}
+                className="flex items-center space-x-2 px-3 py-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+              >
                 <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
                   <UserIcon className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm font-medium">{user.name}</span>
-              </div>
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                size="sm"
-                className="flex items-center space-x-2"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Logout</span>
-              </Button>
+                <span className="text-sm font-medium">{user.fullName || user.name}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${showUserDropdown ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Dropdown Menu */}
+              {showUserDropdown && (
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                  {/* User Info */}
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <p className="text-sm font-medium text-gray-900">{user.fullName || user.name}</p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
+                    <p className="text-xs text-gray-400">{user.role}</p>
+                  </div>
+
+                  {/* Menu Items */}
+                  {getUserDropdownItems(user.role).map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <a
+                        key={index}
+                        href={item.href}
+                        className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={() => setShowUserDropdown(false)}
+                      >
+                        <IconComponent className="w-4 h-4" />
+                        <span>{item.label}</span>
+                      </a>
+                    );
+                  })}
+
+                  {/* Logout */}
+                  <div className="border-t border-gray-100 mt-2">
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center space-x-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex items-center space-x-3">
@@ -383,18 +471,40 @@ export const Navbar = () => {
           >
             Contacts
           </a>
-          {user && user.role === "CLIENT" ? (
+          {user ? (
             <div className="w-full space-y-3">
+              {/* User Info */}
               <div className="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg">
                 <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
                   <UserIcon className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm font-medium">{user.name}</span>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{user.fullName || user.name}</p>
+                  <p className="text-xs text-gray-500">{user.role}</p>
+                </div>
               </div>
+
+              {/* Menu Items */}
+              {getUserDropdownItems(user.role).map((item, index) => {
+                const IconComponent = item.icon;
+                return (
+                  <a
+                    key={index}
+                    href={item.href}
+                    className="flex items-center space-x-3 w-full p-3 text-sm text-gray-700 bg-white rounded-lg border hover:bg-gray-50 transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </a>
+                );
+              })}
+
+              {/* Logout */}
               <Button
                 onClick={handleLogout}
                 variant="outline"
-                className="w-full flex items-center justify-center space-x-2"
+                className="w-full flex items-center justify-center space-x-2 text-red-600 border-red-200 hover:bg-red-50"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>

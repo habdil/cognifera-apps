@@ -283,7 +283,7 @@ export default function JournalAnnouncementsLayout() {
         </Card>
       </main>
       
-      <JournalFooter />
+      {/* <JournalFooter /> */}
     </div>
   );
 }

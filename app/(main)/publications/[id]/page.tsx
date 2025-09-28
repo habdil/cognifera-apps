@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, Download, ExternalLink, Share2, Bookmark, AlertTriangle, Eye, Users, Calendar, MapPin, Quote, ChevronDown, ChevronUp } from "lucide-react";
 import { mockResearchJournals } from "@/mock-data/publications";
 import { ResearchJournalData } from "@/types/publications";
+import { Button } from "@/components/ui/button";
 
 export default function JournalDetailPage() {
   const params = useParams();
@@ -69,14 +70,14 @@ export default function JournalDetailPage() {
               Publication Not Found
             </h1>
             <p className="text-[var(--color-muted-foreground)] mb-8">
-              The publication you're looking for doesn't exist.
+              The publication you&apos;re looking for doesn&apos;t exist.
             </p>
-            <button
+            <Button
               onClick={() => router.back()}
               className="px-6 py-3 bg-[var(--color-primary)] text-[var(--color-primary-foreground)] rounded-lg hover:opacity-90 transition-opacity"
             >
               Go Back
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -173,18 +174,18 @@ export default function JournalDetailPage() {
                   </div>
                   <div>
                     <div className="flex items-center justify-center gap-2">
-                      <button title="Report Issue" className="p-1 hover:bg-white/20 rounded">
+                      <Button title="Report Issue" className="p-1 hover:bg-white/20 rounded">
                         <AlertTriangle className="h-5 w-5 text-orange-500" />
-                      </button>
-                      <button title="View Details" className="p-1 hover:bg-white/20 rounded">
+                      </Button>
+                      <Button title="View Details" className="p-1 hover:bg-white/20 rounded">
                         <Eye className="h-5 w-5 text-[var(--color-muted-foreground)]" />
-                      </button>
-                      <button title="Share" className="p-1 hover:bg-white/20 rounded">
+                      </Button>
+                      <Button title="Share" className="p-1 hover:bg-white/20 rounded">
                         <Share2 className="h-5 w-5 text-[var(--color-muted-foreground)]" />
-                      </button>
-                      <button title="Bookmark" className="p-1 hover:bg-white/20 rounded">
+                      </Button>
+                      <Button title="Bookmark" className="p-1 hover:bg-white/20 rounded">
                         <Bookmark className="h-5 w-5 text-[var(--color-muted-foreground)]" />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                   <div className="md:col-span-1">
@@ -329,7 +330,7 @@ const DocumentSections = ({ journal }: { journal: ResearchJournalData }) => {
               <div className="font-medium text-[var(--color-foreground)] mb-1">
                 [{index + 1}] {ref.authors.join(", ")}
               </div>
-              <div className="text-sm text-[var(--color-foreground)] mb-1">"{ref.title}"</div>
+              <div className="text-sm text-[var(--color-foreground)] mb-1">&quot;{ref.title}&quot;</div>
               <div className="text-sm text-[var(--color-muted-foreground)]">
                 {ref.publication}, {ref.year}
                 {ref.doi && (
@@ -357,7 +358,7 @@ const DocumentSections = ({ journal }: { journal: ResearchJournalData }) => {
               <div className="font-medium text-[var(--color-foreground)] mb-1">
                 {cit.authors.join(", ")}
               </div>
-              <div className="text-sm text-[var(--color-foreground)] mb-1">"{cit.title}"</div>
+              <div className="text-sm text-[var(--color-foreground)] mb-1">&quot;{cit.title}&quot;</div>
               <div className="text-sm text-[var(--color-muted-foreground)]">
                 {cit.publication}, {cit.year} • Cited by {cit.citedBy}
               </div>

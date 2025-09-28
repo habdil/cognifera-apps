@@ -403,7 +403,7 @@ export default function JournalSocialCurrentLayout() {
         </div>
       </main>
       
-      <JournalSocialFooter />
+      {/* <JournalSocialFooter /> */}
     </div>
   );
 }

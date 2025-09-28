@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { loginUser, registerUser, getDashboardUrl } from "@/lib/auth";
+import { login, register, getDashboardUrl } from "@/lib/auth-config";
 import { toast } from "sonner";
 
 interface AuthDialogProps {
@@ -42,29 +42,40 @@ export const AuthDialog = ({ children, defaultMode = "register" }: AuthDialogPro
     try {
       let user;
       if (isLogin) {
-        user = await loginUser(formData.email, formData.password);
+        user = await login(formData.email, formData.password);
       } else {
-        user = await registerUser(formData.name, formData.email, formData.password, formData.confirmPassword);
+        const result = await register(formData.email, formData.password, formData.name);
+
+        if (typeof result === 'object' && 'needsVerification' in result) {
+          // New auth system with verification
+          if (result.needsVerification) {
+            toast.success('Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.');
+            setOpen(false);
+            // Redirect to verification page
+            setTimeout(() => {
+              window.location.href = '/verify-email';
+            }, 1500);
+            return;
+          } else {
+            user = result.user;
+          }
+        } else {
+          user = result;
+        }
       }
 
       console.log(`User logged in with role: ${user.role}`);
-      
-      // Show appropriate success message and redirect
-      const dashboardUrl = getDashboardUrl(user.role);
-      console.log(`Redirecting to: ${dashboardUrl}`);
-      
-      if (user.role === "CLIENT") {
-        // For CLIENT, stay on current page but refresh to update navbar
-        toast.success(`Selamat datang kembali, ${user.name}! 🎉`);
-        setTimeout(() => window.location.reload(), 1500);
+
+      // Show success message and refresh navbar for all users
+      if (isLogin) {
+        toast.success(`Selamat datang kembali, ${user.fullName}! 🎉`);
       } else {
-        // For other roles, redirect to their dashboard
-        toast.success(`Selamat datang, ${user.name}! Mengarahkan ke dashboard... 🎉`);
-        setTimeout(() => {
-          window.location.href = dashboardUrl;
-        }, 1500);
+        toast.success(`Pendaftaran berhasil! Selamat datang, ${user.fullName}! 🎉`);
       }
-      
+
+      // Refresh page to update navbar for all roles
+      setTimeout(() => window.location.reload(), 1500);
+
       setOpen(false);
     } catch (err) {
       console.error('AuthDialog error:', err);
@@ -154,13 +165,30 @@ export const AuthDialog = ({ children, defaultMode = "register" }: AuthDialogPro
             </div>
           )}
           
-          <Button 
+          <Button
             type="submit"
             className="w-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary)]/90"
             disabled={loading}
           >
             {loading ? "Processing..." : (isLogin ? "Masuk" : "Daftar")}
           </Button>
+
+          {isLogin && (
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  setTimeout(() => {
+                    window.location.href = '/forgot-password';
+                  }, 100);
+                }}
+                className="text-sm text-[var(--color-primary)] hover:underline"
+              >
+                Lupa kata sandi?
+              </button>
+            </div>
+          )}
         </form>
           
         <Separator />
