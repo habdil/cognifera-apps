@@ -12,7 +12,6 @@ export default function DashboardRootLayout({
 }) {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Dashboard-specific layout - no main navbar/footer */}
       {children}
     </div>
   );

@@ -1,0 +1,1 @@
+export { SavedNewsModal } from './SavedNewsModal';
