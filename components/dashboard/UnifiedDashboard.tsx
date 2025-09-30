@@ -13,17 +13,22 @@ import {
   Home,
   Users,
   BookOpen,
-  Newspaper
+  Newspaper,
+  Megaphone,
+  Briefcase,
+  Star,
+  Shield
 } from 'lucide-react';
 import { useUnifiedAuth } from '@/hooks/useUnifiedAuth';
 import { Button } from '../ui/button';
 import { Loading } from '../shared/Loading';
+import Image from 'next/image';
 
 // Import modular components
 import { AdminDashboard, AdminUsersContent, AdminArticlesContent } from './roles/admin';
 import { AuthorDashboard, AuthorArticlesContent, AuthorCreateContent } from './roles/author';
 import { ReaderDashboard, ReaderLibraryContent, PublishBookContent, SavedNewsContent } from './roles/reader';
-import { AnalyticsContent, CommentsContent, SettingsContent, UnifiedUser, ProfileData } from './shared';
+import { AnalyticsContent, CommentsContent, SettingsContent, ProfileData } from './shared';
 
 // Menu items per role
 const getMenuItems = (role: string) => {
@@ -37,8 +42,12 @@ const getMenuItems = (role: string) => {
       ...baseItems.slice(0, 1), // Dashboard
       { id: 'users', label: 'Users', icon: Users },
       { id: 'articles', label: 'Articles', icon: FileText },
+      { id: 'iklan', label: 'Iklan', icon: Megaphone },
+      { id: 'layanan', label: 'Layanan', icon: Briefcase },
+      { id: 'testimonial', label: 'Testimonial', icon: Star },
       { id: 'analytics', label: 'Analytics', icon: BarChart3 },
       { id: 'comments', label: 'Comments', icon: MessageSquare },
+      { id: 'security', label: 'Security', icon: Shield },
       ...baseItems.slice(1) // Settings
     ];
   }
@@ -144,6 +153,18 @@ export const UnifiedDashboard = memo(() => {
       case 'users':
         return <AdminUsersContent />;
 
+      case 'iklan':
+        return <div className="p-8"><h2 className="text-2xl font-bold">Iklan Management</h2><p className="text-muted-foreground mt-2">Content coming soon...</p></div>;
+
+      case 'layanan':
+        return <div className="p-8"><h2 className="text-2xl font-bold">Layanan Management</h2><p className="text-muted-foreground mt-2">Content coming soon...</p></div>;
+
+      case 'testimonial':
+        return <div className="p-8"><h2 className="text-2xl font-bold">Testimonial Management</h2><p className="text-muted-foreground mt-2">Content coming soon...</p></div>;
+
+      case 'security':
+        return <div className="p-8"><h2 className="text-2xl font-bold">Security & Moderation</h2><p className="text-muted-foreground mt-2">Content coming soon...</p></div>;
+
       case 'analytics':
         return <AnalyticsContent />;
 
@@ -170,8 +191,14 @@ export const UnifiedDashboard = memo(() => {
       {/* Sidebar - Always visible, never reloads */}
       <div className="w-64 bg-[var(--color-background)] border-r border-[var(--color-border)] flex flex-col">
         {/* Logo */}
-        <div className="p-6 border-b border-[var(--color-border)]">
-          <h2 className="text-xl font-bold text-[var(--color-primary)]">Cognifera</h2>
+        <div className="p-6 border-b border-[var(--color-border)] flex items-center justify-center">
+          <Image
+            src="/logo-sidebar.png"
+            alt="Logo Cognifera"
+            width={100}
+            height={40}
+            className="object-contain"
+          />
         </div>
 
         {/* User Info */}

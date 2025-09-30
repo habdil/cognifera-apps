@@ -97,7 +97,7 @@ export const Navbar = () => {
         return [
           {
             label: 'Dashboard Admin',
-            href: '/dashboard',
+            href: '/dashboard/admin',
             icon: Settings,
             action: null
           }

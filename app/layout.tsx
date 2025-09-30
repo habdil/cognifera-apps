@@ -103,13 +103,13 @@ export default function RootLayout({
                 "availableLanguage": ["Indonesian", "English"]
               },
               "sameAs": [
-                "https://www.linkedin.com/company/cognifera",
-                "https://www.instagram.com/cognifera_official"
+                "https://www.linkedin.com/company/cognifera-education-academy",
+                "https://www.instagram.com/cognifera_edu"
               ],
               "offers": [
                 {
                   "@type": "Service",
-                  "name": "Jasa Riset Akademik",
+                  "name": "Riset Akademik",
                   "description": "Layanan penelitian akademik profesional"
                 },
                 {
@@ -133,7 +133,7 @@ export default function RootLayout({
         {children}
         <PromoPopupProvider />
         <Toaster
-          position="top-right"
+          position="bottom-right"
           toastOptions={{
             style: {
               background: 'var(--background)',

@@ -5,6 +5,8 @@
 
 @theme {
   --color-primary: #EC7A01;
+  --color-destructive: #Ff0000;
+  --color-hijau: #21D375;
   --color-primary-v2: #16a085;
   --color-primary-foreground: #ffffff;
   --color-secondary: #FFDD02;
