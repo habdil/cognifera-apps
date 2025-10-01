@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -11,6 +10,8 @@ import {
   MobileNavMenu,
   MobileNavToggle,
 } from "@/components/ui/resizable-navbar";
+import Image from "next/image";
+import Link from "next/link";
 
 import { AuthDialog } from "@/components/shared/AuthDialog";
 import { getCurrentUser, logout, type UnifiedUser } from "@/lib/auth-config";
@@ -88,7 +89,7 @@ export const Navbar = () => {
         return [
           {
             label: 'Dashboard',
-            href: '/dashboard',
+            href: '/dashboard/author',
             icon: Settings,
             action: null
           }
@@ -112,17 +113,17 @@ export const Navbar = () => {
       {/* Navbar Desktop */}
       <NavBody>
         {/* Logo */}
-        <a
+        <Link
           href="/"
           className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1"
         >
-          <img
+          <Image
             src="/logo.png"
             alt="Logo Cognifera"
             width={30}
             height={30}
           />
-        </a>
+        </Link>
 
         {/* Menu utama dengan dropdown */}
         <NavMenuSections active={active} setActive={setActive} />
@@ -167,14 +168,14 @@ export const Navbar = () => {
       <MobileNav>
         <MobileNavHeader>
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-2">
-            <img
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
               src="/logo.png"
               alt="Logo Cognifera"
               width={32}
               height={32}
             />
-          </a>
+          </Link>
 
           {/* Toggle */}
           <MobileNavToggle
