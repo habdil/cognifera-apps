@@ -1,12 +1,16 @@
 "use client";
 
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import { RichTextEditor } from '@/components/editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Upload, Save, Send, X, Eye } from 'lucide-react';
+import { Upload, Save, Send, X, Eye, CheckCircle2, FileText, Plus, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { toast } from 'sonner';
+import { uploadArticleImage } from '@/lib/api/upload';
+import { createArticle, saveDraft, updateArticle, fetchArticleById } from '@/lib/api/author-articles';
 
 interface ArticleFormData {
   judul: string;
@@ -16,7 +20,11 @@ interface ArticleFormData {
   tags: string[];
 }
 
-export const AuthorCreateContent = memo(() => {
+interface AuthorCreateContentProps {
+  onNavigate?: (tab: string) => void;
+}
+
+export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProps) => {
   const [formData, setFormData] = useState<ArticleFormData>({
     judul: '',
     category: '',
@@ -26,6 +34,53 @@ export const AuthorCreateContent = memo(() => {
   });
   const [tagInput, setTagInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [publishedArticleId, setPublishedArticleId] = useState<string | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editArticleId, setEditArticleId] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isLoadingArticle, setIsLoadingArticle] = useState(false);
+
+  // Check if we're in edit mode
+  useEffect(() => {
+    const articleEditId = localStorage.getItem('article-edit-id');
+    if (articleEditId) {
+      setEditMode(true);
+      setEditArticleId(articleEditId);
+      loadArticleForEdit(articleEditId);
+      // Clear after reading
+      localStorage.removeItem('article-edit-id');
+    }
+  }, []);
+
+  // Load article data for editing
+  const loadArticleForEdit = async (articleId: string) => {
+    try {
+      setIsLoadingArticle(true);
+      const response = await fetchArticleById(articleId);
+
+      if (response.success) {
+        const article = response.data;
+        setFormData({
+          judul: article.judul,
+          category: article.category,
+          featuredImage: article.featuredImage,
+          konten: article.konten,
+          tags: article.tags
+        });
+      }
+    } catch (error) {
+      console.error('Error loading article:', error);
+      toast.error('Failed to Load Article', {
+        description: error instanceof Error ? error.message : 'Please try again.',
+      });
+      // Exit edit mode on error
+      setEditMode(false);
+      setEditArticleId(null);
+    } finally {
+      setIsLoadingArticle(false);
+    }
+  };
 
   const categories = [
     { value: 'research-tips', label: 'Research Tips' },
@@ -38,15 +93,29 @@ export const AuthorCreateContent = memo(() => {
     { value: 'announcement', label: 'Announcement' }
   ];
 
-  const handleCoverImageUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCoverImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const url = e.target?.result as string;
-        setFormData(prev => ({ ...prev, featuredImage: url }));
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+
+      // Upload to Supabase via API
+      const response = await uploadArticleImage(file);
+
+      if (response.success) {
+        setFormData(prev => ({ ...prev, featuredImage: response.data.url }));
+        toast.success('Image Uploaded', {
+          description: 'Cover image has been uploaded successfully.',
+        });
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Upload Failed', {
+        description: error instanceof Error ? error.message : 'Failed to upload image. Please try again.',
+      });
+    } finally {
+      setIsUploading(false);
     }
   }, []);
 
@@ -68,52 +137,183 @@ export const AuthorCreateContent = memo(() => {
   }, []);
 
   const handleSaveDraft = useCallback(async () => {
-    setIsSubmitting(true);
-    try {
-      // TODO: Implement save draft API call
-      console.log('Saving draft:', { ...formData, status: 'nonaktif' });
-      alert('Draft saved successfully!');
-    } catch (error) {
-      console.error('Error saving draft:', error);
-      alert('Failed to save draft');
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [formData]);
-
-  const handlePublish = useCallback(async () => {
-    if (!formData.judul || !formData.category || !formData.konten) {
-      alert('Please fill in all required fields (Title, Category, Content)');
+    if (!formData.judul && !formData.konten) {
+      toast.error('Nothing to Save', {
+        description: 'Please write at least a title or some content before saving as draft.',
+      });
       return;
     }
 
     setIsSubmitting(true);
     try {
-      // TODO: Implement publish API call
-      console.log('Publishing article:', { ...formData, status: 'aktif' });
-      alert('Article published successfully!');
+      const payload = {
+        judul: formData.judul,
+        konten: formData.konten,
+        category: formData.category || '',
+        featured_image: formData.featuredImage || '',
+        tags: formData.tags,
+        status: 'nonaktif' as const
+      };
+
+      let response;
+      if (editMode && editArticleId) {
+        // Update existing draft
+        response = await updateArticle(editArticleId, payload);
+      } else {
+        // Create new draft
+        response = await saveDraft(payload);
+      }
+
+      if (response.success) {
+        toast.success('Draft Saved Successfully!', {
+          description: 'Your draft has been saved. You can continue editing or view all drafts.',
+          action: {
+            label: 'View Drafts',
+            onClick: () => {
+              if (onNavigate) {
+                onNavigate('articles');
+                localStorage.setItem('articles-initial-tab', 'drafts');
+              }
+            },
+          },
+          duration: 5000,
+        });
+
+        // Update edit mode with saved article ID
+        if (!editMode && response.data.id) {
+          setEditMode(true);
+          setEditArticleId(response.data.id);
+        }
+      }
     } catch (error) {
-      console.error('Error publishing article:', error);
-      alert('Failed to publish article');
+      console.error('Error saving draft:', error);
+      toast.error('Failed to Save Draft', {
+        description: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
+      });
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData]);
+  }, [formData, onNavigate, editMode, editArticleId]);
+
+  const handlePublish = useCallback(async () => {
+    if (!formData.judul || !formData.category || !formData.konten) {
+      toast.error('Incomplete Form', {
+        description: 'Please fill in all required fields (Title, Category, Content)',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        judul: formData.judul,
+        konten: formData.konten,
+        category: formData.category,
+        featured_image: formData.featuredImage || '',
+        tags: formData.tags,
+        status: 'aktif' as const
+      };
+
+      let response;
+      if (editMode && editArticleId) {
+        // Update existing article and publish
+        response = await updateArticle(editArticleId, payload);
+      } else {
+        // Create new article and publish
+        response = await createArticle(payload);
+      }
+
+      if (response.success) {
+        setPublishedArticleId(response.data.id);
+
+        // Save to localStorage for preview/view
+        localStorage.setItem('article-preview', JSON.stringify(response.data));
+
+        // Show success dialog
+        setShowSuccessDialog(true);
+      }
+    } catch (error) {
+      console.error('Error publishing article:', error);
+      toast.error('Publication Failed', {
+        description: error instanceof Error ? error.message : 'Failed to publish article. Please try again.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [formData, editMode, editArticleId]);
+
+  const handleCreateAnother = useCallback(() => {
+    setShowSuccessDialog(false);
+    setFormData({
+      judul: '',
+      category: '',
+      featuredImage: '',
+      konten: '',
+      tags: []
+    });
+    setPublishedArticleId(null);
+    setEditMode(false);
+    setEditArticleId(null);
+    toast.success('Ready to Create', {
+      description: 'Form has been reset. Start writing your next article!',
+    });
+  }, []);
+
+  const handleViewArticle = useCallback(() => {
+    setShowSuccessDialog(false);
+    // TODO: Navigate to article detail/preview page
+    // if (publishedArticleId) {
+    //   router.push(`/dashboard/author/articles/${publishedArticleId}`);
+    // }
+
+    // For now, open preview with the published data
+    window.open('/dashboard/author/preview', '_blank');
+  }, []);
+
+  const handleBackToArticles = useCallback(() => {
+    setShowSuccessDialog(false);
+    if (onNavigate) {
+      onNavigate('articles');
+    }
+  }, [onNavigate]);
 
   const handlePreview = useCallback(() => {
     // Save to localStorage temporarily
-    localStorage.setItem('article-preview', JSON.stringify(formData));
+    const dataToPreview = {
+      judul: formData.judul,
+      category: formData.category,
+      featuredImage: formData.featuredImage,
+      konten: formData.konten,
+      tags: formData.tags
+    };
+    localStorage.setItem('article-preview', JSON.stringify(dataToPreview));
 
     // Open preview in new tab
     window.open('/dashboard/author/preview', '_blank');
-  }, [formData]);
+  }, [formData.judul, formData.category, formData.featuredImage, formData.konten, formData.tags]);
+
+  // Show loading state while fetching article for edit
+  if (isLoadingArticle) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 px-4">
+        <div className="w-16 h-16 bg-[var(--color-muted)] rounded-full flex items-center justify-center mb-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-foreground)]"></div>
+        </div>
+        <p className="text-[var(--color-muted-foreground)]">Loading article...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-[var(--color-foreground)]">Create New Article</h1>
-        <p className="text-[var(--color-muted-foreground)] mt-2">Write and publish your article with rich formatting</p>
+        <h1 className="text-3xl font-bold text-[var(--color-foreground)]">
+          {editMode ? 'Edit Article' : 'Create New Article'}
+        </h1>
+        <p className="text-[var(--color-muted-foreground)] mt-2">
+          {editMode ? 'Update your article and republish' : 'Write and publish your article with rich formatting'}
+        </p>
       </div>
 
       {/* Article Information */}
@@ -179,21 +379,33 @@ export const AuthorCreateContent = memo(() => {
                 </Button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-[var(--color-border)] rounded-lg cursor-pointer hover:border-[var(--color-primary)] transition-colors">
+              <label className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-[var(--color-border)] rounded-lg ${isUploading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:border-[var(--color-primary)]'} transition-colors`}>
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <Upload className="w-12 h-12 text-[var(--color-muted-foreground)] mb-3" />
-                  <p className="mb-2 text-sm text-[var(--color-muted-foreground)]">
-                    <span className="font-semibold">Click to upload</span> or drag and drop
-                  </p>
-                  <p className="text-xs text-[var(--color-muted-foreground)] mb-3">
-            Recommended size: 1200x630px or 1920x1080px (16:9 ratio) • Max file size: 10MB • Formats: PNG, JPG, GIF
-          </p>
+                  {isUploading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-foreground)] mb-3"></div>
+                      <p className="mb-2 text-sm text-[var(--color-muted-foreground)] font-semibold">
+                        Uploading image...
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-12 h-12 text-[var(--color-muted-foreground)] mb-3" />
+                      <p className="mb-2 text-sm text-[var(--color-muted-foreground)]">
+                        <span className="font-semibold">Click to upload</span> or drag and drop
+                      </p>
+                      <p className="text-xs text-[var(--color-muted-foreground)] mb-3">
+                        Recommended size: 1200x630px or 1920x1080px (16:9 ratio) • Max file size: 5MB • Formats: PNG, JPG, WebP, GIF
+                      </p>
+                    </>
+                  )}
                 </div>
                 <input
                   type="file"
                   className="hidden"
-                  accept="image/*"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
                   onChange={handleCoverImageUpload}
+                  disabled={isUploading}
                 />
               </label>
             )}
@@ -264,6 +476,7 @@ export const AuthorCreateContent = memo(() => {
           onClick={handlePreview}
           variant="outline"
           className="flex items-center gap-2"
+          disabled={isSubmitting}
         >
           <Eye className="w-4 h-4" />
           Preview Article
@@ -273,7 +486,7 @@ export const AuthorCreateContent = memo(() => {
           <Button
             onClick={handleSaveDraft}
             variant="outline"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isUploading}
             className="flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
@@ -281,14 +494,66 @@ export const AuthorCreateContent = memo(() => {
           </Button>
           <Button
             onClick={handlePublish}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isUploading}
             className="flex items-center gap-2"
           >
-            <Send className="w-4 h-4" />
-            Publish Article
+            {isSubmitting ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                {editMode ? 'Updating...' : 'Publishing...'}
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                {editMode ? 'Update Article' : 'Publish Article'}
+              </>
+            )}
           </Button>
         </div>
       </div>
+
+      {/* Success Dialog */}
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle2 className="w-10 h-10 text-green-600" />
+              </div>
+            </div>
+            <DialogTitle className="text-center text-2xl">Article Published Successfully!</DialogTitle>
+            <DialogDescription className="text-center">
+              Your article &quot;{formData.judul}&quot; has been published and is now live. What would you like to do next?
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="flex-col sm:flex-col gap-2 mt-4">
+            <Button
+              onClick={handleViewArticle}
+              className="w-full flex items-center justify-center gap-2"
+            >
+              <FileText className="w-4 h-4" />
+              View Article
+            </Button>
+            <Button
+              onClick={handleCreateAnother}
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Create Another Article
+            </Button>
+            <Button
+              onClick={handleBackToArticles}
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to My Articles
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 });

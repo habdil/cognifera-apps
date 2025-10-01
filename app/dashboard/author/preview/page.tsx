@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft, Calendar, Tag, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { getCurrentUser } from '@/lib/auth-config';
 
 interface ArticlePreviewData {
   judul: string;
@@ -12,22 +12,38 @@ interface ArticlePreviewData {
   featuredImage: string;
   konten: string;
   tags: string[];
+  author?: {
+    id: string;
+    fullName: string;
+    avatar?: string;
+  };
 }
 
 export default function ArticlePreviewPage() {
-  const router = useRouter();
   const [article, setArticle] = useState<ArticlePreviewData | null>(null);
+  const [authorName, setAuthorName] = useState<string>('Author Name');
 
   useEffect(() => {
-    // Load from localStorage
+    // Load article from localStorage
     const stored = localStorage.getItem('article-preview');
     if (stored) {
       try {
         const data = JSON.parse(stored);
         setArticle(data);
+
+        // If article has author info from backend, use it
+        if (data.author?.fullName) {
+          setAuthorName(data.author.fullName);
+        }
       } catch (error) {
         console.error('Failed to parse preview data:', error);
       }
+    }
+
+    // Get current user from auth (already in localStorage from login)
+    const currentUser = getCurrentUser();
+    if (currentUser?.fullName) {
+      setAuthorName(currentUser.fullName);
     }
   }, []);
 
@@ -93,7 +109,7 @@ export default function ArticlePreviewPage() {
         <div className="flex flex-wrap items-center gap-6 mb-8 text-sm text-[var(--color-muted-foreground)]">
           <div className="flex items-center gap-2">
             <User className="w-4 h-4" />
-            <span>Author Name</span>
+            <span>{authorName}</span>
           </div>
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />

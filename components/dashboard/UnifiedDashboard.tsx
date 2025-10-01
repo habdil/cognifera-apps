@@ -137,7 +137,7 @@ export const UnifiedDashboard = memo(() => {
 
       case 'articles':
         if (userRole === 'ADMIN') return <AdminArticlesContent />;
-        if (userRole === 'AUTHOR') return <AuthorArticlesContent />;
+        if (userRole === 'AUTHOR') return <AuthorArticlesContent onNavigate={handleTabChange} />;
         if (userRole === 'READER') return <ReaderLibraryContent />;
         return <ReaderLibraryContent />; // fallback
 
@@ -148,7 +148,7 @@ export const UnifiedDashboard = memo(() => {
         return <SavedNewsContent />;
 
       case 'create':
-        return <AuthorCreateContent />;
+        return <AuthorCreateContent onNavigate={handleTabChange} />;
 
       case 'users':
         return <AdminUsersContent />;

@@ -212,3 +212,32 @@ export async function fetchUserById(userId: string): Promise<ApiResponse<UserDat
 
   return response.json();
 }
+
+/**
+ * Get current logged-in user profile
+ * GET /api/auth/me or /api/users/me
+ */
+export async function fetchCurrentUser(): Promise<ApiResponse<UserData>> {
+  // Try /api/auth/me first (common pattern)
+  let response = await fetch(`${API_BASE_URL}/auth/me`, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+    credentials: 'include'
+  });
+
+  // Fallback to /api/users/me if 404
+  if (!response.ok && response.status === 404) {
+    response = await fetch(`${API_BASE_URL}/users/me`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+      credentials: 'include'
+    });
+  }
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'Failed to fetch current user' }));
+    throw new Error(error.message || `HTTP ${response.status}: Failed to fetch current user`);
+  }
+
+  return response.json();
+}
