@@ -4,7 +4,7 @@ import { memo, useState, useCallback } from 'react';
 import { RichTextEditor } from '@/components/editor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Upload, Save, Send, X } from 'lucide-react';
+import { Upload, Save, Send, X, Eye } from 'lucide-react';
 import Image from 'next/image';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 
@@ -98,6 +98,14 @@ export const AuthorCreateContent = memo(() => {
     } finally {
       setIsSubmitting(false);
     }
+  }, [formData]);
+
+  const handlePreview = useCallback(() => {
+    // Save to localStorage temporarily
+    localStorage.setItem('article-preview', JSON.stringify(formData));
+
+    // Open preview in new tab
+    window.open('/dashboard/author/preview', '_blank');
   }, [formData]);
 
   return (
@@ -251,24 +259,35 @@ export const AuthorCreateContent = memo(() => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-end gap-4 p-6 bg-[var(--color-background)] rounded-lg border border-[var(--color-border)]">
+      <div className="flex justify-between gap-4 p-6 bg-[var(--color-background)] rounded-lg border border-[var(--color-border)]">
         <Button
-          onClick={handleSaveDraft}
+          onClick={handlePreview}
           variant="outline"
-          disabled={isSubmitting}
           className="flex items-center gap-2"
         >
-          <Save className="w-4 h-4" />
-          Save as Draft
+          <Eye className="w-4 h-4" />
+          Preview Article
         </Button>
-        <Button
-          onClick={handlePublish}
-          disabled={isSubmitting}
-          className="flex items-center gap-2"
-        >
-          <Send className="w-4 h-4" />
-          Publish Article
-        </Button>
+
+        <div className="flex gap-4">
+          <Button
+            onClick={handleSaveDraft}
+            variant="outline"
+            disabled={isSubmitting}
+            className="flex items-center gap-2"
+          >
+            <Save className="w-4 h-4" />
+            Save as Draft
+          </Button>
+          <Button
+            onClick={handlePublish}
+            disabled={isSubmitting}
+            className="flex items-center gap-2"
+          >
+            <Send className="w-4 h-4" />
+            Publish Article
+          </Button>
+        </div>
       </div>
     </div>
   );

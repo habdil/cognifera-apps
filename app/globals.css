@@ -10,6 +10,7 @@
   --color-destructive: #Ff0000;
   --color-hijau: #21D375;
   --color-primary-v2: #16a085;
+  --color-accent: #f5f5f5;
   --color-primary-foreground: #ffffff;
   --color-secondary: #FFDD02;
   --color-secondary-v2: #3498db;
@@ -30,6 +31,8 @@
   --font-sans: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
+
+/* accent */
 
 @keyframes cell-ripple {
   0% {
