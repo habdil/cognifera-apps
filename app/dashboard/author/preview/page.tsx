@@ -58,7 +58,7 @@ export default function ArticlePreviewPage() {
             Please go back and create an article first.
           </p>
           <Button onClick={() => window.close()}>
-            Close Preview
+                <ArrowLeft className="w-4 h-4" />
           </Button>
         </div>
       </div>
@@ -79,7 +79,6 @@ export default function ArticlePreviewPage() {
                 className="flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Close Preview
               </Button>
               <div className="text-sm text-[var(--color-muted-foreground)]">
                 Preview Mode • Changes are not saved
@@ -206,6 +205,19 @@ export default function ArticlePreviewPage() {
           margin-bottom: 1rem;
         }
 
+        .prose ul {
+          list-style-type: disc;
+        }
+
+        .prose ol {
+          list-style-type: decimal;
+        }
+
+        .prose li {
+          margin-bottom: 0.25rem;
+          line-height: 1.75;
+        }
+
         .prose ul[data-type="taskList"] {
           list-style: none;
           padding-left: 0;
@@ -237,23 +249,23 @@ export default function ArticlePreviewPage() {
           max-width: 100%;
           height: auto;
           border-radius: 0.5rem;
-          margin: 1rem 0;
+          margin: 1rem auto;
           display: block;
         }
 
         .prose img[data-align="left"] {
-          margin-left: 0;
-          margin-right: auto;
+          margin-left: 0 !important;
+          margin-right: auto !important;
         }
 
         .prose img[data-align="center"] {
-          margin-left: auto;
-          margin-right: auto;
+          margin-left: auto !important;
+          margin-right: auto !important;
         }
 
         .prose img[data-align="right"] {
-          margin-left: auto;
-          margin-right: 0;
+          margin-left: auto !important;
+          margin-right: 0 !important;
         }
 
         .prose a {

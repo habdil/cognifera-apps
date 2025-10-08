@@ -27,6 +27,8 @@ import Image from 'next/image';
 // Import modular components
 import { AdminDashboard, AdminUsersContent, AdminArticlesContent } from './roles/admin';
 import { AuthorDashboard, AuthorArticlesContent, AuthorCreateContent } from './roles/author';
+import AuthorCommentsContent from './roles/author/AuthorCommentsContent';
+import AuthorAnalyticsContent from './roles/author/AuthorAnalyticsContent';
 import { ReaderDashboard, ReaderLibraryContent, PublishBookContent, SavedNewsContent } from './roles/reader';
 import { AnalyticsContent, CommentsContent, SettingsContent, ProfileData } from './shared';
 
@@ -98,7 +100,20 @@ export const UnifiedDashboard = memo(() => {
       setIsLoading(false);
     }, 1000); // 1 second loading
 
-    return () => clearTimeout(timer);
+    // Handle dashboard navigation events from child components
+    const handleNavigationEvent = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail?.tab) {
+        setActiveTab(customEvent.detail.tab);
+      }
+    };
+
+    window.addEventListener('dashboard-navigate', handleNavigationEvent);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('dashboard-navigate', handleNavigationEvent);
+    };
   }, []);
 
   const menuItems = useMemo(() => getMenuItems(user?.role || 'READER'), [user?.role]);
@@ -166,9 +181,17 @@ export const UnifiedDashboard = memo(() => {
         return <div className="p-8"><h2 className="text-2xl font-bold">Security & Moderation</h2><p className="text-muted-foreground mt-2">Content coming soon...</p></div>;
 
       case 'analytics':
+        // Use AuthorAnalyticsContent for AUTHOR role, generic AnalyticsContent for others
+        if (userRole === 'AUTHOR') {
+          return <AuthorAnalyticsContent />;
+        }
         return <AnalyticsContent />;
 
       case 'comments':
+        // Use AuthorCommentsContent for AUTHOR role, generic CommentsContent for others
+        if (userRole === 'AUTHOR') {
+          return <AuthorCommentsContent />;
+        }
         return <CommentsContent />;
 
       case 'settings':

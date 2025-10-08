@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { toast } from 'sonner';
 import { uploadArticleImage } from '@/lib/api/upload';
 import { createArticle, saveDraft, updateArticle, fetchArticleById } from '@/lib/api/author-articles';
+import { processContentImages } from '@/lib/utils/image-processor';
 
 interface ArticleFormData {
   judul: string;
@@ -204,10 +205,33 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
     }
 
     setIsSubmitting(true);
+
+    // Show loading toast for image processing
+    const loadingToastId = toast.loading('Preparing your article for publication...', {
+      description: 'Please wait while we process your content.',
+    });
+
     try {
+      // Process content images: upload base64 images and replace with URLs
+      const processedContent = await processContentImages(
+        formData.konten,
+        (current, total) => {
+          toast.loading(`Uploading images: ${current} of ${total}`, {
+            id: loadingToastId,
+            description: 'Optimizing your content images...',
+          });
+        }
+      );
+
+      // Update toast for article submission
+      toast.loading('Publishing your article...', {
+        id: loadingToastId,
+        description: 'Almost done!',
+      });
+
       const payload = {
         judul: formData.judul,
-        konten: formData.konten,
+        konten: processedContent, // Use processed content with URLs instead of base64
         category: formData.category,
         featured_image: formData.featuredImage || '',
         tags: formData.tags,
@@ -224,6 +248,15 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
       }
 
       if (response.success) {
+        // Dismiss loading toast
+        toast.dismiss(loadingToastId);
+
+        // Show success toast
+        toast.success('Article Published Successfully!', {
+          description: `"${formData.judul}" is now live and visible to readers.`,
+          duration: 4000,
+        });
+
         setPublishedArticleId(response.data.id);
 
         // Save to localStorage for preview/view
@@ -233,9 +266,13 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
         setShowSuccessDialog(true);
       }
     } catch (error) {
+      // Dismiss loading toast
+      toast.dismiss(loadingToastId);
+
       console.error('Error publishing article:', error);
-      toast.error('Publication Failed', {
-        description: error instanceof Error ? error.message : 'Failed to publish article. Please try again.',
+      toast.error('Failed to Publish Article', {
+        description: error instanceof Error ? error.message : 'Something went wrong. Please check your connection and try again.',
+        duration: 6000,
       });
     } finally {
       setIsSubmitting(false);
@@ -505,7 +542,7 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
             ) : (
               <>
                 <Send className="w-4 h-4" />
-                {editMode ? 'Update Article' : 'Publish Article'}
+                {editMode ? 'Publish Article' : 'Publish Article'}
               </>
             )}
           </Button>

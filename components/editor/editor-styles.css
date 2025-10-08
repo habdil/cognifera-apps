@@ -47,6 +47,19 @@
   margin-bottom: 1rem;
 }
 
+.tiptap-editor-content ul {
+  list-style-type: disc;
+}
+
+.tiptap-editor-content ol {
+  list-style-type: decimal;
+}
+
+.tiptap-editor-content li {
+  margin-bottom: 0.25rem;
+  line-height: 1.75;
+}
+
 .tiptap-editor-content ul[data-type="taskList"] {
   list-style: none;
   padding-left: 0;
@@ -85,7 +98,7 @@
   max-width: 100%;
   height: auto;
   border-radius: 0.5rem;
-  margin: 1rem 0;
+  margin: 1rem auto;
   display: block;
   cursor: pointer;
 }
@@ -97,20 +110,20 @@
 
 /* Image Alignment - Left */
 .tiptap-editor-content img[data-align="left"] {
-  margin-left: 0;
-  margin-right: auto;
+  margin-left: 0 !important;
+  margin-right: auto !important;
 }
 
 /* Image Alignment - Center */
 .tiptap-editor-content img[data-align="center"] {
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* Image Alignment - Right */
 .tiptap-editor-content img[data-align="right"] {
-  margin-left: auto;
-  margin-right: 0;
+  margin-left: auto !important;
+  margin-right: 0 !important;
 }
 
 /* Links */

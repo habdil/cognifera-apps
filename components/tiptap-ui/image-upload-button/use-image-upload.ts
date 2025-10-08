@@ -54,8 +54,8 @@ export function canInsertImage(editor: Editor | null, extensionName: string = "i
   )
     return false
 
-  // For imageResize extension, check if we can use setImage command
-  if (extensionName === "imageResize") {
+  // For standard image extension or imageResize, use setImage command
+  if (extensionName === "image" || extensionName === "imageResize") {
     return editor.can().setImage({ src: '' })
   }
 
@@ -89,11 +89,11 @@ export function uploadAndInsertImage(editor: Editor | null, extensionName: strin
         if (url) {
           let success = false
 
-          // For imageResize extension, use setImage command
-          if (extensionName === "imageResize") {
+          // For standard image extension or imageResize, use setImage command
+          if (extensionName === "image" || extensionName === "imageResize") {
             success = editor.chain().focus().setImage({ src: url }).run()
           } else {
-            // For imageUpload extension, use insertContent
+            // For custom imageUpload extension, use insertContent
             success = editor
               .chain()
               .focus()

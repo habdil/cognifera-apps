@@ -2,19 +2,27 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { BeritaData } from "@/types";
-import { beritaAPI } from "@/lib/api-dummy";
+import { PublicArticle, fetchPublicArticles, calculateTotalPages } from "@/lib/api/public-articles";
 import { NewsCard } from "@/components/news/NewsCard";
 import { Search, Filter } from "lucide-react";
+import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function NewsContent() {
   const searchParams = useSearchParams();
-  const [news, setNews] = useState<BeritaData[]>([]);
-  const [filteredNews, setFilteredNews] = useState<BeritaData[]>([]);
+  const [news, setNews] = useState<PublicArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(searchParams?.get('category') || "all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalArticles, setTotalArticles] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const newsPerPage = 9;
 
   const categories = [
@@ -27,46 +35,54 @@ function NewsContent() {
 
   useEffect(() => {
     const fetchNews = async () => {
-      const response = await beritaAPI.getAll({ status: "aktif" });
-      if (response.success && response.data) {
-        const sortedNews = response.data.sort((a, b) =>
-          new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime()
-        );
-        setNews(sortedNews);
-        setFilteredNews(sortedNews);
+      setLoading(true);
+      try {
+        const params = {
+          page: currentPage,
+          limit: newsPerPage,
+          search: searchTerm || undefined,
+          category: selectedCategory !== "all" ? selectedCategory : undefined,
+        };
+
+        // Debug: Log request parameters
+        console.log('🔍 Fetching articles with params:', params);
+        console.log('📋 Selected Category:', selectedCategory);
+
+        // Fetch published articles from public API
+        const response = await fetchPublicArticles(params);
+
+        console.log('✅ API Response:', response);
+        console.log('📊 Total articles found:', response.meta?.total);
+        console.log('📄 Articles returned:', response.data?.length);
+
+        if (response.success && response.data) {
+          setNews(response.data);
+          setTotalArticles(response.meta.total);
+
+          // Calculate totalPages from offset-based pagination
+          const calculatedTotalPages = calculateTotalPages(response.meta.total, response.meta.limit);
+          setTotalPages(calculatedTotalPages);
+
+          console.log('📊 Meta from backend:', response.meta);
+          console.log('📄 Calculated total pages:', calculatedTotalPages);
+
+          // Debug: Log first article category
+          if (response.data.length > 0) {
+            console.log('🏷️ First article category:', response.data[0].category);
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error fetching news:', error);
+        toast.error('Failed to Load Articles', {
+          description: 'Unable to fetch articles. Please try again later.',
+        });
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchNews();
-  }, []);
-
-  useEffect(() => {
-    let filtered = news;
-
-    // Filter by category
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(item => item.category === selectedCategory);
-    }
-
-    // Filter by search term
-    if (searchTerm.trim()) {
-      filtered = filtered.filter(item =>
-        item.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.konten.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-    }
-
-    setFilteredNews(filtered);
-    setCurrentPage(1);
-  }, [news, selectedCategory, searchTerm]);
-
-  // Pagination
-  const indexOfLastNews = currentPage * newsPerPage;
-  const indexOfFirstNews = indexOfLastNews - newsPerPage;
-  const currentNews = filteredNews.slice(indexOfFirstNews, indexOfLastNews);
-  const totalPages = Math.ceil(filteredNews.length / newsPerPage);
+  }, [currentPage, selectedCategory, searchTerm]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -109,7 +125,7 @@ function NewsContent() {
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10" />
             <input
               type="text"
               placeholder="Cari berita, artikel, atau topik..."
@@ -120,31 +136,44 @@ function NewsContent() {
           </div>
 
           {/* Category Filter */}
-          <div className="relative">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <select
+          {/* <div className="flex items-center gap-2 min-w-[250px]">
+            <Filter className="text-gray-400 w-5 h-5 shrink-0" />
+            <Select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="pl-10 pr-8 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white min-w-[200px]"
+              onValueChange={(value) => {
+                console.log('📝 Category changed to:', value);
+                setSelectedCategory(value);
+                setCurrentPage(1);
+              }}
             >
-              {categories.map((category) => (
-                <option key={category.value} value={category.value}>
-                  {category.label}
-                </option>
-              ))}
-            </select>
-          </div>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih Kategori" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => (
+                  <SelectItem key={category.value} value={category.value}>
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div> */}
         </div>
 
         {/* Results Count */}
         <div className="mb-8">
           <p className="text-gray-600">
-            Menampilkan {filteredNews.length} dari {news.length} artikel
+            Menampilkan {news.length} dari {totalArticles} artikel
+            {selectedCategory !== "all" && (
+              <span className="ml-2 text-primary font-medium">
+                (Kategori: {categories.find(c => c.value === selectedCategory)?.label})
+              </span>
+            )}
           </p>
         </div>
 
         {/* News Grid */}
-        {currentNews.length === 0 ? (
+        {news.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">📰</div>
             <h3 className="text-xl font-semibold text-gray-600 mb-2">
@@ -156,7 +185,7 @@ function NewsContent() {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {currentNews.map((article) => (
+            {news.map((article) => (
               <NewsCard key={article.id} article={article} />
             ))}
           </div>
@@ -201,7 +230,8 @@ function NewsContent() {
   );
 }
 
-export function NewsPageClient() {
+export function
+NewsPageClient() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 pt-20">

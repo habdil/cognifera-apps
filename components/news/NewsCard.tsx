@@ -1,9 +1,10 @@
-import { BeritaData } from "@/types";
-import { Calendar, Clock, Tag, ArrowRight } from "lucide-react";
+import { PublicArticle, getCategoryLabel, getCategoryName } from "@/lib/api/public-articles";
+import { Calendar, Tag, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface NewsCardProps {
-  article: BeritaData;
+  article: PublicArticle;
 }
 
 export function NewsCard({ article }: NewsCardProps) {
@@ -15,35 +16,39 @@ export function NewsCard({ article }: NewsCardProps) {
     });
   };
 
-  const getCategoryLabel = (category: string) => {
-    const categoryMap: { [key: string]: string } = {
-      industry: "Industry News",
-      research: "Research News", 
-      company: "Company News",
-      announcement: "Pengumuman"
-    };
-    return categoryMap[category] || category;
-  };
+  const getCategoryColor = (category: PublicArticle['category']) => {
+    // Get the category name for comparison (handles both string and object)
+    const categoryName = getCategoryName(category);
 
-  const getCategoryColor = (category: string) => {
     const colorMap: { [key: string]: string } = {
       industry: "bg-blue-100 text-blue-800",
       research: "bg-green-100 text-green-800",
       company: "bg-purple-100 text-purple-800",
-      announcement: "bg-orange-100 text-orange-800"
+      announcement: "bg-orange-100 text-orange-800",
+      // Also support Indonesian names
+      "Industri": "bg-blue-100 text-blue-800",
+      "Penelitian": "bg-green-100 text-green-800",
+      "Perusahaan": "bg-purple-100 text-purple-800",
+      "Pengumuman": "bg-orange-100 text-orange-800"
     };
-    return colorMap[category] || "bg-gray-100 text-gray-800";
+    return colorMap[categoryName] || "bg-gray-100 text-gray-800";
   };
 
   return (
     <Link href={`/news/${article.id}`} className="block">
       <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer">
         {/* Featured Image */}
-        <div className="relative h-48 bg-gradient-to-br from-primary/10 to-primary/30 flex items-center justify-center">
-          <div className="text-6xl opacity-50">📰</div>
-          {article.featured && (
-            <div className="absolute top-3 left-3 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-              Featured
+        <div className="relative h-48 bg-gradient-to-br from-primary/10 to-primary/30 overflow-hidden">
+          {article.featuredImage ? (
+            <Image
+              src={article.featuredImage}
+              alt={article.judul}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-6xl opacity-50">📰</div>
             </div>
           )}
         </div>
@@ -72,11 +77,10 @@ export function NewsCard({ article }: NewsCardProps) {
           <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-1" />
-              {formatDate(article.publicationDate)}
+              {formatDate(article.publishedAt)}
             </div>
-            <div className="flex items-center">
-              <Clock className="w-4 h-4 mr-1" />
-              5 min read
+            <div className="flex items-center text-gray-600">
+              <span className="font-medium">{article.author.fullName}</span>
             </div>
           </div>
 

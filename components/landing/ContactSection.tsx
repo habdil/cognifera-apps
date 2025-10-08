@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { ContactFormData } from "@/types";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export function ContactSection() {
   const [formData, setFormData] = useState<ContactFormData>({
@@ -15,7 +16,6 @@ export function ContactSection() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const layananOptions = [
-    { value: '', label: 'Pilih layanan yang diminati' },
     { value: 'feradata', label: 'FERADATA - Paket Analisis Data Premium' },
     { value: 'feraguide', label: 'FERAGUIDE - Paket Bimbingan Karya Tulis Ilmiah' },
     { value: 'ferapub', label: 'FERAPUB - Paket Publikasi Jurnal Internasional' },
@@ -151,23 +151,36 @@ export function ContactSection() {
                 />
               </div>
 
+
               <div>
-                <label htmlFor="layananInterest" className="block text-sm font-medium text-[var(--color-text)] mb-2">
+                <label
+                  htmlFor="layananInterest"
+                  className="block text-sm font-medium text-[var(--color-text)] mb-2"
+                >
                   Layanan yang Diminati
                 </label>
-                <select
-                  id="layananInterest"
-                  name="layananInterest"
+                
+                <Select
                   value={formData.layananInterest}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)] transition-all duration-200"
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, layananInterest: value }))
+                  }
                 >
-                  {layananOptions.map((option) => (
-                    <option key={option.value} value={option.value} className="bg-[var(--color-background)] text-[var(--color-text)]">
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger
+                    id="layananInterest"
+                    className="w-full px-4 py-3 border border-gray-300 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)] transition-all duration-200"
+                  >
+                    <SelectValue placeholder="Pilih layanan yang diminati" />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-white">
+                    {layananOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div>

@@ -13,12 +13,14 @@ import {
   Clock,
   Calendar,
   MoreVertical,
-  Filter
+  Filter,
+  Send
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { fetchAuthorArticles, deleteArticle, type Article } from '@/lib/api/author-articles';
+import { fetchAuthorArticles, deleteArticle, updateArticle, type Article } from '@/lib/api/author-articles';
+import { processContentImages } from '@/lib/utils/image-processor';
 
 type TabType = 'published' | 'drafts';
 
@@ -45,6 +47,7 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
   const [articleToDelete, setArticleToDelete] = useState<Article | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPublishing, setIsPublishing] = useState<string | null>(null);
 
   // Fetch articles from API
   useEffect(() => {
@@ -148,6 +151,76 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
       });
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handlePublishDraft = async (article: Article) => {
+    // Validation
+    if (!article.judul || !article.category || !article.konten) {
+      toast.error('Cannot Publish Draft', {
+        description: 'Article must have a title, category, and content before publishing.',
+        duration: 5000,
+      });
+      return;
+    }
+
+    setIsPublishing(article.id);
+
+    // Show loading toast
+    const loadingToastId = toast.loading('Publishing your article...', {
+      description: 'Processing content and uploading images...',
+    });
+
+    try {
+      // Process content images: upload base64 images and replace with URLs
+      const processedContent = await processContentImages(
+        article.konten,
+        (current, total) => {
+          toast.loading(`Uploading images: ${current} of ${total}`, {
+            id: loadingToastId,
+            description: 'Optimizing your content images...',
+          });
+        }
+      );
+
+      // Update article status to active (published)
+      const payload = {
+        judul: article.judul,
+        konten: processedContent,
+        category: article.category,
+        featured_image: article.featuredImage || '',
+        tags: article.tags,
+        status: 'aktif' as const
+      };
+
+      const response = await updateArticle(article.id, payload);
+
+      if (response.success) {
+        // Dismiss loading toast
+        toast.dismiss(loadingToastId);
+
+        // Show success toast
+        toast.success('Article Published Successfully!', {
+          description: `"${article.judul}" is now live and visible to readers.`,
+          duration: 4000,
+        });
+
+        // Update local state
+        setArticles(prev => prev.map(a =>
+          a.id === article.id ? { ...a, ...response.data } : a
+        ));
+      }
+    } catch (error) {
+      // Dismiss loading toast
+      toast.dismiss(loadingToastId);
+
+      console.error('Error publishing draft:', error);
+      toast.error('Failed to Publish Draft', {
+        description: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
+        duration: 6000,
+      });
+    } finally {
+      setIsPublishing(null);
     }
   };
 
@@ -372,6 +445,28 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
                           <Pencil className="w-4 h-4" />
                           Edit
                         </Button>
+                        {/* Show Publish button only in Drafts tab */}
+                        {activeTab === 'drafts' && (
+                          <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() => handlePublishDraft(article)}
+                            disabled={isPublishing === article.id}
+                            className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white"
+                          >
+                            {isPublishing === article.id ? (
+                              <>
+                                <span className="animate-spin">⏳</span>
+                                Publishing...
+                              </>
+                            ) : (
+                              <>
+                                <Send className="w-4 h-4" />
+                                Publish
+                              </>
+                            )}
+                          </Button>
+                        )}
                         <Button
                           variant="outline"
                           size="sm"
