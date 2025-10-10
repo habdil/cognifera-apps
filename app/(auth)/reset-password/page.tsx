@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, CheckCircle, Eye, EyeOff } from "lucide-react";
-import { resetPassword, isNewAuthSystem } from "@/lib/auth-config";
+import { newResetPassword } from "@/lib/auth-new";
 import { toast } from "sonner";
 
 function ResetPasswordContent() {
@@ -20,12 +20,6 @@ function ResetPasswordContent() {
   const router = useRouter();
 
   useEffect(() => {
-    // If not using new auth system, redirect to home
-    if (!isNewAuthSystem()) {
-      router.push('/');
-      return;
-    }
-
     const tokenParam = searchParams.get('token');
     if (!tokenParam) {
       toast.error('Token reset password tidak valid');
@@ -62,7 +56,7 @@ function ResetPasswordContent() {
     setIsSubmitting(true);
 
     try {
-      await resetPassword(token, password);
+      await newResetPassword(token, password);
       setIsSuccess(true);
       toast.success('Password berhasil direset! Silakan login dengan password baru Anda');
     } catch (error) {

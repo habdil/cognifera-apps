@@ -2,13 +2,13 @@
 
 import { useState, memo, useMemo, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   BarChart3,
   FileText,
   MessageSquare,
   Settings,
   PlusCircle,
-  User,
   LogOut,
   Home,
   Users,
@@ -21,14 +21,24 @@ import {
 } from 'lucide-react';
 import { useUnifiedAuth } from '@/hooks/useUnifiedAuth';
 import { Button } from '../ui/button';
-import { Loading } from '../shared/Loading';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { DashboardSkeleton } from '../shared/DashboardSkeleton';
 import Image from 'next/image';
+
+// Import query keys for prefetching
+import { authorAnalyticsKeys } from '@/hooks/useAuthorAnalytics';
+import { authorArticlesKeys } from '@/hooks/useAuthorArticles';
+import { authorCommentsKeys } from '@/hooks/useAuthorComments';
+import { getAnalyticsOverview, getTopArticles, getViewsTimeline, getCategoryStats } from '@/lib/api/author-analytics';
+import { fetchAuthorArticles } from '@/lib/api/author-articles';
+import { getAuthorComments, getCommentStats } from '@/lib/api/author-comments';
 
 // Import modular components
 import { AdminDashboard, AdminUsersContent, AdminArticlesContent } from './roles/admin';
 import { AuthorDashboard, AuthorArticlesContent, AuthorCreateContent } from './roles/author';
 import AuthorCommentsContent from './roles/author/AuthorCommentsContent';
 import AuthorAnalyticsContent from './roles/author/AuthorAnalyticsContent';
+import AuthorSettingsContent from './roles/author/AuthorSettingsContent';
 import { ReaderDashboard, ReaderLibraryContent, PublishBookContent, SavedNewsContent } from './roles/reader';
 import { AnalyticsContent, CommentsContent, SettingsContent, ProfileData } from './shared';
 
@@ -89,16 +99,110 @@ export const UnifiedDashboard = memo(() => {
   // Fallback to mock user when auth fails (for testing)
   const user = useMemo(() => authUser || {
     id: 'mock-user-001',
-    fullName: 'Test User',
+    full_name: 'Test User',
+    fullName: 'Test User', // Legacy compatibility
     email: 'user@test.com',
-    role: 'AUTHOR' // Default fallback role
+    role: 'AUTHOR', // Default fallback role
+    avatar_url: null,
+    status: 'ACTIVE',
+    is_verified: true,
+    created_at: new Date().toISOString()
   }, [authUser]);
 
-  // Simulate loading state on mount
+  const queryClient = useQueryClient();
+
+  // Initialize dashboard immediately + prefetch data for AUTHOR role
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000); // 1 second loading
+    setIsLoading(false);
+
+    // Prefetch critical data for AUTHOR role on mount
+    if (user?.role === 'AUTHOR') {
+      // Prefetch analytics data for Analytics page (7 days period)
+      queryClient.prefetchQuery({
+        queryKey: authorAnalyticsKeys.overview('7days'),
+        queryFn: async () => {
+          const result = await getAnalyticsOverview('7days');
+          return result.success ? result.data : null;
+        },
+      });
+
+      queryClient.prefetchQuery({
+        queryKey: [...authorAnalyticsKeys.topArticles(), 5, 'views'],
+        queryFn: async () => {
+          const result = await getTopArticles({ limit: 5, sortBy: 'views' });
+          return result.success ? result.data || [] : [];
+        },
+      });
+
+      queryClient.prefetchQuery({
+        queryKey: authorAnalyticsKeys.timeline('7days'),
+        queryFn: async () => {
+          const result = await getViewsTimeline({ period: '7days' });
+          return result.success ? result.data : null;
+        },
+      });
+
+      queryClient.prefetchQuery({
+        queryKey: [...authorAnalyticsKeys.categoryStats(), 4],
+        queryFn: async () => {
+          const result = await getCategoryStats(4);
+          return result.success ? result.data || [] : [];
+        },
+      });
+
+      // Prefetch analytics data for Dashboard (30 days period)
+      queryClient.prefetchQuery({
+        queryKey: authorAnalyticsKeys.overview('30days'),
+        queryFn: async () => {
+          const result = await getAnalyticsOverview('30days');
+          return result.success ? result.data : null;
+        },
+      });
+
+      queryClient.prefetchQuery({
+        queryKey: [...authorAnalyticsKeys.topArticles(), 3, 'views'],
+        queryFn: async () => {
+          const result = await getTopArticles({ limit: 3, sortBy: 'views' });
+          return result.success ? result.data || [] : [];
+        },
+      });
+
+      // Prefetch articles (reduced limit)
+      queryClient.prefetchQuery({
+        queryKey: authorArticlesKeys.list({ status: 'all', limit: 20 }),
+        queryFn: async () => {
+          const result = await fetchAuthorArticles({ status: 'all', limit: 20 });
+          if (!result.success) throw new Error(result.message || 'Failed to fetch articles');
+          return result.data;
+        },
+      });
+
+      // Prefetch comments for Comments page
+      queryClient.prefetchQuery({
+        queryKey: authorCommentsKeys.list({ status: 'all', page: 1, limit: 10, sortBy: 'newest', search: '' }),
+        queryFn: async () => {
+          const result = await getAuthorComments({ status: 'all', page: 1, limit: 10, sortBy: 'newest', search: '' });
+          return result.success ? result.data : null;
+        },
+      });
+
+      // Prefetch comments for Dashboard
+      queryClient.prefetchQuery({
+        queryKey: authorCommentsKeys.list({ status: 'all', page: 1, limit: 5, sortBy: 'newest', search: '' }),
+        queryFn: async () => {
+          const result = await getAuthorComments({ status: 'all', page: 1, limit: 5, sortBy: 'newest', search: '' });
+          return result.success ? result.data : null;
+        },
+      });
+
+      queryClient.prefetchQuery({
+        queryKey: authorCommentsKeys.stats(),
+        queryFn: async () => {
+          const result = await getCommentStats();
+          return result.success ? result.data : null;
+        },
+      });
+    }
 
     // Handle dashboard navigation events from child components
     const handleNavigationEvent = (event: Event) => {
@@ -111,10 +215,9 @@ export const UnifiedDashboard = memo(() => {
     window.addEventListener('dashboard-navigate', handleNavigationEvent);
 
     return () => {
-      clearTimeout(timer);
       window.removeEventListener('dashboard-navigate', handleNavigationEvent);
     };
-  }, []);
+  }, [user?.role, queryClient]);
 
   const menuItems = useMemo(() => getMenuItems(user?.role || 'READER'), [user?.role]);
 
@@ -195,6 +298,10 @@ export const UnifiedDashboard = memo(() => {
         return <CommentsContent />;
 
       case 'settings':
+        // Use AuthorSettingsContent for AUTHOR role, generic SettingsContent for others
+        if (userRole === 'AUTHOR') {
+          return <AuthorSettingsContent user={user} />;
+        }
         return <SettingsContent user={user} onUpdateProfile={handleUpdateProfile} />;
 
       default:
@@ -204,9 +311,9 @@ export const UnifiedDashboard = memo(() => {
     }
   }, [activeTab, user, handleUpdateProfile]);
 
-  // Show loading screen
+  // Show skeleton loading
   if (isLoading) {
-    return <Loading message="Mempersiapkan halaman ..." />;
+    return <DashboardSkeleton />;
   }
 
   return (
@@ -227,14 +334,27 @@ export const UnifiedDashboard = memo(() => {
         {/* User Info */}
         <div className="p-4 border-b border-[var(--color-border)]">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
-              <User className="w-4 h-4 text-[var(--color-primary-foreground)]" />
-            </div>
-            <div>
-              <p className="font-medium text-[var(--color-foreground)] text-sm">{user?.fullName || user?.name || 'User'}</p>
+            <Avatar className="h-10 w-10">
+              <AvatarImage
+                src={'avatar_url' in user ? user.avatar_url || '' : ''}
+                alt={'full_name' in user ? user.full_name : 'User'}
+              />
+              <AvatarFallback className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)]">
+                {('full_name' in user ? user.full_name : 'U')
+                  .split(' ')
+                  .map((n: string) => n[0])
+                  .join('')
+                  .toUpperCase()
+                  .slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-[var(--color-foreground)] text-sm truncate">
+                {'full_name' in user ? user.full_name : 'User'}
+              </p>
               <p className="text-xs text-[var(--color-muted-foreground)]">{user?.role || 'USER'}</p>
               {user?.email && (
-                <p className="text-xs text-[var(--color-muted-foreground)] mt-1">{user.email}</p>
+                <p className="text-xs text-[var(--color-muted-foreground)] mt-1 truncate">{user.email}</p>
               )}
             </div>
           </div>

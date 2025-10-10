@@ -1,7 +1,6 @@
-// New Authentication API implementation for Cognifera
-// Backend API Documentation: http://localhost:5000/api
+import { emitUserUpdated, emitUserLoggedOut } from './events/auth-events';
 
-const NEW_API_BASE_URL = process.env.NEXT_PUBLIC_NEW_API_BASE_URL || "http://localhost:5000/api";
+const NEW_API_BASE_URL = process.env.NEXT_PUBLIC_NEW_API_BASE_URL;
 
 export interface NewUser {
   id: string;
@@ -52,17 +51,30 @@ const NEW_STORAGE_KEYS = {
 
 // Helper functions for API calls
 const makeAuthRequest = async (endpoint: string, options: RequestInit = {}) => {
-  const response = await fetch(`${NEW_API_BASE_URL}${endpoint}`, {
+  const url = `${NEW_API_BASE_URL}${endpoint}`;
+  const requestConfig = {
     headers: {
       'Content-Type': 'application/json',
       ...options.headers,
     },
     ...options,
-  });
+  };
+
+  console.log('[FETCH DEBUG] URL:', url);
+  console.log('[FETCH DEBUG] Method:', requestConfig.method || 'GET');
+  console.log('[FETCH DEBUG] Headers:', requestConfig.headers);
+  console.log('[FETCH DEBUG] Body:', requestConfig.body);
+
+  const response = await fetch(url, requestConfig);
+
+  console.log('[FETCH DEBUG] Response status:', response.status);
 
   const data = await response.json();
 
+  console.log('[FETCH DEBUG] Response data:', data);
+
   if (!response.ok) {
+    console.error('[FETCH DEBUG] Request failed:', data);
     throw new Error(data.error?.message || data.message || 'Request failed');
   }
 
@@ -206,20 +218,46 @@ export const newUpdateProfile = async (profileData: {
     throw new Error("No access token available");
   }
 
-  const response = await makeAuthRequest('/auth/profile', {
+  // Remove undefined/null values (keep empty strings for bio/username to allow clearing)
+  const cleanData: Record<string, string> = {};
+  Object.keys(profileData).forEach(key => {
+    const value = profileData[key as keyof typeof profileData];
+    if (value !== undefined && value !== null) {
+      cleanData[key] = value;
+    }
+  });
+
+  // Validate that at least one field is provided
+  if (Object.keys(cleanData).length === 0) {
+    throw new Error("No data provided to update");
+  }
+
+  await makeAuthRequest('/auth/profile', {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(cleanData),
+  });
+
+  // Fetch fresh user data from backend to ensure we have latest data
+  const freshUserResponse = await makeAuthRequest('/auth/profile', {
+    method: 'GET',
     headers: {
       'Authorization': `Bearer ${accessToken}`,
     },
-    body: JSON.stringify(profileData),
   });
 
-  // Update stored user data
+  const freshUser = freshUserResponse.data.user;
+
+  // Update stored user data and notify components
   if (typeof window !== 'undefined') {
-    localStorage.setItem(NEW_STORAGE_KEYS.user, JSON.stringify(response.data.user));
+    localStorage.setItem(NEW_STORAGE_KEYS.user, JSON.stringify(freshUser));
+    emitUserUpdated();
   }
 
-  return response.data.user;
+  return freshUser;
 };
 
 export const newChangePassword = async (
@@ -332,6 +370,9 @@ export const newLogoutUser = async (): Promise<void> => {
     // Clear cookies
     deleteCookie(NEW_STORAGE_KEYS.accessToken);
     deleteCookie(NEW_STORAGE_KEYS.refreshToken);
+
+    // Emit event to notify React components
+    emitUserLoggedOut();
   }
 };
 
@@ -354,7 +395,13 @@ export const convertNewUserToOldFormat = (newUser: NewUser) => {
     fullName: newUser.full_name,
     email: newUser.email,
     role: newUser.role,
-    status: newUser.status
+    status: newUser.status,
+    // New system fields - preserve all data
+    username: newUser.username,
+    bio: newUser.bio,
+    avatar_url: newUser.avatar_url,
+    avatarUrl: newUser.avatar_url, // Alias for compatibility
+    is_verified: newUser.is_verified
   };
 };
 

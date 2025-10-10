@@ -1,7 +1,7 @@
 // Frontend API Service Layer for Author Articles Management
 // File ini untuk digunakan di Next.js frontend
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface Author {
   id: string;

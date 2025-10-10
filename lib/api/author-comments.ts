@@ -1,7 +1,7 @@
 // Author Comments API - For author to manage comments on their articles
 // Backend API: Ready to use ✅
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Log API URL on initialization
 if (typeof window !== 'undefined') {

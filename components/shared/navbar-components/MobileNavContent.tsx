@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavbarButton } from "@/components/ui/resizable-navbar";
 import { AuthDialog } from "@/components/shared/AuthDialog";
-import { User as UserIcon, LogOut, ChevronDown, ChevronUp, type LucideIcon } from "lucide-react";
-import type { UnifiedUser } from "@/lib/auth-config";
+import { LogOut, ChevronDown, ChevronUp, type LucideIcon, User } from "lucide-react";
+import type { NewUser } from "@/lib/auth-new";
 
 interface DropdownItem {
   label: string;
@@ -15,7 +16,7 @@ interface DropdownItem {
 }
 
 interface MobileNavContentProps {
-  user: UnifiedUser | null;
+  user: NewUser | null;
   expandedMenu: string | null;
   onToggleMenu: (menu: string) => void;
   onCloseMobile: () => void;
@@ -31,6 +32,15 @@ export const MobileNavContent = ({
   onLogout,
   dropdownItems
 }: MobileNavContentProps) => {
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
     <>
       {/* Home */}
@@ -165,11 +175,17 @@ export const MobileNavContent = ({
         <div className="w-full space-y-3">
           {/* User Info */}
           <div className="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg">
-            <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
-              <UserIcon className="w-4 h-4 text-white" />
-            </div>
+            <Avatar className="h-10 w-10">
+              <AvatarImage
+                src={user.avatar_url || ''}
+                alt={user.full_name}
+              />
+              <AvatarFallback className="bg-[var(--color-primary)] text-white text-sm">
+                {getInitials(user.full_name)}
+              </AvatarFallback>
+            </Avatar>
             <div className="flex-1">
-              <p className="text-sm font-medium">{user.fullName || user.name}</p>
+              <p className="text-sm font-medium">{user.full_name}</p>
               <p className="text-xs text-gray-500">{user.role}</p>
             </div>
           </div>
@@ -225,7 +241,7 @@ export const MobileNavContent = ({
               variant="outline"
               className="w-full flex items-center justify-center space-x-2"
             >
-              <UserIcon className="w-4 h-4" />
+              <User className="w-4 h-4" />
               <span>Login</span>
             </Button>
           </AuthDialog>

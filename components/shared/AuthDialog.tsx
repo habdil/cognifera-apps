@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { login, register, getDashboardUrl } from "@/lib/auth-config";
+import { newLoginUser, newRegisterUser, newGetDashboardUrl } from "@/lib/auth-new";
 import { toast } from "sonner";
 
 interface AuthDialogProps {
@@ -42,25 +42,21 @@ export const AuthDialog = ({ children, defaultMode = "register" }: AuthDialogPro
     try {
       let user;
       if (isLogin) {
-        user = await login(formData.email, formData.password);
+        user = await newLoginUser(formData.email, formData.password);
       } else {
-        const result = await register(formData.email, formData.password, formData.name);
+        const result = await newRegisterUser(formData.email, formData.password, formData.name);
 
-        if (typeof result === 'object' && 'needsVerification' in result) {
-          // New auth system with verification
-          if (result.needsVerification) {
-            toast.success('Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.');
-            setOpen(false);
-            // Redirect to verification page
-            setTimeout(() => {
-              window.location.href = '/verify-email';
-            }, 1500);
-            return;
-          } else {
-            user = result.user;
-          }
+        // New auth system with verification
+        if (result.needsVerification) {
+          toast.success('Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.');
+          setOpen(false);
+          // Redirect to verification page
+          setTimeout(() => {
+            window.location.href = '/verify-email';
+          }, 1500);
+          return;
         } else {
-          user = result;
+          user = result.user;
         }
       }
 
@@ -68,9 +64,9 @@ export const AuthDialog = ({ children, defaultMode = "register" }: AuthDialogPro
 
       // Show success message and refresh navbar for all users
       if (isLogin) {
-        toast.success(`Selamat datang kembali, ${user.fullName}! 🎉`);
+        toast.success(`Selamat datang kembali, ${user.full_name}! 🎉`);
       } else {
-        toast.success(`Pendaftaran berhasil! Selamat datang, ${user.fullName}! 🎉`);
+        toast.success(`Pendaftaran berhasil! Selamat datang, ${user.full_name}! 🎉`);
       }
 
       // Refresh page to update navbar for all roles

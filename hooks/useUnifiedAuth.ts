@@ -1,55 +1,82 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { verifyToken, getCurrentUser, logout, type UnifiedUser } from '@/lib/auth-config';
+import { useState, useEffect, useCallback } from 'react';
+import { newVerifyToken, newGetCurrentUser, newLogoutUser, type NewUser } from '@/lib/auth-new';
+import { authEvents } from '@/lib/events/auth-events';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 export const useUnifiedAuth = (requiredRole?: string) => {
-  const [user, setUser] = useState<UnifiedUser | null>(null);
+  const [user, setUser] = useState<NewUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const verifyUserToken = async () => {
+  const verifyUserToken = useCallback(async () => {
+    try {
+      // First check localStorage
+      const localUser = newGetCurrentUser();
+      if (!localUser) {
+        throw new Error("No user data found");
+      }
+
+      // Verify token with backend
+      const verifiedUser = await newVerifyToken();
+
+      // Check role if specified
+      if (requiredRole && verifiedUser.role !== requiredRole) {
+        throw new Error(`Access denied. Required role: ${requiredRole}`);
+      }
+
+      setUser(verifiedUser);
+      setError(null);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Authentication failed';
+      setError(errorMessage);
+
+      // Clear local storage and redirect to home
       try {
-        // First check localStorage
-        const localUser = getCurrentUser();
-        if (!localUser) {
-          throw new Error("No user data found");
-        }
+        await newLogoutUser();
+      } catch (logoutErr) {
+        console.warn('Logout failed during auth error:', logoutErr);
+      }
 
-        // Verify token with backend
-        const verifiedUser = await verifyToken();
+      toast.error(errorMessage);
+      router.push('/?message=auth-failed');
+    } finally {
+      setLoading(false);
+    }
+  }, [requiredRole, router]);
 
-        // Check role if specified
-        if (requiredRole && verifiedUser.role !== requiredRole) {
-          throw new Error(`Access denied. Required role: ${requiredRole}`);
-        }
+  // Initial verification
+  useEffect(() => {
+    verifyUserToken();
+  }, [verifyUserToken]);
 
-        setUser(verifiedUser);
-        setError(null);
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Authentication failed';
-        setError(errorMessage);
-
-        // Clear local storage and redirect to home
-        try {
-          await logout();
-        } catch (logoutErr) {
-          console.warn('Logout failed during auth error:', logoutErr);
-        }
-
-        toast.error(errorMessage);
-        router.push('/?message=auth-failed');
-      } finally {
-        setLoading(false);
+  // Listen to user update events
+  useEffect(() => {
+    const handleUserUpdated = () => {
+      const updatedUser = newGetCurrentUser();
+      if (updatedUser) {
+        setUser(updatedUser);
       }
     };
 
-    verifyUserToken();
-  }, [requiredRole, router]);
+    const handleUserLoggedOut = () => {
+      setUser(null);
+      router.push('/?message=logged-out');
+    };
+
+    // Subscribe to events
+    authEvents.on('user-updated', handleUserUpdated);
+    authEvents.on('user-logged-out', handleUserLoggedOut);
+
+    // Cleanup subscriptions
+    return () => {
+      authEvents.off('user-updated', handleUserUpdated);
+      authEvents.off('user-logged-out', handleUserLoggedOut);
+    };
+  }, [router]);
 
   return { user, loading, error };
 };

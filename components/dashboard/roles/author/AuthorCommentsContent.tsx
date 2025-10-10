@@ -1,43 +1,33 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  getAuthorComments,
-  getCommentStats,
-  flagComment,
-  deleteAuthorComment,
   formatRelativeTime,
-  type AuthorComment,
-  type CommentStats,
   type GetCommentsParams
 } from '@/lib/api/author-comments';
-import { toast } from 'sonner';
+import { useAuthorComments, useCommentStats, useFlagComment, useDeleteComment } from '@/hooks/useAuthorComments';
+import { useDebounce } from '@/hooks/useDebounce';
 import {
   MessageSquare,
   ThumbsUp,
   Flag,
   Trash2,
   Search,
-  Filter,
   CheckCircle,
   TrendingUp,
   Clock,
-  MessageCircle
+  MessageCircle,
+  Filter
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AuthorCommentsContent() {
-  const [comments, setComments] = useState<AuthorComment[]>([]);
-  const [stats, setStats] = useState<CommentStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
-
   const [filters, setFilters] = useState<GetCommentsParams>({
     status: 'all',
     page: 1,
@@ -46,88 +36,38 @@ export default function AuthorCommentsContent() {
     search: ''
   });
 
-  const [pagination, setPagination] = useState({
+  // Debounce search query (500ms delay)
+  const debouncedSearch = useDebounce(filters.search, 500);
+
+  // Update filters with debounced search
+  const effectiveFilters = { ...filters, search: debouncedSearch };
+
+  // Use React Query hooks - automatic caching & background refetch
+  const { data: commentsData, isLoading: loading } = useAuthorComments(effectiveFilters);
+  const { data: stats } = useCommentStats();
+  const flagCommentMutation = useFlagComment();
+  const deleteCommentMutation = useDeleteComment();
+
+  const comments = commentsData?.comments || [];
+  const pagination = commentsData?.pagination || {
     currentPage: 1,
     totalPages: 1,
     totalItems: 0,
     itemsPerPage: 10
-  });
-
-  useEffect(() => {
-    loadData();
-  }, [filters]);
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const [commentsResult, statsResult] = await Promise.all([
-        getAuthorComments(filters),
-        getCommentStats()
-      ]);
-
-      if (commentsResult.success && commentsResult.data) {
-        setComments(commentsResult.data.comments);
-        setPagination(commentsResult.data.pagination);
-      } else {
-        toast.error(commentsResult.message || 'Gagal memuat komentar');
-        setComments([]);
-      }
-
-      if (statsResult.success && statsResult.data) {
-        setStats(statsResult.data);
-      }
-    } catch (error) {
-      console.error('Failed to load data:', error);
-      toast.error('Gagal memuat data');
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleFlagComment = async (commentId: string) => {
     if (!confirm('Apakah Anda yakin ingin melaporkan komentar ini sebagai tidak pantas?')) {
       return;
     }
-
-    try {
-      setActionLoading(commentId);
-      const result = await flagComment(commentId, 'Inappropriate content');
-
-      if (result.success) {
-        toast.success('Komentar berhasil dilaporkan');
-        loadData();
-      } else {
-        toast.error(result.message || 'Gagal melaporkan komentar');
-      }
-    } catch (error) {
-      console.error('Failed to flag comment:', error);
-      toast.error('Gagal melaporkan komentar');
-    } finally {
-      setActionLoading(null);
-    }
+    flagCommentMutation.mutate({ commentId, reason: 'Inappropriate content' });
   };
 
   const handleDeleteComment = async (commentId: string) => {
     if (!confirm('Apakah Anda yakin ingin menghapus komentar ini? Tindakan ini tidak dapat dibatalkan.')) {
       return;
     }
-
-    try {
-      setActionLoading(commentId);
-      const result = await deleteAuthorComment(commentId);
-
-      if (result.success) {
-        toast.success('Komentar berhasil dihapus');
-        loadData();
-      } else {
-        toast.error(result.message || 'Gagal menghapus komentar');
-      }
-    } catch (error) {
-      console.error('Failed to delete comment:', error);
-      toast.error('Gagal menghapus komentar');
-    } finally {
-      setActionLoading(null);
-    }
+    deleteCommentMutation.mutate(commentId);
   };
 
   const handleSearchChange = (value: string) => {
@@ -359,7 +299,7 @@ export default function AuthorCommentsContent() {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleFlagComment(comment.id)}
-                              disabled={actionLoading === comment.id}
+                              disabled={flagCommentMutation.isPending || deleteCommentMutation.isPending}
                               className="gap-2 hover:text-destructive"
                             >
                               <Flag className="h-4 w-4" />
@@ -370,7 +310,7 @@ export default function AuthorCommentsContent() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteComment(comment.id)}
-                            disabled={actionLoading === comment.id}
+                            disabled={flagCommentMutation.isPending || deleteCommentMutation.isPending}
                             className="gap-2 border text-destructive hover:text-white hover:bg-destructive"
                           >
                             <Trash2 className="h-4 w-4" />

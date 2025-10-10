@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
@@ -16,29 +16,76 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
 import {
+  getAnalyticsOverview,
+  getTopArticles,
+  getViewsTimeline,
+  getCategoryStats,
   formatNumber,
   formatDate,
   getTrendDirection,
+  type AnalyticsOverview,
+  type TopArticle,
+  type ViewsTimelineResponse,
+  type CategoryStat,
   type PeriodType
 } from '@/lib/api/author-analytics';
-import {
-  useAnalyticsOverview,
-  useTopArticles,
-  useViewsTimeline,
-  useCategoryStats
-} from '@/hooks/useAuthorAnalytics';
 
 export default function AuthorAnalyticsContent() {
   const [period, setPeriod] = useState<PeriodType>('7days');
+  const [loading, setLoading] = useState(true);
 
-  // Use React Query hooks - automatic caching and background refetch
-  const { data: overview, isLoading: overviewLoading } = useAnalyticsOverview(period);
-  const { data: topArticles = [], isLoading: topArticlesLoading } = useTopArticles(5, 'views');
-  const { data: timeline, isLoading: timelineLoading } = useViewsTimeline(period);
-  const { data: categoryStats = [], isLoading: categoryLoading } = useCategoryStats(4);
+  const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
+  const [topArticles, setTopArticles] = useState<TopArticle[]>([]);
+  const [timeline, setTimeline] = useState<ViewsTimelineResponse | null>(null);
+  const [categoryStats, setCategoryStats] = useState<CategoryStat[]>([]);
 
-  const loading = overviewLoading || topArticlesLoading || timelineLoading || categoryLoading;
+  useEffect(() => {
+    loadAnalytics();
+  }, [period]);
+
+  const loadAnalytics = async () => {
+    try {
+      setLoading(true);
+
+      const [overviewResult, topArticlesResult, timelineResult, categoryResult] = await Promise.all([
+        getAnalyticsOverview(period),
+        getTopArticles({ limit: 5, sortBy: 'views' }),
+        getViewsTimeline({ period }),
+        getCategoryStats(4)
+      ]);
+
+      if (overviewResult.success && overviewResult.data) {
+        setOverview(overviewResult.data);
+      } else {
+        toast.error(overviewResult.message || 'Gagal memuat overview');
+      }
+
+      if (topArticlesResult.success && topArticlesResult.data) {
+        setTopArticles(topArticlesResult.data);
+      } else {
+        toast.error(topArticlesResult.message || 'Gagal memuat top articles');
+      }
+
+      if (timelineResult.success && timelineResult.data) {
+        setTimeline(timelineResult.data);
+      } else {
+        toast.error(timelineResult.message || 'Gagal memuat timeline');
+      }
+
+      if (categoryResult.success && categoryResult.data) {
+        setCategoryStats(categoryResult.data);
+      } else {
+        toast.error(categoryResult.message || 'Gagal memuat category stats');
+      }
+    } catch (error) {
+      console.error('Failed to load analytics:', error);
+      toast.error('Gagal memuat data analytics');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getTrendIcon = (trendValue: number) => {
     const direction = getTrendDirection(trendValue);
@@ -85,7 +132,7 @@ export default function AuthorAnalyticsContent() {
       </div>
 
       {/* Stats Cards */}
-      {overviewLoading ? (
+      {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <Card key={i}>
@@ -109,12 +156,12 @@ export default function AuthorAnalyticsContent() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {formatNumber(overview?.totalViews ?? 0)}
+                {formatNumber(overview.totalViews)}
               </div>
               <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                {getTrendIcon(overview?.trends?.viewsTrend ?? 0)}
-                <span className={getTrendColor(overview?.trends?.viewsTrend ?? 0)}>
-                  {(overview?.trends?.viewsTrend ?? 0) >= 0 ? '+' : ''}{(overview?.trends?.viewsTrend ?? 0).toFixed(1)}%
+                {getTrendIcon(overview.trends.viewsTrend)}
+                <span className={getTrendColor(overview.trends.viewsTrend)}>
+                  {overview.trends.viewsTrend >= 0 ? '+' : ''}{overview.trends.viewsTrend.toFixed(1)}%
                 </span> dari period lalu
               </p>
             </CardContent>
@@ -127,12 +174,12 @@ export default function AuthorAnalyticsContent() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {formatNumber(overview?.totalLikes ?? 0)}
+                {formatNumber(overview.totalLikes)}
               </div>
               <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                {getTrendIcon(overview?.trends?.likesTrend ?? 0)}
-                <span className={getTrendColor(overview?.trends?.likesTrend ?? 0)}>
-                  {(overview?.trends?.likesTrend ?? 0) >= 0 ? '+' : ''}{(overview?.trends?.likesTrend ?? 0).toFixed(1)}%
+                {getTrendIcon(overview.trends.likesTrend)}
+                <span className={getTrendColor(overview.trends.likesTrend)}>
+                  {overview.trends.likesTrend >= 0 ? '+' : ''}{overview.trends.likesTrend.toFixed(1)}%
                 </span> dari period lalu
               </p>
             </CardContent>
@@ -145,12 +192,12 @@ export default function AuthorAnalyticsContent() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {formatNumber(overview?.totalComments ?? 0)}
+                {formatNumber(overview.totalComments)}
               </div>
               <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                {getTrendIcon(overview?.trends?.commentsTrend ?? 0)}
-                <span className={getTrendColor(overview?.trends?.commentsTrend ?? 0)}>
-                  {(overview?.trends?.commentsTrend ?? 0) >= 0 ? '+' : ''}{(overview?.trends?.commentsTrend ?? 0).toFixed(1)}%
+                {getTrendIcon(overview.trends.commentsTrend)}
+                <span className={getTrendColor(overview.trends.commentsTrend)}>
+                  {overview.trends.commentsTrend >= 0 ? '+' : ''}{overview.trends.commentsTrend.toFixed(1)}%
                 </span> dari period lalu
               </p>
             </CardContent>
@@ -163,10 +210,10 @@ export default function AuthorAnalyticsContent() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {overview?.publishedArticles ?? 0}
+                {overview.publishedArticles}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                {overview?.draftArticles ?? 0} draft
+                {overview.draftArticles} draft
               </p>
             </CardContent>
           </Card>
@@ -184,7 +231,7 @@ export default function AuthorAnalyticsContent() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {timelineLoading ? (
+            {loading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className="flex items-center gap-4">
@@ -212,7 +259,7 @@ export default function AuthorAnalyticsContent() {
                         </div>
                       </div>
                       <div className="w-16 text-right text-sm font-medium text-foreground">
-                        {formatNumber(item?.views ?? 0)}
+                        {formatNumber(item.views)}
                       </div>
                     </div>
                   );
@@ -234,7 +281,7 @@ export default function AuthorAnalyticsContent() {
             <CardDescription>Kategori dengan views tertinggi</CardDescription>
           </CardHeader>
           <CardContent>
-            {categoryLoading ? (
+            {loading ? (
               <div className="space-y-4">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="space-y-2">
@@ -256,7 +303,7 @@ export default function AuthorAnalyticsContent() {
                     <div key={index} className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
                         <span className="font-medium text-foreground">{item.category}</span>
-                        <span className="text-muted-foreground">{formatNumber(item?.totalViews ?? 0)} views</span>
+                        <span className="text-muted-foreground">{formatNumber(item.totalViews)} views</span>
                       </div>
                       <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div
@@ -285,7 +332,7 @@ export default function AuthorAnalyticsContent() {
           <CardDescription>Artikel dengan engagement tertinggi</CardDescription>
         </CardHeader>
         <CardContent>
-          {topArticlesLoading ? (
+          {loading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="flex items-start gap-4 p-4 border border-border rounded-lg">
@@ -332,15 +379,15 @@ export default function AuthorAnalyticsContent() {
                     <div className="flex items-center gap-6 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Eye className="h-4 w-4" />
-                        {formatNumber(article?.views ?? 0)}
+                        {formatNumber(article.views)}
                       </span>
                       <span className="flex items-center gap-1">
                         <ThumbsUp className="h-4 w-4" />
-                        {formatNumber(article?.likes ?? 0)}
+                        {formatNumber(article.likes)}
                       </span>
                       <span className="flex items-center gap-1">
                         <MessageSquare className="h-4 w-4" />
-                        {article?.comments ?? 0}
+                        {article.comments}
                       </span>
                     </div>
                   </div>

@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, XCircle, Loader2, Mail, AlertCircle } from "lucide-react";
-import { verifyEmail, isNewAuthSystem, getDashboardUrl } from "@/lib/auth-config";
+import { newVerifyEmail, newGetDashboardUrl } from "@/lib/auth-new";
 import { toast } from "sonner";
 import Image from "next/image";
 
@@ -15,12 +15,6 @@ function VerifyEmailContent() {
   const router = useRouter();
 
   useEffect(() => {
-    // Only proceed if using new auth system
-    if (!isNewAuthSystem()) {
-      router.push('/');
-      return;
-    }
-
     const token = searchParams.get('token');
 
     if (token) {
@@ -28,25 +22,21 @@ function VerifyEmailContent() {
     } else {
       setStatus('instructions');
     }
-  }, [searchParams, router]);
+  }, [searchParams]);
 
   const verifyEmailWithToken = async (token: string) => {
     try {
       setStatus('loading');
-      const user = await verifyEmail(token);
+      const user = await newVerifyEmail(token);
 
-      if (user) {
-        setStatus('success');
-        toast.success(`Selamat! Email Anda telah berhasil diverifikasi. Selamat datang, ${user.fullName}! 🎉`);
+      setStatus('success');
+      toast.success(`Selamat! Email Anda telah berhasil diverifikasi. Selamat datang, ${user.full_name}! 🎉`);
 
-        // Redirect to appropriate dashboard after 3 seconds
-        setTimeout(() => {
-          const dashboardUrl = getDashboardUrl(user.role);
-          router.push(dashboardUrl);
-        }, 3000);
-      } else {
-        throw new Error('Verifikasi gagal');
-      }
+      // Redirect to appropriate dashboard after 3 seconds
+      setTimeout(() => {
+        const dashboardUrl = newGetDashboardUrl(user.role);
+        router.push(dashboardUrl);
+      }, 3000);
     } catch (error) {
       console.error('Email verification failed:', error);
       setStatus('error');

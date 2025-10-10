@@ -14,7 +14,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AuthDialog } from "@/components/shared/AuthDialog";
-import { getCurrentUser, logout, type UnifiedUser } from "@/lib/auth-config";
+import { newGetCurrentUser, newLogoutUser, type NewUser } from "@/lib/auth-new";
+import { authEvents } from "@/lib/events/auth-events";
 import { Button } from "@/components/ui/button";
 import { User as UserIcon, BookOpen, Heart, Settings } from "lucide-react";
 import { toast } from "sonner";
@@ -24,13 +25,31 @@ import { UserDropdown, NavMenuSections, MobileNavContent } from "./navbar-compon
 export const Navbar = () => {
   const [active, setActive] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [user, setUser] = useState<UnifiedUser | null>(null);
+  const [user, setUser] = useState<NewUser | null>(null);
   const [expandedMobileMenu, setExpandedMobileMenu] = useState<string | null>(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showSavedNewsModal, setShowSavedNewsModal] = useState(false);
 
   useEffect(() => {
-    setUser(getCurrentUser());
+    setUser(newGetCurrentUser());
+
+    // Listen to auth events for real-time updates
+    const handleUserUpdated = () => {
+      const updatedUser = newGetCurrentUser();
+      setUser(updatedUser);
+    };
+
+    const handleUserLoggedOut = () => {
+      setUser(null);
+    };
+
+    authEvents.on('user-updated', handleUserUpdated);
+    authEvents.on('user-logged-out', handleUserLoggedOut);
+
+    return () => {
+      authEvents.off('user-updated', handleUserUpdated);
+      authEvents.off('user-logged-out', handleUserLoggedOut);
+    };
   }, []);
 
   // Close dropdown when clicking outside
@@ -49,7 +68,7 @@ export const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await newLogoutUser();
       toast.success("Berhasil logout! Sampai jumpa lagi! 👋");
       setUser(null);
       setShowUserDropdown(false);
@@ -144,8 +163,7 @@ export const Navbar = () => {
               <AuthDialog defaultMode="login">
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="text-[var(--color-foreground)] hover:text-[var(--color-primary)] flex items-center space-x-2"
+                  className="text-[var(--color-foreground)] hover:text-white hover:bg-primary flex items-center space-x-2"
                 >
                   <UserIcon className="w-4 h-4" />
                   <span>Login</span>
@@ -154,7 +172,7 @@ export const Navbar = () => {
               <AuthDialog>
                 <NavbarButton
                   variant="primary"
-                  className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)] cursor-pointer"
+                  className="bg-[var(--color-primary)] text-white hover:bg-white hover:text-primary"
                 >
                   Get Started
                 </NavbarButton>

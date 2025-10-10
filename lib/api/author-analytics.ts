@@ -1,7 +1,7 @@
 // Author Analytics API - For author dashboard analytics
 // Backend API: Ready to use ✅
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Log API URL on initialization
 if (typeof window !== 'undefined') {
@@ -40,7 +40,7 @@ export interface TopArticle {
   id: string;
   title: string;
   slug: string;
-  category: string;
+  category: string | { id: string; name: string; slug: string };  // Backend may return object
   views: number;
   likes: number;
   comments: number;
@@ -71,13 +71,15 @@ export interface ViewsTimelineResponse {
 }
 
 export interface CategoryStat {
-  category: string;
-  articleCount: number;
+  category: string;              // Backend uses: categoryName
+  categoryName?: string;         // Backend field name
+  articleCount: number;          // Backend uses: articlesCount
+  articlesCount?: number;        // Backend field name
   totalViews: number;
   totalLikes: number;
   totalComments: number;
   avgViewsPerArticle: number;
-  engagementRate: number;     // Percentage
+  engagementRate: number;        // Percentage
 }
 
 export interface ApiResponse<T> {
@@ -212,9 +214,27 @@ export async function getTopArticles(
     }
 
     console.log('✅ [Analytics] Top articles fetched successfully');
+    console.log('📊 [Analytics] Top articles raw data:', result.data);
+
+    // Backend returns nested structure: { articles: [...], totalArticles: X }
+    // We need just the articles array
+    const rawArticles = result.data?.articles || result.data || [];
+
+    // Transform articles to normalize category field
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const articles: TopArticle[] = rawArticles.map((article: any) => ({
+      ...article,
+      // If category is object, extract name; otherwise use as-is
+      category: typeof article.category === 'object' && article.category?.name
+        ? article.category.name
+        : article.category
+    }));
+
+    console.log('📊 [Analytics] Transformed articles array:', articles);
+
     return {
       success: true,
-      data: result.data
+      data: articles
     };
   } catch (error) {
     console.error('❌ [Analytics] Network error:', error);
@@ -274,9 +294,24 @@ export async function getViewsTimeline(
     }
 
     console.log('✅ [Analytics] Timeline fetched successfully');
+    console.log('📊 [Analytics] Timeline raw data:', result.data);
+
+    // Backend returns: { data: [...], period: "7days", total: X, average: Y, peak: {...} }
+    // Transform to match ViewsTimelineResponse interface
+    const transformedData: ViewsTimelineResponse = {
+      timeline: result.data?.data || [],
+      summary: {
+        totalViews: result.data?.total || 0,
+        totalUniqueViews: result.data?.total || 0, // Backend doesn't provide unique views in summary
+        averageViewsPerDay: result.data?.average || 0,
+        peak: result.data?.peak || { date: '', views: 0 }
+      }
+    };
+    console.log('📊 [Analytics] Transformed timeline data:', transformedData);
+
     return {
       success: true,
-      data: result.data
+      data: transformedData
     };
   } catch (error) {
     console.error('❌ [Analytics] Network error:', error);
@@ -329,9 +364,31 @@ export async function getCategoryStats(
     }
 
     console.log('✅ [Analytics] Category stats fetched successfully');
+    console.log('📊 [Analytics] Category stats raw data:', result.data);
+
+    // Backend returns nested structure: { categories: [...], totalCategories: X }
+    // We need just the categories array, and transform field names
+    const rawCategories = result.data?.categories || result.data || [];
+
+    // Transform backend field names to match frontend interface
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const categories: CategoryStat[] = rawCategories.map((cat: any) => ({
+      category: cat.categoryName || cat.category,
+      categoryName: cat.categoryName,
+      articleCount: cat.articlesCount || cat.articleCount || 0,
+      articlesCount: cat.articlesCount,
+      totalViews: cat.totalViews || 0,
+      totalLikes: cat.totalLikes || 0,
+      totalComments: cat.totalComments || 0,
+      avgViewsPerArticle: cat.avgViewsPerArticle || 0,
+      engagementRate: cat.engagementRate || 0
+    }));
+
+    console.log('📊 [Analytics] Transformed categories array:', categories);
+
     return {
       success: true,
-      data: result.data
+      data: categories
     };
   } catch (error) {
     console.error('❌ [Analytics] Network error:', error);

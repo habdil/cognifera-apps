@@ -1,7 +1,7 @@
 // Frontend API Service Layer for File Upload
 // File ini untuk digunakan di Next.js frontend
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_NEW_API_BASE_URL;
 
 export interface UploadedFileData {
   url: string;

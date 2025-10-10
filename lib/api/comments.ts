@@ -1,7 +1,7 @@
 // Comments API - For article comments
 // Backend API: READY TO USE ✅
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_NEW_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_NEW_API_BASE_URL;
 
 // Log API URL on initialization
 if (typeof window !== 'undefined') {

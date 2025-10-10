@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Mail, CheckCircle } from "lucide-react";
-import { forgotPassword, isNewAuthSystem } from "@/lib/auth-config";
+import { newForgotPassword } from "@/lib/auth-new";
 import { toast } from "sonner";
 
 export default function ForgotPasswordPage() {
@@ -13,12 +13,6 @@ export default function ForgotPasswordPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
-
-  // If not using new auth system, redirect to home
-  if (!isNewAuthSystem()) {
-    router.push('/');
-    return null;
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +30,7 @@ export default function ForgotPasswordPage() {
     setIsSubmitting(true);
 
     try {
-      await forgotPassword(email.trim());
+      await newForgotPassword(email.trim());
       setIsSuccess(true);
       toast.success('Instruksi reset password telah dikirim ke email Anda');
     } catch (error) {

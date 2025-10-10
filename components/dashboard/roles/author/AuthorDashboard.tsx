@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import {
   Eye,
   ThumbsUp,
@@ -19,66 +17,38 @@ import {
   MessageCircle,
   Clock
 } from 'lucide-react';
-import { toast } from 'sonner';
 import { DashboardContentProps } from '../../shared/types';
 import {
-  getAnalyticsOverview,
-  getTopArticles,
   formatNumber,
-  formatDate,
-  getTrendDirection,
-  type AnalyticsOverview,
-  type TopArticle
+  getTrendDirection
 } from '@/lib/api/author-analytics';
 import {
-  getAuthorComments,
-  formatRelativeTime,
-  type AuthorComment
+  formatRelativeTime
 } from '@/lib/api/author-comments';
+import { useAnalyticsOverview, useTopArticles } from '@/hooks/useAuthorAnalytics';
+import { useAuthorComments } from '@/hooks/useAuthorComments';
 
 export function AuthorDashboard({ user }: DashboardContentProps) {
-  const [loading, setLoading] = useState(true);
-  const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
-  const [topArticles, setTopArticles] = useState<TopArticle[]>([]);
-  const [recentComments, setRecentComments] = useState<AuthorComment[]>([]);
+  // Use React Query hooks - data sudah di-prefetch di UnifiedDashboard
+  const { data: overview, isLoading: overviewLoading } = useAnalyticsOverview('30days');
+  const { data: topArticles = [], isLoading: topArticlesLoading } = useTopArticles(3, 'views');
+  const { data: commentsData, isLoading: commentsLoading } = useAuthorComments({
+    limit: 5,
+    sortBy: 'newest',
+    status: 'all',
+    page: 1,
+    search: ''
+  });
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
+  const loading = overviewLoading || topArticlesLoading || commentsLoading;
+  const recentComments = commentsData?.comments || [];
+
+  // Get user name from prop for instant display (no backend delay)
+  const userName = user?.full_name || user?.fullName || user?.name || 'Author';
 
   const handleNewArticle = () => {
-    if (onNavigate) {
-      onNavigate('create');
-    }
-  };
-
-  const loadDashboardData = async () => {
-    try {
-      setLoading(true);
-
-      const [overviewResult, topArticlesResult, commentsResult] = await Promise.all([
-        getAnalyticsOverview('30days'),
-        getTopArticles({ limit: 3, sortBy: 'views' }),
-        getAuthorComments({ limit: 5, sortBy: 'newest' })
-      ]);
-
-      if (overviewResult.success && overviewResult.data) {
-        setOverview(overviewResult.data);
-      }
-
-      if (topArticlesResult.success && topArticlesResult.data) {
-        setTopArticles(topArticlesResult.data);
-      }
-
-      if (commentsResult.success && commentsResult.data) {
-        setRecentComments(commentsResult.data.comments);
-      }
-    } catch (error) {
-      console.error('Failed to load dashboard:', error);
-      toast.error('Gagal memuat data dashboard');
-    } finally {
-      setLoading(false);
-    }
+    const event = new CustomEvent('dashboard-navigate', { detail: { tab: 'create' } });
+    window.dispatchEvent(event);
   };
 
   const getTrendIcon = (trendValue: number) => {
@@ -100,7 +70,7 @@ export function AuthorDashboard({ user }: DashboardContentProps) {
       {/* Welcome Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">
-          Welcome back, {user?.fullName || user?.name || 'Author'}! 👋
+          Welcome back, {userName}! 👋
         </h1>
         <p className="text-muted-foreground mt-1">
           Here&apos;s what&apos;s happening with your articles
@@ -108,7 +78,7 @@ export function AuthorDashboard({ user }: DashboardContentProps) {
       </div>
 
       {/* Stats Cards */}
-      {loading ? (
+      {loading || !overview ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <Card key={i}>
@@ -132,12 +102,12 @@ export function AuthorDashboard({ user }: DashboardContentProps) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {formatNumber(overview.totalViews)}
+                {formatNumber(overview?.totalViews ?? 0)}
               </div>
               <p className="text-xs flex items-center gap-1 mt-1">
-                {getTrendIcon(overview.trends.viewsTrend)}
-                <span className={getTrendColor(overview.trends.viewsTrend)}>
-                  {overview.trends.viewsTrend >= 0 ? '+' : ''}{overview.trends.viewsTrend.toFixed(1)}%
+                {getTrendIcon(overview?.trends?.viewsTrend ?? 0)}
+                <span className={getTrendColor(overview?.trends?.viewsTrend ?? 0)}>
+                  {(overview?.trends?.viewsTrend ?? 0) >= 0 ? '+' : ''}{(overview?.trends?.viewsTrend ?? 0).toFixed(1)}%
                 </span>
                 <span className="text-muted-foreground">vs last month</span>
               </p>
@@ -151,12 +121,12 @@ export function AuthorDashboard({ user }: DashboardContentProps) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {formatNumber(overview.totalLikes)}
+                {formatNumber(overview?.totalLikes ?? 0)}
               </div>
               <p className="text-xs flex items-center gap-1 mt-1">
-                {getTrendIcon(overview.trends.likesTrend)}
-                <span className={getTrendColor(overview.trends.likesTrend)}>
-                  {overview.trends.likesTrend >= 0 ? '+' : ''}{overview.trends.likesTrend.toFixed(1)}%
+                {getTrendIcon(overview?.trends?.likesTrend ?? 0)}
+                <span className={getTrendColor(overview?.trends?.likesTrend ?? 0)}>
+                  {(overview?.trends?.likesTrend ?? 0) >= 0 ? '+' : ''}{(overview?.trends?.likesTrend ?? 0).toFixed(1)}%
                 </span>
                 <span className="text-muted-foreground">vs last month</span>
               </p>
@@ -170,12 +140,12 @@ export function AuthorDashboard({ user }: DashboardContentProps) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {formatNumber(overview.totalComments)}
+                {formatNumber(overview?.totalComments ?? 0)}
               </div>
               <p className="text-xs flex items-center gap-1 mt-1">
-                {getTrendIcon(overview.trends.commentsTrend)}
-                <span className={getTrendColor(overview.trends.commentsTrend)}>
-                  {overview.trends.commentsTrend >= 0 ? '+' : ''}{overview.trends.commentsTrend.toFixed(1)}%
+                {getTrendIcon(overview?.trends?.commentsTrend ?? 0)}
+                <span className={getTrendColor(overview?.trends?.commentsTrend ?? 0)}>
+                  {(overview?.trends?.commentsTrend ?? 0) >= 0 ? '+' : ''}{(overview?.trends?.commentsTrend ?? 0).toFixed(1)}%
                 </span>
                 <span className="text-muted-foreground">vs last month</span>
               </p>
@@ -189,10 +159,10 @@ export function AuthorDashboard({ user }: DashboardContentProps) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {overview.publishedArticles}
+                {overview?.publishedArticles ?? 0}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                {overview.draftArticles} draft{overview.draftArticles !== 1 ? 's' : ''}
+                {overview?.draftArticles ?? 0} draft{(overview?.draftArticles ?? 0) !== 1 ? 's' : ''}
               </p>
             </CardContent>
           </Card>
@@ -237,15 +207,15 @@ export function AuthorDashboard({ user }: DashboardContentProps) {
                       <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Eye className="h-3 w-3" />
-                          {formatNumber(article.views)}
+                          {formatNumber(article.views || 0)}
                         </span>
                         <span className="flex items-center gap-1">
                           <ThumbsUp className="h-3 w-3" />
-                          {formatNumber(article.likes)}
+                          {formatNumber(article.likes || 0)}
                         </span>
                         <span className="flex items-center gap-1">
                           <MessageSquare className="h-3 w-3" />
-                          {article.comments}
+                          {article.comments || 0}
                         </span>
                       </div>
                     </div>
@@ -369,7 +339,3 @@ export function AuthorDashboard({ user }: DashboardContentProps) {
 }
 
 AuthorDashboard.displayName = 'AuthorDashboard';
-function onNavigate(arg0: string) {
-  throw new Error('Function not implemented.');
-}
-

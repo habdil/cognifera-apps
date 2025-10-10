@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Work_Sans, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import PromoPopupProvider from "@/components/PromoPopupProvider";
+import { QueryProvider } from "@/lib/providers/QueryProvider";
 import "./globals.css";
 
 const workSans = Work_Sans({
@@ -130,20 +131,22 @@ export default function RootLayout({
       <body
         className={`${workSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <PromoPopupProvider />
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            style: {
-              background: 'var(--background)',
-              border: '1px solid var(--border)',
-              color: 'var(--foreground)',
-            },
-            className: 'my-toast',
-            duration: 4000,
-          }}
-        />
+        <QueryProvider>
+          {children}
+          <PromoPopupProvider />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: 'var(--background)',
+                border: '1px solid var(--border)',
+                color: 'var(--foreground)',
+              },
+              className: 'my-toast',
+              duration: 4000,
+            }}
+          />
+        </QueryProvider>
       </body>
     </html>
   );

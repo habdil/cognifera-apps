@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Search, User, ArrowLeft, LogOut } from "lucide-react";
 import { AuthDialog } from "@/components/shared/AuthDialog";
-import { getCurrentUser, logoutUser, type User as UserType } from "@/lib/auth";
+import { getCurrentUser, logoutUser, type User as UserType } from "@/lib/auth-config";
 import { toast } from "sonner";
 import { journalSocialConfig } from "@/lib/journal-social-config";
 

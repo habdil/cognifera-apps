@@ -1,12 +1,19 @@
-// User interface
+// User interface - compatible with NewUser from auth-new.ts
 export interface UnifiedUser {
   id: string;
-  fullName?: string;
-  name?: string;
-  email?: string;
-  role?: string;
+  full_name: string;  // Primary field from new auth
+  fullName?: string;  // Legacy compatibility
+  name?: string;      // Legacy compatibility
+  email: string;
+  role: string;
   username?: string;
   bio?: string;
+  avatar_url?: string | null;  // Match NewUser type
+  avatarUrl?: string;           // Legacy compatibility
+  status?: string;
+  is_verified?: boolean;
+  created_at?: string;
+  last_login_at?: string | null;
 }
 
 // Profile data interface

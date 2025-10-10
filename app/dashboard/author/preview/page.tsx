@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { ArrowLeft, Calendar, Tag, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getCurrentUser } from '@/lib/auth-config';
+import { newGetCurrentUser } from '@/lib/auth-new';
 
 interface ArticlePreviewData {
   judul: string;
@@ -41,9 +41,9 @@ export default function ArticlePreviewPage() {
     }
 
     // Get current user from auth (already in localStorage from login)
-    const currentUser = getCurrentUser();
-    if (currentUser?.fullName) {
-      setAuthorName(currentUser.fullName);
+    const currentUser = newGetCurrentUser();
+    if (currentUser?.full_name) {
+      setAuthorName(currentUser.full_name);
     }
   }, []);
 

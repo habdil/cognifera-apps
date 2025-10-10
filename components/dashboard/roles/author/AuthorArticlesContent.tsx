@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState, useMemo, useEffect } from 'react';
+import { memo, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,14 +12,14 @@ import {
   FileText,
   Clock,
   Calendar,
-  MoreVertical,
-  Filter,
   Send
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { fetchAuthorArticles, deleteArticle, updateArticle, type Article } from '@/lib/api/author-articles';
+import { useAuthorArticles, useDeleteArticle, useUpdateArticle } from '@/hooks/useAuthorArticles';
+import { useDebounce } from '@/hooks/useDebounce';
+import { updateArticle, type Article } from '@/lib/api/author-articles';
 import { processContentImages } from '@/lib/utils/image-processor';
 
 type TabType = 'published' | 'drafts';
@@ -42,57 +42,42 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
 
   const [activeTab, setActiveTab] = useState<TabType>(getInitialTab());
   const [searchQuery, setSearchQuery] = useState('');
-  const [articles, setArticles] = useState<Article[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<Article | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [isPublishing, setIsPublishing] = useState<string | null>(null);
 
-  // Fetch articles from API
-  useEffect(() => {
-    const loadArticles = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetchAuthorArticles({
-          status: 'all', // Fetch all articles (both published and drafts)
-          limit: 50
-        });
+  // Use React Query hooks with reduced limit (50 -> 20)
+  const { data: articles = [], isLoading } = useAuthorArticles({ status: 'all', limit: 20 });
+  const deleteArticleMutation = useDeleteArticle();
+  const updateArticleMutation = useUpdateArticle();
 
-        if (response.success) {
-          setArticles(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching articles:', error);
-        toast.error('Failed to Load Articles', {
-          description: error instanceof Error ? error.message : 'Please try again later.',
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  console.log('📊 AuthorArticlesContent - articles:', articles, 'isLoading:', isLoading, 'type:', typeof articles, 'isArray:', Array.isArray(articles));
 
-    loadArticles();
-  }, []);
+  // Debounce search query untuk mengurangi re-render
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
-  // Filter articles based on active tab and search query
+  // Filter articles based on active tab and debounced search query (client-side filtering)
   const filteredArticles = useMemo(() => {
+    if (!Array.isArray(articles)) return [];
+
     return articles
       .filter(article => {
         const matchesTab = activeTab === 'published'
           ? article.status === 'aktif'
           : article.status === 'nonaktif';
 
-        const matchesSearch = article.judul.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+        const matchesSearch = article.judul.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          article.tags.some(tag => tag.toLowerCase().includes(debouncedSearch.toLowerCase()));
 
         return matchesTab && matchesSearch;
       })
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-  }, [articles, activeTab, searchQuery]);
+  }, [articles, activeTab, debouncedSearch]);
 
   // Calculate stats
   const stats = useMemo(() => {
+    if (!Array.isArray(articles)) return { published: 0, drafts: 0, total: 0 };
+
     const published = articles.filter(a => a.status === 'aktif').length;
     const drafts = articles.filter(a => a.status === 'nonaktif').length;
     return { published, drafts, total: articles.length };
@@ -130,27 +115,14 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
   const handleDeleteConfirm = async () => {
     if (!articleToDelete) return;
 
-    setIsDeleting(true);
     try {
-      // Call delete API
-      await deleteArticle(articleToDelete.id);
-
-      // Remove from local state
-      setArticles(prev => prev.filter(a => a.id !== articleToDelete.id));
-
-      toast.success('Article Deleted', {
-        description: `"${articleToDelete.judul}" has been deleted successfully.`,
-      });
-
+      // Use React Query mutation
+      await deleteArticleMutation.mutateAsync(articleToDelete.id);
       setDeleteDialogOpen(false);
       setArticleToDelete(null);
     } catch (error) {
+      // Error already handled in useMutation
       console.error('Error deleting article:', error);
-      toast.error('Delete Failed', {
-        description: error instanceof Error ? error.message : 'Failed to delete article. Please try again.',
-      });
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -205,10 +177,8 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
           duration: 4000,
         });
 
-        // Update local state
-        setArticles(prev => prev.map(a =>
-          a.id === article.id ? { ...a, ...response.data } : a
-        ));
+        // Update using React Query mutation
+        updateArticleMutation.mutate({ articleId: article.id, payload });
       }
     } catch (error) {
       // Dismiss loading toast
@@ -504,11 +474,11 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
           <DialogFooter className="flex-col sm:flex-col gap-2 mt-4">
             <Button
               onClick={handleDeleteConfirm}
-              disabled={isDeleting}
+              disabled={deleteArticleMutation.isPending}
               variant="destructive"
               className="w-full flex items-center justify-center gap-2"
             >
-              {isDeleting ? (
+              {deleteArticleMutation.isPending ? (
                 <>
                   <span className="animate-spin">⏳</span>
                   Deleting...
@@ -522,7 +492,7 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
             </Button>
             <Button
               onClick={() => setDeleteDialogOpen(false)}
-              disabled={isDeleting}
+              disabled={deleteArticleMutation.isPending}
               variant="outline"
               className="w-full"
             >
