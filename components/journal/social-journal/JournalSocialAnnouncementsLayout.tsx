@@ -359,7 +359,7 @@ export default function JournalSocialAnnouncementsLayout() {
         </div>
       </main>
 
-      <JournalSocialFooter />
+      {/* <JournalSocialFooter /> */}
     </div>
   );
 }

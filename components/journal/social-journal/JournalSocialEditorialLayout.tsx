@@ -512,7 +512,7 @@ export default function JournalSocialEditorialLayout() {
         </div>
       </main>
 
-      <JournalSocialFooter />
+      {/* <JournalSocialFooter /> */}
     </div>
   );
 }

@@ -386,7 +386,7 @@ export default function JournalSocialAboutLayout() {
         </div>
       </main>
       
-      <JournalSocialFooter />
+      {/* <JournalSocialFooter /> */}
     </div>
   );
 }

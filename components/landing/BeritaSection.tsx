@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { BeritaData } from "@/types";
-import { beritaAPI } from "@/lib/api-dummy";
+import { PublicArticle, fetchPublicArticles, getCategoryLabel as getApiCategoryLabel, getCategoryName } from "@/lib/api/public-articles";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
+import { toast } from "sonner";
 
 export function BeritaSection() {
-  const [berita, setBerita] = useState<BeritaData[]>([]);
+  const [berita, setBerita] = useState<PublicArticle[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [loading, setLoading] = useState(true);
 
@@ -20,19 +21,25 @@ export function BeritaSection() {
 
   useEffect(() => {
     const fetchBerita = async () => {
-      const filters = selectedCategory === 'all' 
-        ? { sortBy: 'date' as const, sortOrder: 'desc' as const }
-        : { category: selectedCategory, sortBy: 'date' as const, sortOrder: 'desc' as const };
-      
-      const response = await beritaAPI.getAll(filters);
-      if (response.success && response.data) {
-        // Filter only active articles on frontend
-        const activeArticles = response.data.filter(article => article.status === 'aktif');
-        setBerita(activeArticles.slice(0, 4)); // Show latest 4 articles
+      setLoading(true);
+      try {
+        const response = await fetchPublicArticles({
+          limit: 4,
+          offset: 0,
+          category: selectedCategory !== 'all' ? selectedCategory : undefined,
+        });
+
+        if (response.success && response.data) {
+          setBerita(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching articles for landing page:', error);
+        toast.error('Failed to load articles');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    
+
     fetchBerita();
   }, [selectedCategory]);
 
@@ -45,18 +52,48 @@ export function BeritaSection() {
     }).format(date);
   };
 
-  const getCategoryColor = (category: string) => {
-    const colors = {
+  const getCategoryColor = (category: PublicArticle['category']) => {
+    const categoryName = getCategoryName(category);
+    const colors: { [key: string]: string } = {
       'research': 'bg-blue-100 text-blue-800',
       'industry': 'bg-purple-100 text-purple-800',
       'company': 'bg-orange-100 text-orange-800',
-      'announcement': 'bg-red-100 text-red-800'
+      'announcement': 'bg-red-100 text-red-800',
+      'Penelitian': 'bg-blue-100 text-blue-800',
+      'Industri': 'bg-purple-100 text-purple-800',
+      'Perusahaan': 'bg-orange-100 text-orange-800',
+      'Pengumuman': 'bg-red-100 text-red-800'
     };
-    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[categoryName] || 'bg-gray-100 text-gray-800';
   };
 
-  const getCategoryLabel = (category: string) => {
-    return categories.find(c => c.value === category)?.label || category;
+  const getCategoryLabel = (category: PublicArticle['category']) => {
+    // Try to get from API helper first (handles both string and object)
+    const apiLabel = getApiCategoryLabel(category);
+
+    // If it's already translated, return it
+    if (apiLabel !== getCategoryName(category)) {
+      return apiLabel;
+    }
+
+    // Otherwise use our local mapping
+    const categoryName = getCategoryName(category);
+    return categories.find(c => c.value === categoryName)?.label || categoryName;
+  };
+
+  const getCategoryEmoji = (category: PublicArticle['category']) => {
+    const categoryName = getCategoryName(category);
+    const emojis: { [key: string]: string } = {
+      'research': '🔬',
+      'industry': '📊',
+      'company': '🏢',
+      'announcement': '📢',
+      'Penelitian': '🔬',
+      'Industri': '📊',
+      'Perusahaan': '🏢',
+      'Pengumuman': '📢'
+    };
+    return emojis[categoryName] || '📰';
   };
 
   if (loading) {
@@ -110,11 +147,22 @@ export function BeritaSection() {
             <div className="mb-12">
               <div className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
                 <div className="md:flex">
-                  <div className="md:w-1/2 bg-primary/10 p-8 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-6xl mb-4">📖</div>
-                      <div className="text-lg font-medium text-primary">Featured Article</div>
-                    </div>
+                  <div className="md:w-1/2 relative bg-gradient-to-br from-primary/10 to-primary/30 overflow-hidden">
+                    {berita[0].featuredImage ? (
+                      <Image
+                        src={berita[0].featuredImage}
+                        alt={berita[0].judul}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="p-8 h-full flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-6xl mb-4">📖</div>
+                          <div className="text-lg font-medium text-primary">Featured Article</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="md:w-1/2 p-8">
                     <div className="flex items-center justify-between mb-4">
@@ -122,18 +170,18 @@ export function BeritaSection() {
                         {getCategoryLabel(berita[0].category)}
                       </span>
                       <span className="text-gray-500 text-sm">
-                        {formatDate(berita[0].publicationDate)}
+                        {formatDate(berita[0].publishedAt)}
                       </span>
                     </div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-4 leading-tight">
                       {berita[0].judul}
                     </h3>
-                    <p className="text-gray-600 mb-6 leading-relaxed">
-                      {berita[0].metaDescription || `${berita[0].konten.slice(0, 200)}...`}
+                    <p className="text-gray-600 mb-6 leading-relaxed line-clamp-3">
+                      {berita[0].konten.replace(/<[^>]*>/g, '').substring(0, 200)}...
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500 text-sm">
-                        By {berita[0].author}
+                        By {berita[0].author.fullName}
                       </span>
                       <Link href={`/news/${berita[0].id}`}>
                         <Button variant="outline" className="rounded-full">
@@ -148,18 +196,26 @@ export function BeritaSection() {
 
             {/* Other Articles Grid */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {berita.slice(1).map((artikel, index) => (
-                <div 
-                  key={index}
+              {berita.slice(1).map((artikel) => (
+                <div
+                  key={artikel.id}
                   className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                 >
-                  <div className="h-48 bg-primary/10 flex items-center justify-center">
-                    <div className="text-4xl">
-                      {artikel.category === 'research' && '🔬'}
-                      {artikel.category === 'industry' && '📊'}
-                      {artikel.category === 'company' && '🏢'}
-                      {artikel.category === 'announcement' && '📢'}
-                    </div>
+                  <div className="h-48 relative bg-gradient-to-br from-primary/10 to-primary/30 overflow-hidden">
+                    {artikel.featuredImage ? (
+                      <Image
+                        src={artikel.featuredImage}
+                        alt={artikel.judul}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="h-full flex items-center justify-center">
+                        <div className="text-4xl">
+                          {getCategoryEmoji(artikel.category)}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
@@ -167,18 +223,18 @@ export function BeritaSection() {
                         {getCategoryLabel(artikel.category)}
                       </span>
                       <span className="text-gray-500 text-sm">
-                        {formatDate(artikel.publicationDate)}
+                        {formatDate(artikel.publishedAt)}
                       </span>
                     </div>
                     <h3 className="text-lg font-bold text-gray-800 mb-3 line-clamp-2">
                       {artikel.judul}
                     </h3>
                     <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {artikel.metaDescription || `${artikel.konten.slice(0, 120)}...`}
+                      {artikel.konten.replace(/<[^>]*>/g, '').substring(0, 120)}...
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500 text-xs">
-                        {artikel.author}
+                        {artikel.author.fullName}
                       </span>
                       <Link href={`/news/${artikel.id}`}>
                         <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
@@ -189,6 +245,15 @@ export function BeritaSection() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* View All Button */}
+            <div className="text-center">
+              <Link href="/news">
+                <Button size="lg" className="rounded-full px-8">
+                  View All Articles
+                </Button>
+              </Link>
             </div>
           </>
         ) : (

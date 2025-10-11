@@ -25,7 +25,7 @@ export default function JournalLayout() {
         </div>
       </main>
       
-      <JournalFooter />
+      {/* <JournalFooter /> */}
     </div>
   );
 }

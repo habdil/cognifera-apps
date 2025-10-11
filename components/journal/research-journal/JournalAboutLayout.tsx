@@ -367,7 +367,7 @@ export default function JournalAboutLayout() {
         </div>
       </main>
       
-      <JournalFooter />
+      {/* <JournalFooter /> */}
     </div>
   );
 }

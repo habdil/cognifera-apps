@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Work_Sans, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
-import { Navbar } from "@/components/shared/Navbar";
-import { Footer } from "@/components/shared/Footer";
 import PromoPopupProvider from "@/components/PromoPopupProvider";
+import { QueryProvider } from "@/lib/providers/QueryProvider";
 import "./globals.css";
 
 const workSans = Work_Sans({
@@ -105,13 +104,13 @@ export default function RootLayout({
                 "availableLanguage": ["Indonesian", "English"]
               },
               "sameAs": [
-                "https://www.linkedin.com/company/cognifera",
-                "https://www.instagram.com/cognifera_official"
+                "https://www.linkedin.com/company/cognifera-education-academy",
+                "https://www.instagram.com/cognifera_edu"
               ],
               "offers": [
                 {
                   "@type": "Service",
-                  "name": "Jasa Riset Akademik",
+                  "name": "Riset Akademik",
                   "description": "Layanan penelitian akademik profesional"
                 },
                 {
@@ -132,22 +131,22 @@ export default function RootLayout({
       <body
         className={`${workSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <PromoPopupProvider />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: 'var(--background)',
-              border: '1px solid var(--border)',
-              color: 'var(--foreground)',
-            },
-            className: 'my-toast',
-            duration: 4000,
-          }}
-        />
+        <QueryProvider>
+          {children}
+          <PromoPopupProvider />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: 'var(--background)',
+                border: '1px solid var(--border)',
+                color: 'var(--foreground)',
+              },
+              className: 'my-toast',
+              duration: 4000,
+            }}
+          />
+        </QueryProvider>
       </body>
     </html>
   );

@@ -52,7 +52,7 @@ export interface BeritaData {
   judul: string;
   konten: string;
   featuredImage?: string;
-  category: 'research-tips' | 'success-stories' | 'industry-news' | 'company-news' | 'industry' | 'research' | 'company' | 'announcement';
+  category: 'industry' | 'research' | 'company' | 'announcement';
   tags: string[];
   author: string;
   publicationDate: string;
@@ -62,6 +62,33 @@ export interface BeritaData {
   keywords?: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+// Category interface (backend now returns object with name and description)
+export interface CategoryData {
+  name: string;
+  description: string;
+}
+
+// New interface for public articles with author info
+export interface PublicBeritaData {
+  id: string;
+  judul: string;
+  konten: string;
+  featuredImage?: string;
+  category: CategoryData | string; // Support both object (new) and string (old) for backward compatibility
+  tags: string[];
+  status: 'aktif';
+  publishedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  author: {
+    id: string;
+    fullName: string;
+    email?: string;
+    avatar?: string;
+    bio?: string;
+  };
 }
 
 export interface ContactFormData {

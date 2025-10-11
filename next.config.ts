@@ -39,6 +39,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.cognifera.web.id",
       },
+      {
+        protocol: "https",
+        hostname: "lnjcdrchybzurinizeek.supabase.co",
+      },
     ],
     formats: ["image/webp", "image/avif"],
     minimumCacheTTL: 60,

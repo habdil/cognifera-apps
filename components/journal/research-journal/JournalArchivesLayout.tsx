@@ -298,7 +298,7 @@ export default function JournalArchivesLayout() {
         </Card>
       </main>
       
-      <JournalFooter />
+      {/* <JournalFooter /> */}
     </div>
   );
 }

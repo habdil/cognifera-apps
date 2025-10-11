@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { verifyToken, getCurrentUser, logoutUser, type User } from '@/lib/auth';
+import { verifyToken, getCurrentUser, logoutUser, type User } from '@/lib/auth-config';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 

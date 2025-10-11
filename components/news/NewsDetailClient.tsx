@@ -2,20 +2,26 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { BeritaData } from "@/types";
-import { beritaAPI } from "@/lib/api-dummy";
-import { ArrowLeft, Share2, Eye, ThumbsUp } from "lucide-react";
+import { PublicArticle, fetchPublicArticleById, fetchPublicArticles, getCategoryLabel, getCategoryName, incrementArticleView } from "@/lib/api/public-articles";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { toast } from "sonner";
+import { CommentSection } from "@/components/news/CommentSection";
+import { ArticleHeader } from "@/components/news/ArticleHeader";
+import { ArticleTags } from "@/components/news/ArticleTags";
+import { RelatedArticlesSidebar } from "@/components/news/RelatedArticlesSidebar";
+import { RelatedArticleCard } from "@/components/news/RelatedArticleCard";
 
 interface NewsDetailClientProps {
-  initialArticle?: BeritaData | null;
+  initialArticle?: PublicArticle | null;
 }
 
 export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
   const { id } = useParams();
   const router = useRouter();
-  const [article, setArticle] = useState<BeritaData | null>(initialArticle || null);
-  const [relatedNews, setRelatedNews] = useState<BeritaData[]>([]);
+  const [article, setArticle] = useState<PublicArticle | null>(initialArticle || null);
+  const [relatedNews, setRelatedNews] = useState<PublicArticle[]>([]);
   const [loading, setLoading] = useState(!initialArticle);
 
   const handleBack = () => {
@@ -29,30 +35,51 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
   useEffect(() => {
     if (!initialArticle && id) {
       const fetchArticle = async () => {
-        const response = await beritaAPI.getById(id as string);
-        if (response.success && response.data) {
-          setArticle(response.data);
+        try {
+          const response = await fetchPublicArticleById(id as string);
+          if (response.success && response.data) {
+            setArticle(response.data);
+
+            // Increment view count when article is loaded
+            incrementArticleView(id as string);
+          }
+        } catch (error) {
+          console.error('Error fetching article:', error);
+          toast.error('Failed to Load Article', {
+            description: 'Unable to fetch article details.',
+          });
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       };
 
       fetchArticle();
+    } else if (initialArticle) {
+      // Also increment view count for SSR-loaded articles
+      incrementArticleView(initialArticle.id);
     }
   }, [id, initialArticle]);
 
   useEffect(() => {
     if (article) {
       const fetchRelatedNews = async () => {
-        const relatedResponse = await beritaAPI.getAll({
-          status: "aktif",
-          category: article.category
-        });
+        try {
+          // Get category name for API filter (handles both string and object)
+          const categoryName = getCategoryName(article.category);
 
-        if (relatedResponse.success && relatedResponse.data) {
-          const related = relatedResponse.data
-            .filter(item => item.id !== article.id)
-            .slice(0, 3);
-          setRelatedNews(related);
+          const relatedResponse = await fetchPublicArticles({
+            category: categoryName,
+            limit: 4
+          });
+
+          if (relatedResponse.success && relatedResponse.data) {
+            const related = relatedResponse.data
+              .filter(item => item.id !== article.id)
+              .slice(0, 3);
+            setRelatedNews(related);
+          }
+        } catch (error) {
+          console.error('Error fetching related news:', error);
         }
       };
 
@@ -68,24 +95,22 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
     });
   };
 
-  const getCategoryLabel = (category: string) => {
-    const categoryMap: { [key: string]: string } = {
-      industry: "Industry",
-      research: "Research",
-      company: "Company",
-      announcement: "Announcement"
-    };
-    return categoryMap[category] || category;
-  };
+  const getCategoryColor = (category: PublicArticle['category']) => {
+    // Get the category name for comparison (handles both string and object)
+    const categoryName = getCategoryName(category);
 
-  const getCategoryColor = (category: string) => {
     const colorMap: { [key: string]: string } = {
       research: "bg-blue-100 text-blue-800",
       industry: "bg-purple-100 text-purple-800",
       company: "bg-orange-100 text-orange-800",
-      announcement: "bg-red-100 text-red-800"
+      announcement: "bg-red-100 text-red-800",
+      // Also support Indonesian names
+      "Penelitian": "bg-blue-100 text-blue-800",
+      "Industri": "bg-purple-100 text-purple-800",
+      "Perusahaan": "bg-orange-100 text-orange-800",
+      "Pengumuman": "bg-red-100 text-red-800"
     };
-    return colorMap[category] || "bg-gray-100 text-gray-800";
+    return colorMap[categoryName] || "bg-gray-100 text-gray-800";
   };
 
   if (loading) {
@@ -143,130 +168,159 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
             </button>
 
             {/* Article Header */}
-            <div className="mb-6">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4">
-                {article.judul}
-              </h1>
-
-              {/* Author and Date */}
-              <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                <span className="font-medium">{article.author}</span>
-                <span>•</span>
-                <span>{formatDate(article.publicationDate)}</span>
-              </div>
-
-              {/* Social Actions */}
-              <div className="flex items-center gap-4 py-3 border-y border-gray-200">
-                <button className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors">
-                  <ThumbsUp className="w-4 h-4" />
-                  <span className="text-sm">Like</span>
-                </button>
-                <button className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors">
-                  <Share2 className="w-4 h-4" />
-                  <span className="text-sm">Share</span>
-                </button>
-                <div className="flex items-center gap-2 text-gray-500 ml-auto">
-                  <Eye className="w-4 h-4" />
-                  <span className="text-sm">1,234 views</span>
-                </div>
-              </div>
-            </div>
+            <ArticleHeader
+              articleId={article.id}
+              title={article.judul}
+              author={article.author.fullName}
+              publishedAt={article.publishedAt}
+              views={article.views}
+              initialLikes={article.likes}
+              initialIsLiked={article.isLiked}
+              categoryLabel={getCategoryLabel(article.category)}
+            />
 
             {/* Featured Image */}
             <div className="mb-8">
-              <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/30 rounded-lg flex items-center justify-center">
-                <div className="text-6xl opacity-50">📰</div>
+              <div className="relative aspect-video bg-gradient-to-br from-primary/10 to-primary/30 rounded-lg overflow-hidden">
+                {article.featuredImage ? (
+                  <Image
+                    src={article.featuredImage}
+                    alt={article.judul}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-6xl opacity-50">📰</div>
+                  </div>
+                )}
               </div>
-              <p className="text-xs text-gray-500 mt-2 italic">Ilustrasi artikel - {article.judul}</p>
+              {article.featuredImage && (
+                <p className="text-xs text-gray-500 mt-2 italic">Ilustrasi artikel - {article.judul}</p>
+              )}
             </div>
 
             {/* Article Content */}
             <div className="prose prose-lg max-w-none">
+              <style jsx global>{`
+                /* Article Content Styling - Same as Preview Page */
+                .prose h1 {
+                  font-size: 2.25rem;
+                  font-weight: 700;
+                  margin-top: 2rem;
+                  margin-bottom: 1rem;
+                  color: #111827;
+                }
+
+                .prose h2 {
+                  font-size: 1.875rem;
+                  font-weight: 700;
+                  margin-top: 1.75rem;
+                  margin-bottom: 0.875rem;
+                  color: #111827;
+                }
+
+                .prose h3 {
+                  font-size: 1.5rem;
+                  font-weight: 600;
+                  margin-top: 1.5rem;
+                  margin-bottom: 0.75rem;
+                  color: #111827;
+                }
+
+                .prose p {
+                  margin-bottom: 1rem;
+                  line-height: 1.75;
+                  color: #374151;
+                }
+
+                .prose ul,
+                .prose ol {
+                  padding-left: 1.5rem;
+                  margin-bottom: 1rem;
+                }
+
+                .prose ul {
+                  list-style-type: disc;
+                }
+
+                .prose ol {
+                  list-style-type: decimal;
+                }
+
+                .prose li {
+                  margin-bottom: 0.25rem;
+                  line-height: 1.75;
+                }
+
+                .prose img {
+                  max-width: 100%;
+                  height: auto;
+                  border-radius: 0.5rem;
+                  margin: 1rem auto;
+                  display: block;
+                }
+
+                .prose img[data-align="left"] {
+                  margin-left: 0 !important;
+                  margin-right: auto !important;
+                }
+
+                .prose img[data-align="center"] {
+                  margin-left: auto !important;
+                  margin-right: auto !important;
+                }
+
+                .prose img[data-align="right"] {
+                  margin-left: auto !important;
+                  margin-right: 0 !important;
+                }
+
+                .prose a {
+                  color: #3b82f6;
+                  text-decoration: underline;
+                  transition: color 0.2s;
+                }
+
+                .prose a:hover {
+                  color: #2563eb;
+                }
+
+                .prose blockquote {
+                  border-left: 4px solid #e5e7eb;
+                  padding-left: 1rem;
+                  font-style: italic;
+                  color: #6b7280;
+                  margin: 1rem 0;
+                }
+
+                .prose code {
+                  background-color: #f3f4f6;
+                  padding: 0.2rem 0.4rem;
+                  border-radius: 0.25rem;
+                  font-size: 0.9em;
+                  font-family: monospace;
+                }
+              `}</style>
               <div
                 className="text-gray-900 leading-relaxed"
-                dangerouslySetInnerHTML={{
-                  __html: article.konten
-                    .trim()
-                    .split('\n\n')
-                    .map(paragraph => paragraph.trim())
-                    .filter(paragraph => paragraph.length > 0)
-                    .map(paragraph => `<p class="mb-6">${paragraph.replace(/\n/g, '<br>')}</p>`)
-                    .join('')
-                }}
+                dangerouslySetInnerHTML={{ __html: article.konten }}
               />
             </div>
 
             {/* Tags */}
-            {article.tags.length > 0 && (
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="flex flex-wrap gap-2">
-                  <span className="text-sm font-medium text-gray-700 mr-2">Tags:</span>
-                  {article.tags.map((tag, index) => (
-                    <Link
-                      key={index}
-                      href={`/#news?tag=${tag}`}
-                      className="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded text-sm hover:bg-blue-100 transition-colors"
-                    >
-                      {tag}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
+            <ArticleTags tags={article.tags} />
+
+            {/* Comment Section */}
+            <CommentSection articleId={article.id} />
           </div>
 
           {/* Sidebar */}
-          <div className="w-80 hidden lg:block">
-            {/* Ad Space */}
-            <div className="bg-gray-50 rounded-lg p-6 mb-6">
-              <div className="text-center">
-                <div className="text-4xl mb-3">📢</div>
-                <p className="text-sm text-gray-600 font-medium">Advertisement Space</p>
-                <p className="text-xs text-gray-500 mt-2">Your ad could be here</p>
-              </div>
-            </div>
-
-            {/* Related News in Sidebar */}
-            {relatedNews.length > 0 && (
-              <div className="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Artikel Terkait</h3>
-                <div className="space-y-4">
-                  {relatedNews.map((relatedArticle) => (
-                    <Link
-                      key={relatedArticle.id}
-                      href={`/news/${relatedArticle.id}`}
-                      className="block group"
-                    >
-                      <div className="flex gap-3">
-                        <div className="flex-shrink-0">
-                          <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/30 rounded flex items-center justify-center">
-                            <span className="text-lg opacity-50">📰</span>
-                          </div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-gray-900 group-hover:text-primary transition-colors line-clamp-2 text-sm leading-tight">
-                            {relatedArticle.judul}
-                          </h4>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {formatDate(relatedArticle.publicationDate)}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Another Ad Space */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 mt-6">
-              <div className="text-center">
-                <div className="text-3xl mb-3">🎯</div>
-                <p className="text-sm text-gray-700 font-medium">Sponsored Content</p>
-                <p className="text-xs text-gray-600 mt-2">Premium placement available</p>
-              </div>
-            </div>
-          </div>
+          <RelatedArticlesSidebar
+            articles={relatedNews}
+            formatDate={formatDate}
+            getCategoryColor={getCategoryColor}
+          />
         </div>
 
         {/* Mobile Related News */}
@@ -275,26 +329,13 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
             <h2 className="text-xl font-bold text-gray-900 mb-6">Artikel Terkait</h2>
             <div className="grid gap-4">
               {relatedNews.map((relatedArticle) => (
-                <Link
+                <RelatedArticleCard
                   key={relatedArticle.id}
-                  href={`/news/${relatedArticle.id}`}
-                  className="flex gap-4 bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/30 rounded flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl opacity-50">📰</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className={`inline-block px-2 py-1 rounded text-xs font-medium mb-2 ${getCategoryColor(relatedArticle.category)}`}>
-                      {getCategoryLabel(relatedArticle.category)}
-                    </span>
-                    <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">
-                      {relatedArticle.judul}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {formatDate(relatedArticle.publicationDate)}
-                    </p>
-                  </div>
-                </Link>
+                  article={relatedArticle}
+                  variant="mobile"
+                  formatDate={formatDate}
+                  getCategoryColor={getCategoryColor}
+                />
               ))}
             </div>
           </div>

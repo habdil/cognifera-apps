@@ -387,7 +387,7 @@ export default function JournalSocialArchivesLayout() {
         </Card>
       </main>
       
-      <JournalSocialFooter />
+      {/* <JournalSocialFooter /> */}
     </div>
   );
 }

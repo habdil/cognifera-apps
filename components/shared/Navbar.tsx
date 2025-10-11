@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -11,154 +10,160 @@ import {
   MobileNavMenu,
   MobileNavToggle,
 } from "@/components/ui/resizable-navbar";
-
-import {
-  Menu,
-  MenuItem,
-  HoveredLink,
-  SecondaryMenuProvider,
-} from "@/components/ui/navbar-menu";
+import Image from "next/image";
+import Link from "next/link";
 
 import { AuthDialog } from "@/components/shared/AuthDialog";
-import { getCurrentUser, logoutUser, type User } from "@/lib/auth";
+import { newGetCurrentUser, newLogoutUser, type NewUser } from "@/lib/auth-new";
+import { authEvents } from "@/lib/events/auth-events";
 import { Button } from "@/components/ui/button";
-import { User as UserIcon, LogOut, ChevronDown, ChevronUp } from "lucide-react";
+import { User as UserIcon, BookOpen, Heart, Settings } from "lucide-react";
 import { toast } from "sonner";
+import { SavedNewsModal } from "@/components/dashboard/modal";
+import { UserDropdown, NavMenuSections, MobileNavContent } from "./navbar-components";
 
 export const Navbar = () => {
   const [active, setActive] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<NewUser | null>(null);
   const [expandedMobileMenu, setExpandedMobileMenu] = useState<string | null>(null);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showSavedNewsModal, setShowSavedNewsModal] = useState(false);
 
   useEffect(() => {
-    setUser(getCurrentUser());
+    setUser(newGetCurrentUser());
+
+    // Listen to auth events for real-time updates
+    const handleUserUpdated = () => {
+      const updatedUser = newGetCurrentUser();
+      setUser(updatedUser);
+    };
+
+    const handleUserLoggedOut = () => {
+      setUser(null);
+    };
+
+    authEvents.on('user-updated', handleUserUpdated);
+    authEvents.on('user-logged-out', handleUserLoggedOut);
+
+    return () => {
+      authEvents.off('user-updated', handleUserUpdated);
+      authEvents.off('user-logged-out', handleUserLoggedOut);
+    };
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showUserDropdown && !(event.target as Element).closest('.relative')) {
+        setShowUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserDropdown]);
 
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await newLogoutUser();
       toast.success("Berhasil logout! Sampai jumpa lagi! 👋");
       setUser(null);
+      setShowUserDropdown(false);
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     } catch (error) {
       console.error('Logout failed:', error);
       toast.error("Logout gagal, tapi data lokal sudah dihapus");
-      // Even if API call fails, clear local data
       setUser(null);
+      setShowUserDropdown(false);
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     }
   };
 
-  const navItems = [
-    { name: "Home", link: "/" },
-    { name: "About", link: "/#about" },
-    { name: "Services", link: "/#services" },
-    { name: "Publications", link: "/publications" },
-    { name: "News", link: "/news" },
-    { name: "Contacts", link: "/#contacts" },
-  ];
+  const getUserDropdownItems = (userRole: string) => {
+    switch (userRole) {
+      case 'READER':
+      case 'CLIENT':
+        return [
+          {
+            label: 'Terbitkan Buku',
+            href: '/dashboard/reader',
+            icon: BookOpen,
+            action: null
+          },
+          {
+            label: 'Berita Tersimpan',
+            href: null,
+            icon: Heart,
+            action: () => setShowSavedNewsModal(true)
+          }
+        ];
+      case 'AUTHOR':
+        return [
+          {
+            label: 'Dashboard',
+            href: '/dashboard/author',
+            icon: Settings,
+            action: null
+          }
+        ];
+      case 'ADMIN':
+        return [
+          {
+            label: 'Dashboard Admin',
+            href: '/dashboard/admin',
+            icon: Settings,
+            action: null
+          }
+        ];
+      default:
+        return [];
+    }
+  };
 
   return (
     <RootNavbar>
       {/* Navbar Desktop */}
       <NavBody>
         {/* Logo */}
-        <a
+        <Link
           href="/"
           className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1"
         >
-          <img
+          <Image
             src="/logo.png"
             alt="Logo Cognifera"
             width={30}
             height={30}
           />
-        </a>
+        </Link>
 
         {/* Menu utama dengan dropdown */}
-        <Menu setActive={setActive}>
-          <MenuItem setActive={setActive} active={active} item="About">
-            <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="/profile">Profile</HoveredLink>
-              <HoveredLink href="/visi-misi">Visi dan Misi</HoveredLink>
-              <HoveredLink href="/our-team">Our Team</HoveredLink>
-            </div>
-          </MenuItem>
-
-          <MenuItem setActive={setActive} active={active} item="Services">
-            <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="/services/feradata">FERADATA</HoveredLink>
-              <HoveredLink href="/services/feraguide">FERAGUIDE</HoveredLink>
-              <HoveredLink href="/services/ferapub">FERAPUB</HoveredLink>
-              <HoveredLink href="/services/feragrant">FERAGRANT</HoveredLink>
-            </div>
-          </MenuItem>
-
-          <MenuItem setActive={setActive} active={active} item="Publications">
-            <SecondaryMenuProvider>
-              <div className="flex flex-col space-y-4 text-sm">
-                <HoveredLink href="/publications">All Publications</HoveredLink>
-                <HoveredLink 
-                  href="/publications?section=books"
-                >
-                  Books
-                </HoveredLink>
-                <HoveredLink 
-                  href="/publications"
-                  subItems={[
-                    { title: "Global Journal of Science Education", href: "/journal", description: "International journal focused on science education research and methodology" },
-                    { title: "Journal of Social Responsibility and Service", href: "/journal-social", description: "Community service and social responsibility research publications" },
-                    { title: "Journal Al-Musannif", href: "https://ojs.cognifera.web.id", description: "Islamic studies and scholarly research journal" }
-                  ]}
-                >
-                  Journals
-                </HoveredLink>
-              </div>
-            </SecondaryMenuProvider>
-          </MenuItem>
-
-          <MenuItem setActive={setActive} active={active} item="News">
-            <div className="flex flex-col space-y-4 text-sm">
-              <HoveredLink href="/news">All News</HoveredLink>
-              <HoveredLink href="/news?category=industry">Industry News</HoveredLink>
-              <HoveredLink href="/news?category=research">Research News</HoveredLink>
-              <HoveredLink href="/news?category=company">Company News</HoveredLink>
-            </div>
-          </MenuItem>
-        </Menu>
+        <NavMenuSections active={active} setActive={setActive} />
 
         {/* CTA */}
         <div className="flex items-center space-x-4">
-          {user && user.role === "CLIENT" ? (
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2 px-3 py-2 bg-gray-100 rounded-full">
-                <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
-                  <UserIcon className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-sm font-medium">{user.name}</span>
-              </div>
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                size="sm"
-                className="flex items-center space-x-2"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Logout</span>
-              </Button>
-            </div>
+          {user ? (
+            <UserDropdown
+              user={user}
+              showDropdown={showUserDropdown}
+              onToggleDropdown={() => setShowUserDropdown(!showUserDropdown)}
+              onLogout={handleLogout}
+              dropdownItems={getUserDropdownItems(user.role)}
+              onCloseDropdown={() => setShowUserDropdown(false)}
+            />
           ) : (
             <div className="flex items-center space-x-3">
               <AuthDialog defaultMode="login">
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="text-[var(--color-foreground)] hover:text-[var(--color-primary)] flex items-center space-x-2"
+                  className="text-[var(--color-foreground)] hover:text-white hover:bg-primary flex items-center space-x-2"
                 >
                   <UserIcon className="w-4 h-4" />
                   <span>Login</span>
@@ -167,7 +172,7 @@ export const Navbar = () => {
               <AuthDialog>
                 <NavbarButton
                   variant="primary"
-                  className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)] cursor-pointer"
+                  className="bg-[var(--color-primary)] text-white hover:bg-white hover:text-primary"
                 >
                   Get Started
                 </NavbarButton>
@@ -181,14 +186,14 @@ export const Navbar = () => {
       <MobileNav>
         <MobileNavHeader>
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-2">
-            <img
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
               src="/logo.png"
               alt="Logo Cognifera"
               width={32}
               height={32}
             />
-          </a>
+          </Link>
 
           {/* Toggle */}
           <MobileNavToggle
@@ -199,230 +204,22 @@ export const Navbar = () => {
 
         {/* Mobile menu */}
         <MobileNavMenu isOpen={mobileOpen} onClose={() => setMobileOpen(false)}>
-          {/* Home */}
-          <a
-            href="/"
-            className="w-full rounded-md px-4 py-2 text-base font-medium text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
-            onClick={() => setMobileOpen(false)}
-          >
-            Home
-          </a>
-
-          {/* About Section with Sub-items */}
-          <div className="w-full">
-            <button
-              onClick={() => setExpandedMobileMenu(expandedMobileMenu === 'about' ? null : 'about')}
-              className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-[var(--color-foreground)] border-b border-gray-200 hover:bg-gray-50"
-            >
-              <span>About</span>
-              {expandedMobileMenu === 'about' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
-            {expandedMobileMenu === 'about' && (
-              <div className="pl-6 py-1 space-y-1 bg-gray-50">
-                <a
-                  href="/profile"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Profile
-                </a>
-                <a
-                  href="/visi-misi"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Visi dan Misi
-                </a>
-                <a
-                  href="/our-team"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Our Team
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Services Section with Sub-items */}
-          <div className="w-full">
-            <button
-              onClick={() => setExpandedMobileMenu(expandedMobileMenu === 'services' ? null : 'services')}
-              className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-[var(--color-foreground)] border-b border-gray-200 hover:bg-gray-50"
-            >
-              <span>Services</span>
-              {expandedMobileMenu === 'services' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
-            {expandedMobileMenu === 'services' && (
-              <div className="pl-6 py-1 space-y-1 bg-gray-50">
-                <a
-                  href="/services/feradata"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  FERADATA
-                </a>
-                <a
-                  href="/services/feraguide"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  FERAGUIDE
-                </a>
-                <a
-                  href="/services/ferapub"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  FERAPUB
-                </a>
-                <a
-                  href="/services/feragrant"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  FERAGRANT
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Publications Section with Sub-items */}
-          <div className="w-full">
-            <button
-              onClick={() => setExpandedMobileMenu(expandedMobileMenu === 'publications' ? null : 'publications')}
-              className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-[var(--color-foreground)] border-b border-gray-200 hover:bg-gray-50"
-            >
-              <span>Publications</span>
-              {expandedMobileMenu === 'publications' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
-            {expandedMobileMenu === 'publications' && (
-              <div className="pl-6 py-1 space-y-1 bg-gray-50">
-                <a
-                  href="/publications"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  All Publications
-                </a>
-                <a
-                  href="/publications?section=books"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Books
-                </a>
-                <a
-                  href="/publications?section=journals"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Journals
-                </a>
-                <a
-                  href="https://ojs.cognifera.web.id"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Journal Al-Musannif ↗
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* News Section with Sub-items */}
-          <div className="w-full">
-            <button
-              onClick={() => setExpandedMobileMenu(expandedMobileMenu === 'news' ? null : 'news')}
-              className="w-full flex items-center justify-between px-4 py-2 text-base font-medium text-[var(--color-foreground)] border-b border-gray-200 hover:bg-gray-50"
-            >
-              <span>News</span>
-              {expandedMobileMenu === 'news' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
-            {expandedMobileMenu === 'news' && (
-              <div className="pl-6 py-1 space-y-1 bg-gray-50">
-                <a
-                  href="/news"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  All News
-                </a>
-                <a
-                  href="/news?category=industry"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Industry News
-                </a>
-                <a
-                  href="/news?category=research"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Research News
-                </a>
-                <a
-                  href="/news?category=company"
-                  className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Company News
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Contacts */}
-          <a
-            href="/#contacts"
-            className="w-full rounded-md px-4 py-2 text-base font-medium text-[var(--color-foreground)] hover:text-[var(--color-primary)]"
-            onClick={() => setMobileOpen(false)}
-          >
-            Contacts
-          </a>
-          {user && user.role === "CLIENT" ? (
-            <div className="w-full space-y-3">
-              <div className="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg">
-                <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
-                  <UserIcon className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-sm font-medium">{user.name}</span>
-              </div>
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                className="w-full flex items-center justify-center space-x-2"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Logout</span>
-              </Button>
-            </div>
-          ) : (
-            <div className="w-full space-y-3">
-              <AuthDialog defaultMode="login">
-                <Button
-                  variant="outline"
-                  className="w-full flex items-center justify-center space-x-2"
-                >
-                  <UserIcon className="w-4 h-4" />
-                  <span>Login</span>
-                </Button>
-              </AuthDialog>
-              <AuthDialog>
-                <NavbarButton
-                  variant="primary"
-                  className="w-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)] cursor-pointer"
-                >
-                  Get Started
-                </NavbarButton>
-              </AuthDialog>
-            </div>
-          )}
+          <MobileNavContent
+            user={user}
+            expandedMenu={expandedMobileMenu}
+            onToggleMenu={(menu: string) => setExpandedMobileMenu(expandedMobileMenu === menu ? null : menu)}
+            onCloseMobile={() => setMobileOpen(false)}
+            onLogout={handleLogout}
+            dropdownItems={user ? getUserDropdownItems(user.role) : []}
+          />
         </MobileNavMenu>
       </MobileNav>
+
+      {/* Saved News Modal */}
+      <SavedNewsModal
+        open={showSavedNewsModal}
+        onOpenChange={setShowSavedNewsModal}
+      />
     </RootNavbar>
   );
 };

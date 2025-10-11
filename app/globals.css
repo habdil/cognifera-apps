@@ -1,8 +1,16 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   --color-primary: #EC7A01;
+  --color-destructive: #Ff0000;
+  --color-hijau: #21D375;
   --color-primary-v2: #16a085;
+  --color-accent: #d4d4d4;
   --color-primary-foreground: #ffffff;
   --color-secondary: #FFDD02;
   --color-secondary-v2: #3498db;
@@ -14,6 +22,7 @@
   --color-muted: #f7f7f7;
   --color-muted-foreground: #737373;
   --color-border: #e5e5e5;
+  --color-border-3: #FFFF00;
   --color-border-2: #16a085;
   --color-input: #e5e5e5;
   --color-ring: #EC7A01;
@@ -23,6 +32,7 @@
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
+/* accent */
 
 @keyframes cell-ripple {
   0% {
@@ -78,6 +88,7 @@ html {
   font-family: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif !important;
   border-radius: var(--radius) !important;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+  background: var(--color-background) !important;
 }
 
 /* Success Toast */
@@ -144,4 +155,46 @@ html {
 .hero-headline .split-word:nth-child(8), /* Penerbitan */
 .hero-headline .split-word:nth-child(9) { /* Buku */
   color: var(--color-primary);
+}
+
+:root {
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+.dark {
+  --sidebar: hsl(240 5.9% 10%);
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@theme inline {
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

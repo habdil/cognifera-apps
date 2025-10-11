@@ -744,7 +744,7 @@ export default function JournalSubmitLayout() {
         </div>
       </main>
       
-      <JournalFooter />
+      {/* <JournalFooter /> */}
     </div>
   );
 }
