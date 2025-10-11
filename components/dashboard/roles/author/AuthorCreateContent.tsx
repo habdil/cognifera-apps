@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { uploadArticleImage } from '@/lib/api/upload';
 import { createArticle, saveDraft, updateArticle, fetchArticleById } from '@/lib/api/author-articles';
 import { processContentImages } from '@/lib/utils/image-processor';
+import { PublicCategory, fetchPublicCategories } from '@/lib/api/public-articles';
 
 interface ArticleFormData {
   judul: string;
@@ -41,6 +42,10 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
   const [editArticleId, setEditArticleId] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoadingArticle, setIsLoadingArticle] = useState(false);
+
+  // Categories state
+  const [categories, setCategories] = useState<PublicCategory[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   // Check if we're in edit mode
   useEffect(() => {
@@ -83,16 +88,33 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
     }
   };
 
-  const categories = [
-    { value: 'research-tips', label: 'Research Tips' },
-    { value: 'success-stories', label: 'Success Stories' },
-    { value: 'industry-news', label: 'Industry News' },
-    { value: 'company-news', label: 'Company News' },
-    { value: 'industry', label: 'Industry' },
-    { value: 'research', label: 'Research' },
-    { value: 'company', label: 'Company' },
-    { value: 'announcement', label: 'Announcement' }
-  ];
+  // Fetch categories from API
+  useEffect(() => {
+    const loadCategories = async () => {
+      setCategoriesLoading(true);
+      try {
+        const response = await fetchPublicCategories();
+
+        if (response.success && response.data && response.data.length > 0) {
+          // Sort by sortOrder (ascending)
+          const sortedCategories = response.data.sort((a, b) => a.sortOrder - b.sortOrder);
+          setCategories(sortedCategories);
+          console.log('✅ [Author] Categories loaded from API:', sortedCategories);
+        } else {
+          console.warn('⚠️ [Author] No categories returned from API');
+        }
+      } catch (error) {
+        console.error('❌ [Author] Error fetching categories:', error);
+        toast.error('Failed to Load Categories', {
+          description: 'Using default categories. Please refresh the page.',
+        });
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    loadCategories();
+  }, []);
 
   const handleCoverImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -380,16 +402,32 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
           <Select
             value={formData.category}
             onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+            disabled={categoriesLoading}
           >
             <SelectTrigger className="w-full hover:border-[var(--color-primary)]">
-              <SelectValue placeholder="Select a category..." />
+              <SelectValue placeholder={categoriesLoading ? "Loading categories..." : "Select a category..."} />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((cat) => (
-                <SelectItem className='bg-white hover:text-primary hover:bg-gray-50' key={cat.value} value={cat.value}>
-                  {cat.label}
-                </SelectItem>
-              ))}
+              {categoriesLoading ? (
+                <div className="flex items-center justify-center py-4 text-sm text-gray-500">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2"></div>
+                  Loading...
+                </div>
+              ) : categories.length > 0 ? (
+                categories.map((cat) => (
+                  <SelectItem
+                    className='bg-white hover:text-primary hover:bg-gray-50'
+                    key={cat.id}
+                    value={cat.slug}
+                  >
+                    {cat.name}
+                  </SelectItem>
+                ))
+              ) : (
+                <div className="py-4 px-3 text-sm text-gray-500 text-center">
+                  No categories available. Please contact admin.
+                </div>
+              )}
             </SelectContent>
           </Select>
         </div>

@@ -166,7 +166,9 @@ export default function ArticlePreviewPage() {
       </article>
 
       <style jsx global>{`
-        /* Match editor styles */
+        /* Complete editor styles - Matches editor-styles.css EXACTLY */
+
+        /* Headings */
         .prose h1 {
           font-size: 2.5rem;
           font-weight: 700;
@@ -194,11 +196,15 @@ export default function ArticlePreviewPage() {
           color: var(--color-foreground);
         }
 
+        /* Paragraphs */
         .prose p {
+          font-size: 1rem;
+          line-height: 1.75;
           margin-bottom: 1rem;
           color: var(--color-foreground);
         }
 
+        /* Lists */
         .prose ul,
         .prose ol {
           padding-left: 1.5rem;
@@ -218,6 +224,7 @@ export default function ArticlePreviewPage() {
           line-height: 1.75;
         }
 
+        /* Task Lists */
         .prose ul[data-type="taskList"] {
           list-style: none;
           padding-left: 0;
@@ -229,6 +236,11 @@ export default function ArticlePreviewPage() {
           gap: 0.5rem;
         }
 
+        .prose ul[data-type="taskList"] li input[type="checkbox"] {
+          margin-top: 0.25rem;
+        }
+
+        /* Blockquote */
         .prose blockquote {
           border-left: 4px solid var(--color-border);
           padding-left: 1rem;
@@ -237,6 +249,7 @@ export default function ArticlePreviewPage() {
           margin: 1rem 0;
         }
 
+        /* Code */
         .prose code {
           background-color: var(--color-muted);
           padding: 0.2rem 0.4rem;
@@ -245,6 +258,7 @@ export default function ArticlePreviewPage() {
           font-family: monospace;
         }
 
+        /* Images - Base */
         .prose img {
           max-width: 100%;
           height: auto;
@@ -253,6 +267,7 @@ export default function ArticlePreviewPage() {
           display: block;
         }
 
+        /* Image Alignment */
         .prose img[data-align="left"] {
           margin-left: 0 !important;
           margin-right: auto !important;
@@ -268,13 +283,48 @@ export default function ArticlePreviewPage() {
           margin-right: 0 !important;
         }
 
+        /* Links */
         .prose a {
           color: #3b82f6;
           text-decoration: underline;
+          transition: color 0.2s;
         }
 
         .prose a:hover {
           color: #2563eb;
+        }
+
+        /* Text Alignment - Support from TipTap TextAlign extension */
+        .prose [style*="text-align: left"],
+        .prose p[style*="text-align: left"],
+        .prose h1[style*="text-align: left"],
+        .prose h2[style*="text-align: left"],
+        .prose h3[style*="text-align: left"] {
+          text-align: left !important;
+        }
+
+        .prose [style*="text-align: center"],
+        .prose p[style*="text-align: center"],
+        .prose h1[style*="text-align: center"],
+        .prose h2[style*="text-align: center"],
+        .prose h3[style*="text-align: center"] {
+          text-align: center !important;
+        }
+
+        .prose [style*="text-align: right"],
+        .prose p[style*="text-align: right"],
+        .prose h1[style*="text-align: right"],
+        .prose h2[style*="text-align: right"],
+        .prose h3[style*="text-align: right"] {
+          text-align: right !important;
+        }
+
+        .prose [style*="text-align: justify"],
+        .prose p[style*="text-align: justify"],
+        .prose h1[style*="text-align: justify"],
+        .prose h2[style*="text-align: justify"],
+        .prose h3[style*="text-align: justify"] {
+          text-align: justify !important;
         }
       `}</style>
     </div>

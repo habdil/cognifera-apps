@@ -299,27 +299,42 @@ export async function toggleCommentLike(commentId: string): Promise<ApiResponse<
 /**
  * Toggle like on an article (like/unlike)
  * POST /api/public/articles/:id/like
- * Authentication: Required
+ * Authentication: Optional
+ * - If authenticated: like as logged-in user
+ * - If not authenticated: like as guest with deviceId
  * Returns updated like count and isLiked status
  */
-export async function toggleArticleLike(articleId: string): Promise<ApiResponse<{ likes: number; isLiked: boolean }>> {
+export async function toggleArticleLike(articleId: string, deviceId?: string): Promise<ApiResponse<{ likes: number; isLiked: boolean }>> {
   try {
     const token = getAuthToken();
 
-    if (!token) {
+    // Prepare request body and headers
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    const body: { deviceId?: string } = {};
+
+    if (token) {
+      // Authenticated user - use token
+      headers['Authorization'] = `Bearer ${token}`;
+      console.log('👤 Toggling like as authenticated user');
+    } else if (deviceId) {
+      // Guest user - use deviceId
+      body.deviceId = deviceId;
+      console.log('🆔 Toggling like as guest with deviceId:', deviceId);
+    } else {
       return {
         success: false,
-        error: 'UNAUTHORIZED',
-        message: 'Login required to like article'
+        error: 'NO_IDENTIFIER',
+        message: 'Unable to identify user or device'
       };
     }
 
     const response = await fetch(`${API_BASE_URL}/public/articles/${articleId}/like`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
+      headers,
+      body: JSON.stringify(body),
     });
 
     const result = await response.json();
@@ -332,6 +347,8 @@ export async function toggleArticleLike(articleId: string): Promise<ApiResponse<
       };
     }
 
+    console.log('✅ Like toggled successfully:', result);
+
     return {
       success: true,
       data: {
@@ -340,7 +357,7 @@ export async function toggleArticleLike(articleId: string): Promise<ApiResponse<
       }
     };
   } catch (error) {
-    console.error('Error toggling article like:', error);
+    console.error('❌ Error toggling article like:', error);
     return {
       success: false,
       error: 'NETWORK_ERROR',

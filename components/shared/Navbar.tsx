@@ -91,18 +91,18 @@ export const Navbar = () => {
       case 'READER':
       case 'CLIENT':
         return [
-          {
-            label: 'Terbitkan Buku',
-            href: '/dashboard/reader',
-            icon: BookOpen,
-            action: null
-          },
-          {
-            label: 'Berita Tersimpan',
-            href: null,
-            icon: Heart,
-            action: () => setShowSavedNewsModal(true)
-          }
+          // {
+          //   label: 'Terbitkan Buku',
+          //   href: '/dashboard/reader',
+          //   icon: BookOpen,
+          //   action: null
+          // },
+          // {
+          //   label: 'Berita Tersimpan',
+          //   href: null,
+          //   icon: Heart,
+          //   action: () => setShowSavedNewsModal(true)
+          // }
         ];
       case 'AUTHOR':
         return [
