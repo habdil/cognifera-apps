@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { newLoginUser, newRegisterUser, newGetDashboardUrl } from "@/lib/auth-new";
 import { toast } from "sonner";
+import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 
 interface AuthDialogProps {
   children: React.ReactNode;
@@ -186,9 +187,20 @@ export const AuthDialog = ({ children, defaultMode = "register" }: AuthDialogPro
             </div>
           )}
         </form>
-          
+
+        <div className="relative">
+          <Separator />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="bg-white px-2 text-xs text-muted-foreground">
+              ATAU
+            </span>
+          </div>
+        </div>
+
+        <GoogleLoginButton disabled={loading} />
+
         <Separator />
-        
+
         <div className="text-center text-sm">
           <span className="text-muted-foreground">
             {isLogin ? "Belum punya akun?" : "Sudah punya akun?"}

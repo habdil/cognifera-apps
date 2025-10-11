@@ -241,3 +241,26 @@ export async function fetchCurrentUser(): Promise<ApiResponse<UserData>> {
 
   return response.json();
 }
+
+/**
+ * Update user role (Admin only)
+ * PATCH /api/users/:userId/role
+ */
+export async function updateUserRole(
+  userId: string,
+  role: 'AUTHOR' | 'READER'
+): Promise<ApiResponse<{ user: UserData }>> {
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/role`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    credentials: 'include',
+    body: JSON.stringify({ role })
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'Failed to update user role' }));
+    throw new Error(error.message || `HTTP ${response.status}: Failed to update user role`);
+  }
+
+  return response.json();
+}

@@ -19,7 +19,8 @@ import {
   createUser,
   toggleUserStatus,
   deleteUser,
-  fetchUserStats
+  fetchUserStats,
+  updateUserRole
 } from '@/lib/api/users';
 
 export const AdminUsersContent = memo(() => {
@@ -187,6 +188,29 @@ export const AdminUsersContent = memo(() => {
     }
   };
 
+  const handleUpdateRole = async (userId: string, newRole: 'AUTHOR' | 'READER') => {
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+
+    try {
+      const result = await updateUserRole(userId, newRole);
+
+      // Update local state
+      setUsers(prev => prev.map(u =>
+        u.id === userId ? result.data.user : u
+      ));
+
+      toast.success('Role user berhasil diubah', {
+        description: `${user.fullName} sekarang menjadi ${newRole === 'AUTHOR' ? 'Author' : 'Client'}`
+      });
+    } catch (error) {
+      console.error('Update role error:', error);
+      toast.error('Gagal mengubah role user', {
+        description: error instanceof Error ? error.message : 'Terjadi kesalahan'
+      });
+    }
+  };
+
   // Get existing emails for validation
   const existingEmails = useMemo(() => {
     return users.map(u => u.email.toLowerCase());
@@ -259,6 +283,7 @@ export const AdminUsersContent = memo(() => {
                         onView={handleView}
                         onToggleBlock={handleToggleBlock}
                         onDelete={handleDelete}
+                        onUpdateRole={handleUpdateRole}
                       />
                     ))}
                   </tbody>

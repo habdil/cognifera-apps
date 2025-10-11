@@ -448,3 +448,34 @@ export const newCreateUser = async (userData: {
 export const newCheckHealth = async () => {
   return await makeAuthRequest('/health');
 };
+
+// Google OAuth helper function
+export const handleGoogleCallback = async (token: string, refreshToken: string): Promise<NewUser> => {
+  // Validate tokens
+  if (!token || !refreshToken) {
+    throw new Error('Invalid tokens from Google OAuth');
+  }
+
+  // Save tokens to storage
+  localStorage.setItem(NEW_STORAGE_KEYS.accessToken, token);
+  localStorage.setItem(NEW_STORAGE_KEYS.refreshToken, refreshToken);
+
+  // Set cookies
+  setCookie(NEW_STORAGE_KEYS.accessToken, token, 900); // 15 minutes
+  setCookie(NEW_STORAGE_KEYS.refreshToken, refreshToken, 604800); // 7 days
+
+  // Fetch user profile
+  const response = await makeAuthRequest('/auth/profile', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  const user = response.data.user;
+
+  // Save user data
+  localStorage.setItem(NEW_STORAGE_KEYS.user, JSON.stringify(user));
+
+  return user;
+};
