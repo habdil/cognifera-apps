@@ -342,20 +342,20 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-[var(--color-foreground)]">
+        <h1 className="text-2xl md:text-3xl font-bold text-[var(--color-foreground)]">
           {editMode ? 'Edit Article' : 'Create New Article'}
         </h1>
-        <p className="text-[var(--color-muted-foreground)] mt-2">
+        <p className="text-sm md:text-base text-[var(--color-muted-foreground)] mt-1 md:mt-2">
           {editMode ? 'Update your article and republish' : 'Write and publish your article with rich formatting'}
         </p>
       </div>
 
       {/* Article Information */}
-      <div className="bg-[var(--color-background)] rounded-lg border border-[var(--color-border)] p-6 space-y-6">
-        <h2 className="text-xl font-semibold text-[var(--color-foreground)]">Article Information</h2>
+      <div className="bg-[var(--color-background)] rounded-lg border border-[var(--color-border)] p-4 md:p-6 space-y-4 md:space-y-6">
+        <h2 className="text-lg md:text-xl font-semibold text-[var(--color-foreground)]">Article Information</h2>
 
         {/* Title */}
         <div>
@@ -401,7 +401,7 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
           </label>
           <div className="space-y-4">
             {formData.featuredImage ? (
-              <div className="relative w-full h-64 rounded-lg overflow-hidden border border-[var(--color-border)]">
+              <div className="relative w-full h-48 md:h-64 rounded-lg overflow-hidden border border-[var(--color-border)]">
                 <Image
                   src={formData.featuredImage}
                   alt="Cover preview"
@@ -416,8 +416,8 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
                 </Button>
               </div>
             ) : (
-              <label className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-[var(--color-border)] rounded-lg ${isUploading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:border-[var(--color-primary)]'} transition-colors`}>
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <label className={`flex flex-col items-center justify-center w-full h-48 md:h-64 border-2 border-dashed border-[var(--color-border)] rounded-lg ${isUploading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:border-[var(--color-primary)]'} transition-colors`}>
+                <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4">
                   {isUploading ? (
                     <>
                       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-foreground)] mb-3"></div>
@@ -427,12 +427,12 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
                     </>
                   ) : (
                     <>
-                      <Upload className="w-12 h-12 text-[var(--color-muted-foreground)] mb-3" />
-                      <p className="mb-2 text-sm text-[var(--color-muted-foreground)]">
-                        <span className="font-semibold">Click to upload</span> or drag and drop
+                      <Upload className="w-10 h-10 md:w-12 md:h-12 text-[var(--color-muted-foreground)] mb-3" />
+                      <p className="mb-2 text-sm text-[var(--color-muted-foreground)] text-center">
+                        <span className="font-semibold">Click to upload</span> <span className="hidden sm:inline">or drag and drop</span>
                       </p>
-                      <p className="text-xs text-[var(--color-muted-foreground)] mb-3">
-                        Recommended size: 1200x630px or 1920x1080px (16:9 ratio) • Max file size: 5MB • Formats: PNG, JPG, WebP, GIF
+                      <p className="text-xs text-[var(--color-muted-foreground)] mb-3 text-center">
+                        <span className="hidden sm:inline">Recommended size: 1200x630px or 1920x1080px (16:9 ratio) • </span>Max file size: 5MB<span className="hidden sm:inline"> • Formats: PNG, JPG, WebP, GIF</span>
                       </p>
                     </>
                   )}
@@ -454,7 +454,7 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
           <label className="block text-sm font-medium text-[var(--color-foreground)] mb-2">
             Tags
           </label>
-          <div className="flex gap-2 mb-3">
+          <div className="flex flex-col sm:flex-row gap-2 mb-3">
             <Input
               type="text"
               value={tagInput}
@@ -468,7 +468,8 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
               placeholder="Add a tag..."
               className="flex-1"
             />
-            <Button onClick={handleAddTag} variant="outline">
+            <Button onClick={handleAddTag} variant="outline" className="w-full sm:w-auto">
+              <Plus className="w-4 h-4 sm:hidden mr-2" />
               Add Tag
             </Button>
           </div>
@@ -495,44 +496,46 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
       </div>
 
       {/* Article Content */}
-      <div className="bg-[var(--color-background)] rounded-lg border border-[var(--color-border)] p-6 space-y-4">
-        <h2 className="text-xl font-semibold text-[var(--color-foreground)]">
+      <div className="bg-[var(--color-background)] rounded-lg border border-[var(--color-border)] p-4 md:p-6 space-y-4">
+        <h2 className="text-lg md:text-xl font-semibold text-[var(--color-foreground)]">
           Article Content <span className="text-red-500">*</span>
         </h2>
         <RichTextEditor
           content={formData.konten}
           onChange={(content) => setFormData(prev => ({ ...prev, konten: content }))}
           placeholder="Start writing your article..."
-          className="min-h-[500px]"
+          className="min-h-[400px] md:min-h-[500px]"
         />
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between gap-4 p-6 bg-[var(--color-background)] rounded-lg border border-[var(--color-border)]">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 p-4 md:p-6 bg-[var(--color-background)] rounded-lg border border-[var(--color-border)]">
         <Button
           onClick={handlePreview}
           variant="outline"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 w-full sm:w-auto"
           disabled={isSubmitting}
         >
           <Eye className="w-4 h-4" />
-          Preview Article
+          <span className="hidden sm:inline">Preview Article</span>
+          <span className="sm:hidden">Preview</span>
         </Button>
 
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Button
             onClick={handleSaveDraft}
             variant="outline"
             disabled={isSubmitting || isUploading}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full sm:w-auto"
           >
             <Save className="w-4 h-4" />
-            Save as Draft
+            <span className="hidden sm:inline">Save as Draft</span>
+            <span className="sm:hidden">Save Draft</span>
           </Button>
           <Button
             onClick={handlePublish}
             disabled={isSubmitting || isUploading}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full sm:w-auto"
           >
             {isSubmitting ? (
               <>
@@ -542,7 +545,8 @@ export const AuthorCreateContent = memo(({ onNavigate }: AuthorCreateContentProp
             ) : (
               <>
                 <Send className="w-4 h-4" />
-                {editMode ? 'Publish Article' : 'Publish Article'}
+                <span className="hidden sm:inline">{editMode ? 'Publish Article' : 'Publish Article'}</span>
+                <span className="sm:hidden">Publish</span>
               </>
             )}
           </Button>

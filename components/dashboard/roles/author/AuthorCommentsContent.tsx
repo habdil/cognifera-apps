@@ -95,7 +95,7 @@ export default function AuthorCommentsContent() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Statistics Cards */}
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -234,25 +234,25 @@ export default function AuthorCommentsContent() {
               {comments.map((comment) => (
                 <div
                   key={comment.id}
-                  className="border border-border rounded-lg p-4 hover:bg-muted/50 transition-colors"
+                  className="border border-border rounded-lg p-3 md:p-4 hover:bg-muted/50 transition-colors"
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3 md:gap-4">
                     {/* Avatar */}
-                    <Avatar>
+                    <Avatar className="h-8 w-8 md:h-10 md:w-10 flex-shrink-0">
                       <AvatarImage src={comment.user.avatarUrl || undefined} />
                       <AvatarFallback>
                         {comment.user.fullName.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
 
-                    <div className="flex-1 space-y-2">
+                    <div className="flex-1 space-y-2 min-w-0">
                       {/* Header */}
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="font-semibold text-foreground">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-foreground text-sm md:text-base">
                             {comment.user.fullName}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs md:text-sm text-muted-foreground truncate">
                             Di artikel: <span className="font-medium">{comment.article.title}</span>
                           </p>
                           <p className="text-xs text-muted-foreground">
@@ -261,34 +261,34 @@ export default function AuthorCommentsContent() {
                         </div>
 
                         {/* Badges */}
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-shrink-0">
                           {comment.isFlagged && (
-                            <Badge variant="destructive" className="gap-1">
+                            <Badge variant="destructive" className="gap-1 text-xs h-fit">
                               <Flag className="h-3 w-3" />
-                              Dilaporkan
+                              <span className="hidden sm:inline">Dilaporkan</span>
                             </Badge>
                           )}
                           {comment.isApproved && (
-                            <Badge variant="default" className="gap-1 bg-green-600">
+                            <Badge variant="default" className="gap-1 bg-green-600 text-xs h-fit">
                               <CheckCircle className="h-3 w-3" />
-                              Disetujui
+                              <span className="hidden sm:inline">Disetujui</span>
                             </Badge>
                           )}
                         </div>
                       </div>
 
                       {/* Content */}
-                      <p className="text-foreground">{comment.content}</p>
+                      <p className="text-sm md:text-base text-foreground break-words">{comment.content}</p>
 
                       {/* Meta & Actions */}
-                      <div className="flex items-center justify-between pt-2">
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
+                        <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm text-muted-foreground">
                           <span className="flex items-center gap-1">
-                            <ThumbsUp className="h-4 w-4" />
+                            <ThumbsUp className="h-3 w-3 md:h-4 md:w-4" />
                             {comment.likesCount}
                           </span>
                           <span className="flex items-center gap-1">
-                            <MessageSquare className="h-4 w-4" />
+                            <MessageSquare className="h-3 w-3 md:h-4 md:w-4" />
                             {comment.repliesCount}
                           </span>
                         </div>
@@ -300,10 +300,10 @@ export default function AuthorCommentsContent() {
                               size="sm"
                               onClick={() => handleFlagComment(comment.id)}
                               disabled={flagCommentMutation.isPending || deleteCommentMutation.isPending}
-                              className="gap-2 hover:text-destructive"
+                              className="gap-1 md:gap-2 hover:text-destructive text-xs md:text-sm h-8"
                             >
-                              <Flag className="h-4 w-4" />
-                              Laporkan
+                              <Flag className="h-3 w-3 md:h-4 md:w-4" />
+                              <span className="hidden sm:inline">Laporkan</span>
                             </Button>
                           )}
                           <Button
@@ -311,10 +311,10 @@ export default function AuthorCommentsContent() {
                             size="sm"
                             onClick={() => handleDeleteComment(comment.id)}
                             disabled={flagCommentMutation.isPending || deleteCommentMutation.isPending}
-                            className="gap-2 border text-destructive hover:text-white hover:bg-destructive"
+                            className="gap-1 md:gap-2 border text-destructive hover:text-white hover:bg-destructive text-xs md:text-sm h-8"
                           >
-                            <Trash2 className="h-4 w-4" />
-                            Hapus
+                            <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
+                            <span className="hidden sm:inline">Hapus</span>
                           </Button>
                         </div>
                       </div>
@@ -329,22 +329,24 @@ export default function AuthorCommentsContent() {
 
       {/* Pagination */}
       {!loading && comments.length > 0 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs md:text-sm text-muted-foreground text-center sm:text-left">
             Menampilkan {((pagination.currentPage - 1) * pagination.itemsPerPage) + 1} - {Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems)} dari {pagination.totalItems} komentar
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Button
               variant="outline"
               size="sm"
               onClick={() => handlePageChange(pagination.currentPage - 1)}
               disabled={pagination.currentPage === 1}
+              className="text-xs md:text-sm"
             >
-              Sebelumnya
+              <span className="hidden sm:inline">Sebelumnya</span>
+              <span className="sm:hidden">Prev</span>
             </Button>
-            <div className="flex items-center gap-2 px-4">
-              <span className="text-sm">
-                Halaman {pagination.currentPage} dari {pagination.totalPages}
+            <div className="flex items-center gap-2 px-2 md:px-4">
+              <span className="text-xs md:text-sm whitespace-nowrap">
+                Hal {pagination.currentPage}/{pagination.totalPages}
               </span>
             </div>
             <Button
@@ -352,8 +354,10 @@ export default function AuthorCommentsContent() {
               size="sm"
               onClick={() => handlePageChange(pagination.currentPage + 1)}
               disabled={pagination.currentPage === pagination.totalPages}
+              className="text-xs md:text-sm"
             >
-              Selanjutnya
+              <span className="hidden sm:inline">Selanjutnya</span>
+              <span className="sm:hidden">Next</span>
             </Button>
           </div>
         </div>
