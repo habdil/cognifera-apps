@@ -6,21 +6,19 @@ import { Input } from '@/components/ui/input';
 import {
   Plus,
   Search,
-  Eye,
-  Pencil,
-  Trash2,
   FileText,
   Clock,
-  Calendar,
-  Send
+  Trash2,
+  Eye
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import Image from 'next/image';
 import { useAuthorArticles, useDeleteArticle, useUpdateArticle } from '@/hooks/useAuthorArticles';
 import { useDebounce } from '@/hooks/useDebounce';
 import { updateArticle, type Article } from '@/lib/api/author-articles';
 import { processContentImages } from '@/lib/utils/image-processor';
+import { ArticleStatsCard } from './components/ArticleStatsCard';
+import { ArticleCard } from './components/ArticleCard';
 
 type TabType = 'published' | 'drafts';
 
@@ -194,28 +192,6 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(date);
-  };
-
-  const getCategoryLabel = (category: string) => {
-    const categories: Record<string, string> = {
-      'research-tips': 'Research Tips',
-      'success-stories': 'Success Stories',
-      'industry-news': 'Industry News',
-      'company-news': 'Company News',
-      'industry': 'Industry',
-      'research': 'Research',
-      'company': 'Company',
-      'announcement': 'Announcement',
-    };
-    return categories[category] || category;
-  };
 
   return (
     <div className="space-y-6">
@@ -235,65 +211,52 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-[var(--color-background)] rounded-lg border border-[var(--color-border)] p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <FileText className="w-5 h-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-[var(--color-foreground)]">{stats.total}</p>
-              <p className="text-sm text-[var(--color-muted-foreground)]">Total Articles</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-[var(--color-background)] rounded-lg border border-[var(--color-border)] p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <Eye className="w-5 h-5 text-green-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-[var(--color-foreground)]">{stats.published}</p>
-              <p className="text-sm text-[var(--color-muted-foreground)]">Published</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-[var(--color-background)] rounded-lg border border-[var(--color-border)] p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-              <Clock className="w-5 h-5 text-amber-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-[var(--color-foreground)]">{stats.drafts}</p>
-              <p className="text-sm text-[var(--color-muted-foreground)]">Drafts</p>
-            </div>
-          </div>
-        </div>
+        <ArticleStatsCard
+          icon={FileText}
+          value={stats.total}
+          label="Total Articles"
+          colorClass="bg-blue-100 text-blue-600"
+        />
+        <ArticleStatsCard
+          icon={Eye}
+          value={stats.published}
+          label="Published"
+          colorClass="bg-green-100 text-green-600"
+        />
+        <ArticleStatsCard
+          icon={Clock}
+          value={stats.drafts}
+          label="Drafts"
+          colorClass="bg-amber-100 text-amber-600"
+        />
       </div>
 
       {/* Tabs and Search */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="inline-flex bg-[var(--color-muted)] rounded-lg p-1">
+        <div className="inline-flex bg-[var(--color-muted)] rounded-lg p-1 w-full sm:w-auto">
           <button
+            type="button"
             onClick={() => handleTabChange('published')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'published'
                 ? 'bg-[var(--color-background)] text-[var(--color-foreground)] shadow-sm'
                 : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]'
             }`}
           >
-            Published ({stats.published})
+            <span className="hidden sm:inline">Published ({stats.published})</span>
+            <span className="sm:hidden">Published</span>
           </button>
           <button
+            type="button"
             onClick={() => handleTabChange('drafts')}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'drafts'
                 ? 'bg-[var(--color-background)] text-[var(--color-foreground)] shadow-sm'
                 : 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]'
             }`}
           >
-            Drafts ({stats.drafts})
+            <span className="hidden sm:inline">Drafts ({stats.drafts})</span>
+            <span className="sm:hidden">Drafts</span>
           </button>
         </div>
 
@@ -344,113 +307,16 @@ export const AuthorArticlesContent = memo(({ onNavigate, initialTab = 'published
         ) : (
           <div className="divide-y divide-[var(--color-border)]">
             {filteredArticles.map((article) => (
-              <div
+              <ArticleCard
                 key={article.id}
-                className="p-6 hover:bg-[var(--color-muted)] transition-colors group"
-              >
-                <div className="flex gap-4">
-                  {/* Thumbnail */}
-                  {article.featuredImage ? (
-                    <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-[var(--color-muted)]">
-                      <Image
-                        src={article.featuredImage}
-                        alt={article.judul}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-24 h-24 flex-shrink-0 rounded-lg bg-[var(--color-muted)] flex items-center justify-center">
-                      <FileText className="w-8 h-8 text-[var(--color-muted-foreground)]" />
-                    </div>
-                  )}
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-semibold text-[var(--color-foreground)] mb-1 truncate">
-                          {article.judul}
-                        </h3>
-                        <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted-foreground)] mb-2">
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--color-muted)] rounded-md">
-                            {getCategoryLabel(article.category)}
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {formatDate(article.updatedAt)}
-                          </span>
-                        </div>
-                        {article.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {article.tags.map((tag, index) => (
-                              <span
-                                key={index}
-                                className="text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded"
-                              >
-                                #{tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewArticle(article)}
-                          className="flex items-center gap-1"
-                        >
-                          <Eye className="w-4 h-4" />
-                          View
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEditArticle(article.id)}
-                          className="flex items-center gap-1"
-                        >
-                          <Pencil className="w-4 h-4" />
-                          Edit
-                        </Button>
-                        {/* Show Publish button only in Drafts tab */}
-                        {activeTab === 'drafts' && (
-                          <Button
-                            variant="default"
-                            size="sm"
-                            onClick={() => handlePublishDraft(article)}
-                            disabled={isPublishing === article.id}
-                            className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white"
-                          >
-                            {isPublishing === article.id ? (
-                              <>
-                                <span className="animate-spin">⏳</span>
-                                Publishing...
-                              </>
-                            ) : (
-                              <>
-                                <Send className="w-4 h-4" />
-                                Publish
-                              </>
-                            )}
-                          </Button>
-                        )}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteClick(article)}
-                          className="flex items-center gap-1 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                article={article}
+                isDraft={activeTab === 'drafts'}
+                isPublishing={isPublishing === article.id}
+                onView={handleViewArticle}
+                onEdit={handleEditArticle}
+                onDelete={handleDeleteClick}
+                onPublish={activeTab === 'drafts' ? handlePublishDraft : undefined}
+              />
             ))}
           </div>
         )}

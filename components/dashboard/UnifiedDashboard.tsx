@@ -17,7 +17,9 @@ import {
   Megaphone,
   Briefcase,
   Star,
-  Shield
+  Shield,
+  Menu,
+  X
 } from 'lucide-react';
 import { useUnifiedAuth } from '@/hooks/useUnifiedAuth';
 import { Button } from '../ui/button';
@@ -91,6 +93,7 @@ const getMenuItems = (role: string) => {
 export const UnifiedDashboard = memo(() => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isLoading, setIsLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
 
   // Use auth hook with fallback to mock user for testing
@@ -223,6 +226,7 @@ export const UnifiedDashboard = memo(() => {
 
   const handleTabChange = useCallback((tabId: string) => {
     setActiveTab(tabId);
+    setIsSidebarOpen(false); // Close sidebar on mobile after selection
   }, []);
 
   const handleLogout = useCallback(async () => {
@@ -318,8 +322,31 @@ export const UnifiedDashboard = memo(() => {
 
   return (
     <div className="flex h-screen bg-[var(--color-muted)]">
-      {/* Sidebar - Always visible, never reloads */}
-      <div className="w-64 bg-[var(--color-background)] border-r border-[var(--color-border)] flex flex-col">
+      {/* Mobile Hamburger Menu */}
+      <button
+        type="button"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-[var(--color-background)] border border-[var(--color-border)] md:hidden hover:bg-[var(--color-muted)] transition-colors"
+        aria-label="Toggle menu"
+      >
+        {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
+
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - Responsive */}
+      <div className={`
+        fixed md:static inset-y-0 left-0 z-40
+        w-64 bg-[var(--color-background)] border-r border-[var(--color-border)] flex flex-col
+        transform transition-transform duration-200 ease-in-out
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
         {/* Logo */}
         <div className="p-6 border-b border-[var(--color-border)] flex items-center justify-center">
           <Image
@@ -369,6 +396,7 @@ export const UnifiedDashboard = memo(() => {
             return (
               <button
                 key={item.id}
+                type="button"
                 onClick={() => handleTabChange(item.id)}
                 className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
                   isActive
@@ -398,7 +426,7 @@ export const UnifiedDashboard = memo(() => {
 
       {/* Content Area - Instant content switching */}
       <div className="flex-1 overflow-auto">
-        <div className="p-8">
+        <div className="p-4 md:p-8 pt-16 md:pt-8">
           {renderContent}
         </div>
       </div>

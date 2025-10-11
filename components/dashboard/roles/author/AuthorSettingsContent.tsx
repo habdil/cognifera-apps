@@ -44,14 +44,14 @@ export default function AuthorSettingsContent({ user }: AuthorSettingsContentPro
   };
 
   if (!user) {
-    return <div className="p-6 text-center">Loading...</div>;
+    return <div className="p-4 md:p-6 text-center text-sm md:text-base">Loading...</div>;
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
       <div>
-        <h2 className="text-2xl font-bold text-[var(--color-foreground)]">Settings</h2>
-        <p className="text-[var(--color-muted-foreground)] mt-1">
+        <h2 className="text-xl md:text-2xl font-bold text-[var(--color-foreground)]">Settings</h2>
+        <p className="text-sm md:text-base text-[var(--color-muted-foreground)] mt-1">
           Manage your account settings and preferences
         </p>
       </div>
@@ -77,7 +77,7 @@ export default function AuthorSettingsContent({ user }: AuthorSettingsContentPro
       />
 
       {/* Password Change Section */}
-      <PasswordChangeSection />
+      {/* <PasswordChangeSection /> */}
     </div>
   );
 }

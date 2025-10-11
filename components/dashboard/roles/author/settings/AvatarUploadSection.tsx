@@ -91,25 +91,26 @@ export const AvatarUploadSection = ({ avatarUrl, fullName, onAvatarUpdate }: Ava
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <Camera className="w-5 h-5" />
+        <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
+          <Camera className="w-4 h-4 md:w-5 md:h-5" />
           <span>Profile Picture</span>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-xs md:text-sm">
           Update your avatar to personalize your profile
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center space-x-6">
-          <Avatar className="h-24 w-24 cursor-pointer" onClick={handleAvatarClick}>
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
+          <Avatar className="h-20 w-20 md:h-24 md:w-24 cursor-pointer flex-shrink-0" onClick={handleAvatarClick}>
             <AvatarImage src={avatarUrl} alt={fullName} />
-            <AvatarFallback className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)] text-2xl">
+            <AvatarFallback className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)] text-xl md:text-2xl">
               {getInitials(fullName)}
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1">
-            <p className="text-sm text-[var(--color-muted-foreground)] mb-3">
-              Click avatar or button to upload a new picture
+          <div className="flex-1 text-center sm:text-left w-full sm:w-auto">
+            <p className="text-xs md:text-sm text-[var(--color-muted-foreground)] mb-3">
+              <span className="hidden sm:inline">Click avatar or button to upload a new picture</span>
+              <span className="sm:hidden">Tap avatar or button to upload photo</span>
             </p>
             <input
               ref={fileInputRef}
@@ -123,9 +124,11 @@ export const AvatarUploadSection = ({ avatarUrl, fullName, onAvatarUpdate }: Ava
               variant="outline"
               onClick={handleAvatarClick}
               disabled={isUploading}
+              className="w-full sm:w-auto text-sm"
             >
               <Upload className="w-4 h-4 mr-2" />
-              {isUploading ? 'Uploading...' : 'Upload New Photo'}
+              <span className="hidden sm:inline">{isUploading ? 'Uploading...' : 'Upload New Photo'}</span>
+              <span className="sm:hidden">{isUploading ? 'Uploading...' : 'Upload Photo'}</span>
             </Button>
           </div>
         </div>
