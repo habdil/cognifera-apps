@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { toggleArticleLike } from "@/lib/api/comments";
 import { formatViewCount } from "@/lib/api/public-articles";
 import { ShareButton } from "./ShareButton";
+import { getDeviceId, isGuestUser } from "@/lib/utils/device-id";
 
 interface ArticleHeaderProps {
   articleId: string;
@@ -43,7 +44,13 @@ export function ArticleHeader({
   const handleLike = async () => {
     setLikeLoading(true);
     try {
-      const result = await toggleArticleLike(articleId);
+      // Check if user is guest or authenticated
+      const isGuest = isGuestUser();
+      const deviceId = isGuest ? getDeviceId() : undefined;
+
+      console.log('🎯 Like button clicked:', { isGuest, deviceId, articleId });
+
+      const result = await toggleArticleLike(articleId, deviceId);
 
       if (result.success && result.data) {
         // Update local state with response from backend
@@ -51,9 +58,13 @@ export function ArticleHeader({
         setIsLiked(result.data.isLiked);
 
         // Show feedback
-        toast.success(result.data.isLiked ? 'Article liked!' : 'Like removed');
+        const message = result.data.isLiked
+          ? (isGuest ? 'Article liked! (as guest)' : 'Article liked!')
+          : 'Like removed';
+        toast.success(message);
       } else {
-        // Handle error (e.g., not logged in)
+        // Handle error
+        console.error('Failed to like article:', result);
         toast.error(result.message || 'Failed to like article');
       }
     } catch (error) {

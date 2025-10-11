@@ -16,22 +16,49 @@ export function NewsCard({ article }: NewsCardProps) {
     });
   };
 
-  const getCategoryColor = (category: PublicArticle['category']) => {
-    // Get the category name for comparison (handles both string and object)
-    const categoryName = getCategoryName(category);
+  // Helper: Convert hex color to lightened background and text color
+  const hexToRgb = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  };
 
+  const getCategoryStyle = (category: PublicArticle['category']): {
+    className?: string;
+    backgroundColor?: string;
+    color?: string;
+    border?: string;
+  } => {
+    // If category is object with color field from database, use it
+    if (typeof category === 'object' && category !== null && 'color' in category && category.color) {
+      const colorValue = String(category.color);
+      const rgb = hexToRgb(colorValue);
+      if (rgb) {
+        return {
+          backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`,
+          color: colorValue,
+          border: `1px solid ${colorValue}40`
+        };
+      }
+    }
+
+    // Fallback to predefined Tailwind classes
+    const categoryName = getCategoryName(category);
     const colorMap: { [key: string]: string } = {
       industry: "bg-blue-100 text-blue-800",
       research: "bg-green-100 text-green-800",
       company: "bg-purple-100 text-purple-800",
       announcement: "bg-orange-100 text-orange-800",
-      // Also support Indonesian names
       "Industri": "bg-blue-100 text-blue-800",
-      "Penelitian": "bg-green-100 text-green-800",
+      "Research": "bg-green-100 text-green-800",
       "Perusahaan": "bg-purple-100 text-purple-800",
       "Pengumuman": "bg-orange-100 text-orange-800"
     };
-    return colorMap[categoryName] || "bg-gray-100 text-gray-800";
+
+    return { className: colorMap[categoryName] || "bg-gray-100 text-gray-800" };
   };
 
   return (
@@ -57,10 +84,22 @@ export function NewsCard({ article }: NewsCardProps) {
         <div className="p-6">
           {/* Category */}
           <div className="mb-3">
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(article.category)}`}>
-              <Tag className="w-3 h-3 mr-1" />
-              {getCategoryLabel(article.category)}
-            </span>
+            {(() => {
+              const style = getCategoryStyle(article.category);
+              return (
+                <span
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${style.className || ''}`}
+                  style={style.backgroundColor ? {
+                    backgroundColor: style.backgroundColor,
+                    color: style.color,
+                    border: style.border
+                  } : undefined}
+                >
+                  <Tag className="w-3 h-3 mr-1" />
+                  {getCategoryLabel(article.category)}
+                </span>
+              );
+            })()}
           </div>
 
           {/* Title */}

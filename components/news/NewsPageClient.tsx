@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import { PublicArticle, fetchPublicArticles, calculateTotalPages } from "@/lib/api/public-articles";
+import { PublicArticle, fetchPublicArticles, calculateTotalPages, PublicCategory, fetchPublicCategories } from "@/lib/api/public-articles";
 import { NewsCard } from "@/components/news/NewsCard";
 import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
@@ -20,6 +20,8 @@ import { Input } from "../ui/input";
 function NewsContent() {
   const searchParams = useSearchParams();
   const [news, setNews] = useState<PublicArticle[]>([]);
+  const [categories, setCategories] = useState<PublicCategory[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(searchParams?.get('category') || "all");
@@ -31,13 +33,42 @@ function NewsContent() {
   // Debounce search term - tunggu 500ms setelah user stop ngetik
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const categories = [
-    { value: "all", label: "Semua Kategori" },
-    { value: "industry", label: "Industry News" },
-    { value: "research", label: "Research News" },
-    { value: "company", label: "Company News" },
-    { value: "announcement", label: "Pengumuman" }
+  // Fallback categories jika API gagal
+  const fallbackCategories = [
+    { value: "all", label: "Semua Kategori", count: 0 },
+    { value: "industry", label: "Industry News", count: 0 },
+    { value: "research", label: "Research News", count: 0 },
+    { value: "company", label: "Company News", count: 0 },
+    { value: "announcement", label: "Pengumuman", count: 0 }
   ];
+
+  // Fetch categories from API
+  const fetchCategories = useCallback(async () => {
+    setCategoriesLoading(true);
+    try {
+      const response = await fetchPublicCategories();
+
+      if (response.success && response.data && response.data.length > 0) {
+        // Sort by sortOrder (ascending)
+        const sortedCategories = response.data.sort((a, b) => a.sortOrder - b.sortOrder);
+        setCategories(sortedCategories);
+        console.log('✅ Categories loaded from API:', sortedCategories);
+      } else {
+        console.warn('⚠️ No categories returned from API, using fallback');
+        // Keep empty array, will use fallback in UI
+      }
+    } catch (error) {
+      console.error('❌ Error fetching categories:', error);
+      // Keep empty array, will use fallback in UI
+    } finally {
+      setCategoriesLoading(false);
+    }
+  }, []);
+
+  // Fetch categories on mount
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const fetchNews = useCallback(async () => {
     setLoading(true);
@@ -182,16 +213,38 @@ function NewsContent() {
               onValueChange={(value) => {
                 setSelectedCategory(value);
               }}
+              disabled={categoriesLoading}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Pilih Kategori" />
+                <SelectValue placeholder={categoriesLoading ? "Loading..." : "Pilih Kategori"} />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.value} value={category.value}>
-                    {category.label}
-                  </SelectItem>
-                ))}
+                {/* "Semua Kategori" option always at top */}
+                <SelectItem value="all">
+                  Semua Kategori
+                  {totalArticles > 0 && (
+                    <span className="ml-2 text-xs text-gray-500">({totalArticles})</span>
+                  )}
+                </SelectItem>
+
+                {/* Dynamic categories from API */}
+                {categories.length > 0 ? (
+                  categories.map((category) => (
+                    <SelectItem key={category.id} value={category.slug}>
+                      {category.name}
+                      {category.articlesCount > 0 && (
+                        <span className="ml-2 text-xs text-gray-500">({category.articlesCount})</span>
+                      )}
+                    </SelectItem>
+                  ))
+                ) : (
+                  /* Fallback categories if API fails */
+                  !categoriesLoading && fallbackCategories.slice(1).map((category) => (
+                    <SelectItem key={category.value} value={category.value}>
+                      {category.label}
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -203,7 +256,11 @@ function NewsContent() {
             Menampilkan {news.length} dari {totalArticles} artikel
             {selectedCategory !== "all" && (
               <span className="ml-2 text-primary font-medium">
-                (Kategori: {categories.find(c => c.value === selectedCategory)?.label})
+                (Kategori: {
+                  categories.find(c => c.slug === selectedCategory)?.name ||
+                  fallbackCategories.find(c => c.value === selectedCategory)?.label ||
+                  selectedCategory
+                })
               </span>
             )}
           </p>

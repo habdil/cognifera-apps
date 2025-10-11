@@ -16,6 +16,26 @@ export interface Category {
   description: string;
 }
 
+/**
+ * Full Category data from database
+ * Used for category list/selector
+ */
+export interface PublicCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string; // Hex color for UI
+  icon?: string; // Icon name or URL
+  isActive: boolean;
+  sortOrder: number;
+  articlesCount: number; // Number of articles in this category
+  metaTitle?: string;
+  metaDescription?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface PublicArticle {
   id: string;
   judul: string;
@@ -58,7 +78,8 @@ export interface SingleArticleResponse {
 
 /**
  * Fetch published articles (public, no auth required)
- * GET /api/public/articles
+ * GET /api/public/articles?deviceId=xxx
+ * Authentication: Optional (isLiked field populated if authenticated or deviceId provided)
  */
 export async function fetchPublicArticles(
   params: PublicArticlesParams = {}
@@ -80,6 +101,14 @@ export async function fetchPublicArticles(
   if (params.search) queryParams.append('search', params.search);
   if (params.category) queryParams.append('category', params.category);
 
+  const token = getAuthToken();
+  const deviceId = getDeviceIdFromStorage();
+
+  // Add deviceId to query params if no token
+  if (!token && deviceId) {
+    queryParams.append('deviceId', deviceId);
+  }
+
   const url = `${API_BASE_URL}/public/articles?${queryParams.toString()}`;
 
   // Debug: Log the actual URL being called
@@ -90,6 +119,7 @@ export async function fetchPublicArticles(
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
     },
     // cache: 'no-store', // For dynamic SSR data
   });
@@ -116,16 +146,47 @@ export async function fetchPublicArticles(
 }
 
 /**
+ * Get auth token from localStorage
+ */
+function getAuthToken(): string | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  return localStorage.getItem('cognifera_new_access_token');
+}
+
+/**
+ * Get device ID from localStorage (for guest users)
+ */
+function getDeviceIdFromStorage(): string | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  return localStorage.getItem('cognifera_device_id');
+}
+
+/**
  * Get single published article by ID (public, no auth required)
- * GET /api/public/articles/:id
+ * GET /api/public/articles/:id?deviceId=xxx
+ * Authentication: Optional (isLiked field populated if authenticated or deviceId provided)
  */
 export async function fetchPublicArticleById(
   articleId: string
 ): Promise<SingleArticleResponse> {
-  const response = await fetch(`${API_BASE_URL}/public/articles/${articleId}`, {
+  const token = getAuthToken();
+  const deviceId = getDeviceIdFromStorage();
+
+  // Build URL with deviceId as query param if no token
+  const url = new URL(`${API_BASE_URL}/public/articles/${articleId}`);
+  if (!token && deviceId) {
+    url.searchParams.append('deviceId', deviceId);
+  }
+
+  const response = await fetch(url.toString(), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
     },
     // cache: 'no-store', // For dynamic SSR data
   });
@@ -145,6 +206,8 @@ export async function fetchPublicArticleById(
     if (data.data) {
       console.log('📋 Article Category:', data.data.category);
       console.log('📋 Category Type:', typeof data.data.category);
+      console.log('📋 Is Liked:', data.data.isLiked);
+      console.log('📋 User Type:', token ? 'authenticated' : (deviceId ? 'guest' : 'unknown'));
     }
   }
 
@@ -255,4 +318,54 @@ export function offsetToPage(offset: number, limit: number): number {
  */
 export function pageToOffset(page: number, limit: number): number {
   return (page - 1) * limit;
+}
+
+/**
+ * Fetch all active categories (public, no auth required)
+ * GET /api/public/categories
+ * Returns categories sorted by sort_order
+ */
+export interface CategoriesResponse {
+  success: boolean;
+  data: PublicCategory[];
+  meta?: {
+    total: number;
+  };
+}
+
+export async function fetchPublicCategories(): Promise<CategoriesResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/public/categories`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Optional: cache categories for 5 minutes to reduce API calls
+      next: { revalidate: 300 }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Failed to fetch categories`);
+    }
+
+    const data = await response.json();
+
+    // Debug: Log categories response
+    if (typeof window !== 'undefined') {
+      console.log('📂 Categories API Response:', data);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+
+    // Return empty array on error
+    return {
+      success: false,
+      data: [],
+      meta: {
+        total: 0
+      }
+    };
+  }
 }

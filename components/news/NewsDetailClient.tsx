@@ -22,7 +22,8 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
   const router = useRouter();
   const [article, setArticle] = useState<PublicArticle | null>(initialArticle || null);
   const [relatedNews, setRelatedNews] = useState<PublicArticle[]>([]);
-  const [loading, setLoading] = useState(!initialArticle);
+  // Always show loading initially to fetch fresh data with deviceId/token
+  const [loading, setLoading] = useState(true);
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -33,29 +34,36 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
   };
 
   useEffect(() => {
-    if (!initialArticle && id) {
-      const fetchArticle = async () => {
-        try {
-          const response = await fetchPublicArticleById(id as string);
-          if (response.success && response.data) {
-            setArticle(response.data);
+    const fetchArticle = async () => {
+      try {
+        // Always fetch from client side to get correct isLiked status
+        // This ensures deviceId is sent properly (only available in browser)
+        const response = await fetchPublicArticleById(id as string);
+        if (response.success && response.data) {
+          setArticle(response.data);
 
-            // Increment view count when article is loaded
+          // Increment view count when article is loaded (only once)
+          if (!initialArticle) {
             incrementArticleView(id as string);
           }
-        } catch (error) {
-          console.error('Error fetching article:', error);
-          toast.error('Failed to Load Article', {
-            description: 'Unable to fetch article details.',
-          });
-        } finally {
-          setLoading(false);
         }
-      };
+      } catch (error) {
+        console.error('Error fetching article:', error);
+        toast.error('Failed to Load Article', {
+          description: 'Unable to fetch article details.',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    // Always fetch on client side to get deviceId
+    if (id) {
       fetchArticle();
-    } else if (initialArticle) {
-      // Also increment view count for SSR-loaded articles
+    }
+
+    // Also increment view count for SSR-loaded articles (first visit)
+    if (initialArticle) {
       incrementArticleView(initialArticle.id);
     }
   }, [id, initialArticle]);
@@ -95,7 +103,8 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
     });
   };
 
-  const getCategoryColor = (category: PublicArticle['category']) => {
+  // Simple version for sidebar - returns string className
+  const getCategoryColor = (category: PublicArticle['category']): string => {
     // Get the category name for comparison (handles both string and object)
     const categoryName = getCategoryName(category);
 
@@ -203,37 +212,45 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
             {/* Article Content */}
             <div className="prose prose-lg max-w-none">
               <style jsx global>{`
-                /* Article Content Styling - Same as Preview Page */
+                /* Complete editor styles - Matches editor-styles.css EXACTLY */
+
+                /* Headings */
                 .prose h1 {
-                  font-size: 2.25rem;
+                  font-size: 2.5rem;
                   font-weight: 700;
-                  margin-top: 2rem;
+                  line-height: 1.2;
+                  margin-top: 1.5rem;
                   margin-bottom: 1rem;
                   color: #111827;
                 }
 
                 .prose h2 {
-                  font-size: 1.875rem;
-                  font-weight: 700;
-                  margin-top: 1.75rem;
-                  margin-bottom: 0.875rem;
+                  font-size: 2rem;
+                  font-weight: 600;
+                  line-height: 1.3;
+                  margin-top: 1.25rem;
+                  margin-bottom: 0.75rem;
                   color: #111827;
                 }
 
                 .prose h3 {
                   font-size: 1.5rem;
                   font-weight: 600;
-                  margin-top: 1.5rem;
-                  margin-bottom: 0.75rem;
+                  line-height: 1.4;
+                  margin-top: 1rem;
+                  margin-bottom: 0.5rem;
                   color: #111827;
                 }
 
+                /* Paragraphs */
                 .prose p {
-                  margin-bottom: 1rem;
+                  font-size: 1rem;
                   line-height: 1.75;
+                  margin-bottom: 1rem;
                   color: #374151;
                 }
 
+                /* Lists */
                 .prose ul,
                 .prose ol {
                   padding-left: 1.5rem;
@@ -253,6 +270,41 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
                   line-height: 1.75;
                 }
 
+                /* Task Lists */
+                .prose ul[data-type="taskList"] {
+                  list-style: none;
+                  padding-left: 0;
+                }
+
+                .prose ul[data-type="taskList"] li {
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 0.5rem;
+                }
+
+                .prose ul[data-type="taskList"] li input[type="checkbox"] {
+                  margin-top: 0.25rem;
+                }
+
+                /* Blockquote */
+                .prose blockquote {
+                  border-left: 4px solid #e5e7eb;
+                  padding-left: 1rem;
+                  font-style: italic;
+                  color: #6b7280;
+                  margin: 1rem 0;
+                }
+
+                /* Code */
+                .prose code {
+                  background-color: #f3f4f6;
+                  padding: 0.2rem 0.4rem;
+                  border-radius: 0.25rem;
+                  font-size: 0.9em;
+                  font-family: monospace;
+                }
+
+                /* Images - Base */
                 .prose img {
                   max-width: 100%;
                   height: auto;
@@ -261,6 +313,7 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
                   display: block;
                 }
 
+                /* Image Alignment */
                 .prose img[data-align="left"] {
                   margin-left: 0 !important;
                   margin-right: auto !important;
@@ -276,6 +329,7 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
                   margin-right: 0 !important;
                 }
 
+                /* Links */
                 .prose a {
                   color: #3b82f6;
                   text-decoration: underline;
@@ -286,20 +340,37 @@ export function NewsDetailClient({ initialArticle }: NewsDetailClientProps) {
                   color: #2563eb;
                 }
 
-                .prose blockquote {
-                  border-left: 4px solid #e5e7eb;
-                  padding-left: 1rem;
-                  font-style: italic;
-                  color: #6b7280;
-                  margin: 1rem 0;
+                /* Text Alignment - Support from TipTap TextAlign extension */
+                .prose [style*="text-align: left"],
+                .prose p[style*="text-align: left"],
+                .prose h1[style*="text-align: left"],
+                .prose h2[style*="text-align: left"],
+                .prose h3[style*="text-align: left"] {
+                  text-align: left !important;
                 }
 
-                .prose code {
-                  background-color: #f3f4f6;
-                  padding: 0.2rem 0.4rem;
-                  border-radius: 0.25rem;
-                  font-size: 0.9em;
-                  font-family: monospace;
+                .prose [style*="text-align: center"],
+                .prose p[style*="text-align: center"],
+                .prose h1[style*="text-align: center"],
+                .prose h2[style*="text-align: center"],
+                .prose h3[style*="text-align: center"] {
+                  text-align: center !important;
+                }
+
+                .prose [style*="text-align: right"],
+                .prose p[style*="text-align: right"],
+                .prose h1[style*="text-align: right"],
+                .prose h2[style*="text-align: right"],
+                .prose h3[style*="text-align: right"] {
+                  text-align: right !important;
+                }
+
+                .prose [style*="text-align: justify"],
+                .prose p[style*="text-align: justify"],
+                .prose h1[style*="text-align: justify"],
+                .prose h2[style*="text-align: justify"],
+                .prose h3[style*="text-align: justify"] {
+                  text-align: justify !important;
                 }
               `}</style>
               <div
