@@ -247,32 +247,6 @@ export function ServiceDetailClient({ initialService }: ServiceDetailClientProps
                 ))}
               </div>
             </div>
-
-            {/* Additional Info */}
-            <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl p-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                Mengapa Memilih {service.nama}?
-              </h2>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                Tim ahli Cognifera telah berpengalaman membantu ribuan peneliti mencapai tujuan akademis mereka.
-                Dengan metodologi yang teruji dan dukungan berkelanjutan, kami memastikan setiap proyek penelitian
-                Anda mencapai standar publikasi internasional.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                <div className="bg-white rounded-lg p-4">
-                  <div className="text-2xl font-bold text-primary mb-1">500+</div>
-                  <div className="text-sm text-gray-600">Proyek Selesai</div>
-                </div>
-                <div className="bg-white rounded-lg p-4">
-                  <div className="text-2xl font-bold text-primary mb-1">50+</div>
-                  <div className="text-sm text-gray-600">Jurnal Partner</div>
-                </div>
-                <div className="bg-white rounded-lg p-4">
-                  <div className="text-2xl font-bold text-primary mb-1">24/7</div>
-                  <div className="text-sm text-gray-600">Support</div>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Right Column - CTA */}
@@ -311,23 +285,13 @@ export function ServiceDetailClient({ initialService }: ServiceDetailClientProps
               </a>
 
               <Link
-                href="/#services"
+                href="/services"
                 className="block w-full bg-gray-100 text-gray-700 text-center py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
               >
                 Lihat Layanan Lain
               </Link>
             </div>
 
-            {/* Quick Info */}
-            <div className="bg-blue-50 rounded-xl p-6">
-              <h4 className="font-semibold text-blue-800 mb-3">💡 Info Penting</h4>
-              <div className="space-y-2 text-sm text-blue-700">
-                <p>✓ Konsultasi awal gratis</p>
-                <p>✓ Garansi revisi hingga puas</p>
-                <p>✓ Timeline kerja yang jelas</p>
-                <p>✓ Progress report berkala</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -24,11 +24,43 @@ export const NavMenuSections = ({ active, setActive }: NavMenuSectionsProps) => 
       </MenuItem>
 
       <MenuItem setActive={setActive} active={active} item="Services">
-        <div className="flex flex-col space-y-4 text-sm">
-          <HoveredLink href="/services/feradata">FERADATA</HoveredLink>
-          <HoveredLink href="/services/feraguide">FERAGUIDE</HoveredLink>
-          <HoveredLink href="/services/ferapub">FERAPUB</HoveredLink>
-          <HoveredLink href="/services/feragrant">FERAGRANT</HoveredLink>
+        <div className="flex flex-col space-y-3 text-sm">
+          <HoveredLink href="/services">
+            <span className="font-semibold">All Services</span>
+          </HoveredLink>
+
+          <div className="border-t pt-3 mt-2 space-y-2">
+            <HoveredLink href="/services/feradata">
+              <div className="flex flex-col">
+                <span className="font-medium">FERADATA</span>
+                <span className="text-xs text-muted-foreground">Premium Data Analysis</span>
+              </div>
+            </HoveredLink>
+            <HoveredLink href="/services/feraguide">
+              <div className="flex flex-col">
+                <span className="font-medium">FERAGUIDE</span>
+                <span className="text-xs text-muted-foreground">Academic Writing Guidance</span>
+              </div>
+            </HoveredLink>
+            <HoveredLink href="/services/ferapub">
+              <div className="flex flex-col">
+                <span className="font-medium">FERAPUB</span>
+                <span className="text-xs text-muted-foreground">International Journal Publication</span>
+              </div>
+            </HoveredLink>
+            <HoveredLink href="/services/feragrant">
+              <div className="flex flex-col">
+                <span className="font-medium">FERAGRANT</span>
+                <span className="text-xs text-muted-foreground">Research Grant & Funding</span>
+              </div>
+            </HoveredLink>
+          </div>
+
+          <div className="border-t pt-3">
+            <HoveredLink href="/services?category=penerbitan-buku">
+              <span className="font-medium">Book Publishing</span>
+            </HoveredLink>
+          </div>
         </div>
       </MenuItem>
 

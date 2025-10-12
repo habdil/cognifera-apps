@@ -10,6 +10,7 @@ export interface LayananData {
   targetMarket: string[];
   successRate?: string;
   warna: string;
+  kategori?: 'analisis-data' | 'bimbingan' | 'publikasi' | 'hibah' | 'penerbitan-buku';
   status: 'aktif' | 'nonaktif';
   createdAt: Date;
   updatedAt: Date;
