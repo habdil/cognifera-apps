@@ -19,6 +19,7 @@ export const mockLayanan: LayananData[] = [
     targetMarket: ["Mahasiswa S1/S2/S3", "Dosen muda", "Peneliti"],
     successRate: "95%",
     warna: "#EC7A01",
+    kategori: "analisis-data",
     status: "aktif",
     createdAt: new Date("2024-01-01"),
     updatedAt: new Date("2024-08-20")
@@ -41,6 +42,7 @@ export const mockLayanan: LayananData[] = [
     targetMarket: ["Mahasiswa S1/S2/S3", "Dosen", "Peneliti senior"],
     successRate: "90%",
     warna: "#FFDD02",
+    kategori: "bimbingan",
     status: "aktif",
     createdAt: new Date("2024-01-15"),
     updatedAt: new Date("2024-08-22")
@@ -63,6 +65,7 @@ export const mockLayanan: LayananData[] = [
     targetMarket: ["Dosen", "Peneliti senior", "Institusi riset"],
     successRate: "92%",
     warna: "#10b981",
+    kategori: "publikasi",
     status: "aktif",
     createdAt: new Date("2024-03-01"),
     updatedAt: new Date("2024-08-23")
@@ -85,8 +88,87 @@ export const mockLayanan: LayananData[] = [
     targetMarket: ["Dosen", "Peneliti senior", "Institusi riset", "Startup riset"],
     successRate: "85%",
     warna: "#97D5EE",
+    kategori: "hibah",
     status: "aktif",
     createdAt: new Date("2024-04-01"),
     updatedAt: new Date("2024-08-25")
+  },
+  {
+    id: "bukuhemat",
+    nama: "Paket Penerbitan Buku Hemat",
+    tagline: "Paket Hemat - Solusi Terjangkau",
+    deskripsi: "Paket penerbitan buku dengan harga terjangkau, cocok untuk penulis pemula",
+    deskripsiLengkap: "Paket Hemat adalah solusi penerbitan buku yang ekonomis namun tetap profesional. Cocok untuk penulis pemula yang ingin menerbitkan karya pertama mereka dengan ISBN resmi dan terindeks Google Scholar.",
+    icon: "book-open",
+    hargaMulai: 500000,
+    fiturUtama: [
+      "ISBN Buku",
+      "Layouting Cover dan Isi Sederhana (Tanpa Revisi)",
+      "Terindeks Google Scholar",
+      "E-Sertifikat bagi Penulis Pertama",
+      "E-Book",
+      "Ukuran Buku Standar UNESCO",
+      "Biaya Cetak: Rp 150.000"
+    ],
+    targetMarket: ["Mahasiswa S1/S2/S3", "Dosen muda", "Penulis pemula"],
+    successRate: "98%",
+    warna: "#8B5CF6",
+    kategori: "penerbitan-buku",
+    status: "aktif",
+    createdAt: new Date("2024-05-01"),
+    updatedAt: new Date("2024-10-01")
+  },
+  {
+    id: "bukustandar",
+    nama: "Paket Penerbitan Buku Standar",
+    tagline: "Paket Standar - Kualitas Terjamin",
+    deskripsi: "Paket penerbitan buku standar dengan proofreading untuk hasil lebih berkualitas",
+    deskripsiLengkap: "Paket Standar memberikan layanan penerbitan buku yang lebih lengkap dengan tambahan proofreading untuk memastikan naskah Anda bebas dari kesalahan dan siap terbit dengan kualitas profesional.",
+    icon: "book-open",
+    hargaMulai: 750000,
+    fiturUtama: [
+      "ISBN Buku",
+      "Layouting Cover dan Isi (Tanpa Revisi)",
+      "Terindeks Google Scholar",
+      "E-Sertifikat bagi Penulis Pertama",
+      "E-Book",
+      "Ukuran Buku Standar UNESCO",
+      "Proofreading",
+      "Biaya Cetak: Rp 150.000"
+    ],
+    targetMarket: ["Mahasiswa S2/S3", "Dosen", "Peneliti"],
+    successRate: "97%",
+    warna: "#F59E0B",
+    kategori: "penerbitan-buku",
+    status: "aktif",
+    createdAt: new Date("2024-05-01"),
+    updatedAt: new Date("2024-10-01")
+  },
+  {
+    id: "bukukomplit",
+    nama: "Paket Penerbitan Buku Komplit",
+    tagline: "Paket Komplit - Layanan Premium",
+    deskripsi: "Paket penerbitan buku premium dengan konversi naskah dan layouting high quality",
+    deskripsiLengkap: "Paket Komplit adalah layanan penerbitan buku paling lengkap kami. Termasuk konversi naskah dari skripsi/tesis/disertasi, layouting high quality, dan proofreading untuk hasil publikasi yang sempurna dan profesional.",
+    icon: "book-open",
+    hargaMulai: 1500000,
+    fiturUtama: [
+      "Konversi Naskah dari Skripsi/Tesis/Disertasi",
+      "E-ISBN Buku",
+      "Layouting Cover dan Isi High Quality (Tanpa Revisi)",
+      "Terindeks Google Scholar",
+      "E-Sertifikat bagi Penulis Pertama",
+      "E-Book",
+      "Ukuran Buku Standar UNESCO",
+      "Proofreading",
+      "Biaya Cetak: Rp 150.000"
+    ],
+    targetMarket: ["Mahasiswa S3", "Dosen", "Peneliti senior", "Institusi riset"],
+    successRate: "99%",
+    warna: "#DC2626",
+    kategori: "penerbitan-buku",
+    status: "aktif",
+    createdAt: new Date("2024-05-01"),
+    updatedAt: new Date("2024-10-01")
   }
 ];
