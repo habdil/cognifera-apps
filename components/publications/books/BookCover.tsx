@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
 import { BookOpen } from "lucide-react";
 import { BookData } from "@/types/publications";
 
@@ -8,29 +10,57 @@ interface BookCoverProps {
 }
 
 export function BookCover({ book }: BookCoverProps) {
+  const previews = book.previewImages?.length
+    ? book.previewImages
+    : [book.coverImage];
+  const [selectedImage, setSelectedImage] = useState(previews[0]);
+
   return (
     <div className="space-y-4">
-      {/* Main Cover */}
-      <div className="aspect-[3/4] bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] rounded-lg p-8 flex items-center justify-center">
-        <div className="text-white text-center">
-          <BookOpen className="h-16 w-16 mx-auto mb-4 opacity-80" />
-          <div className="text-lg font-bold mb-2">{book.title}</div>
-          <div className="text-sm opacity-80">{book.authors[0]}</div>
-        </div>
-      </div>
-
-      {/* Thumbnail previews */}
-      <div className="grid grid-cols-4 gap-2">
-        {[1, 2, 3, 4].map((thumb) => (
-          <div
-            key={thumb}
-            className="aspect-[3/4] bg-gray-100 rounded border-2 border-transparent hover:border-[var(--color-primary)] cursor-pointer transition-colors"
-          >
-            <div className="w-full h-full bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-secondary)]/20 rounded flex items-center justify-center">
-              <span className="text-xs text-[var(--color-muted-foreground)]">{thumb}</span>
+      <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white p-3">
+        {selectedImage ? (
+          <Image
+            src={selectedImage}
+            alt={book.coverAlt ?? book.title}
+            fill
+            className="object-contain"
+            sizes="(max-width: 1024px) 100vw, 33vw"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white">
+            <div className="text-center">
+              <BookOpen className="mx-auto mb-4 h-16 w-16 opacity-80" />
+              <div className="text-lg font-bold">{book.title}</div>
             </div>
           </div>
-        ))}
+        )}
+      </div>
+
+      <div className="grid grid-cols-4 gap-2">
+        {previews.map((image, index) => {
+          const isActive = image === selectedImage;
+
+          return (
+            <button
+              key={`${book.slug}-${index}`}
+              type="button"
+              onClick={() => setSelectedImage(image)}
+              className={`relative aspect-[3/4] overflow-hidden rounded-lg border transition-colors ${
+                isActive
+                  ? "border-[var(--color-primary)]"
+                  : "border-[var(--color-border)] hover:border-[var(--color-primary)]"
+              }`}
+            >
+              <Image
+                src={image}
+                alt={`${book.title} preview ${index + 1}`}
+                fill
+                className="object-contain"
+                sizes="120px"
+              />
+            </button>
+          );
+        })}
       </div>
     </div>
   );

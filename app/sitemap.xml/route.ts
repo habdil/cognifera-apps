@@ -65,7 +65,7 @@ export async function GET() {
 
   // Dynamic book pages
   const bookPages = mockBooks.map(book => ({
-    url: `${baseUrl}/publications/books/${book.id}`,
+    url: `${baseUrl}/publications/books/${book.slug}`,
     lastmod: currentDate,
     changefreq: 'monthly',
     priority: 0.6
