@@ -837,10 +837,9 @@ export const mockBooks: BookData[] = [
     pageLabel: "i-viii + 405 halaman",
     language: "id",
     category: "textbook",
-    description: "Buku ini membahas kinerja karyawan dari sudut pandang teori dan praktik, dengan fokus pada pemahaman konsep, evaluasi, dan penerapannya dalam konteks organisasi.",
+    description: "Buku ini mengulas kinerja karyawan melalui pendekatan teoritis dan praktis, mencakup konsep dasar, evaluasi, serta penerapannya dalam konteks organisasi.",
     longDescription: [
-      "Konten buku ini mengangkat tema kinerja karyawan dengan pendekatan konseptual sekaligus aplikatif, sehingga relevan untuk pembaca akademik maupun praktisi.",
-      "Untuk tahap awal, detail metadata yang belum tampak dari asset visual disimpan secara minimal dan bisa diperbarui nanti tanpa mengubah struktur halamannya."
+      "Disusun untuk pembaca akademik maupun praktisi, buku ini menyajikan pembahasan yang sistematis mengenai kinerja karyawan, mulai dari landasan konseptual hingga implementasinya dalam dunia kerja."
     ],
     keywords: [],
     coverImage: "/books/covers/kinerja-karyawan.jpg",
