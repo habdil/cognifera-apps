@@ -832,7 +832,7 @@ export const mockBooks: BookData[] = [
     authors: ["Firmansyah, S.M., M.M"],
     publisher: "PT Cognifera Education Academy",
     publicationYear: 2026,
-    isbn: "-",
+    isbn: "978-634-04-9836-3",
     pages: 405,
     pageLabel: "i-viii + 405 halaman",
     language: "id",
