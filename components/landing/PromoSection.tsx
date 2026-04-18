@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { IklanData, LayananData } from "@/types";
 import { iklanAPI, layananAPI } from "@/lib/api-dummy";
-import { Button } from "../ui/button";
+import { ArrowRight, Clock } from "lucide-react";
 
 export function PromoSection() {
   const [promos, setPromos] = useState<IklanData[]>([]);
@@ -13,29 +13,20 @@ export function PromoSection() {
   useEffect(() => {
     const fetchData = async () => {
       const [promosResponse, layananResponse] = await Promise.all([
-        iklanAPI.getAll({ status: 'aktif', sortBy: 'priority', sortOrder: 'asc' }),
-        layananAPI.getAll({ status: 'aktif' })
+        iklanAPI.getAll({ status: "aktif", sortBy: "priority", sortOrder: "asc" }),
+        layananAPI.getAll({ status: "aktif" }),
       ]);
-      
       if (promosResponse.success && promosResponse.data) {
-        // Filter active promos that haven't expired
-        const activePromos = promosResponse.data.filter(promo => 
-          new Date() <= promo.tanggalBerakhir
-        );
-        setPromos(activePromos);
+        setPromos(promosResponse.data.filter((p) => new Date() <= p.tanggalBerakhir));
       }
-      
       if (layananResponse.success && layananResponse.data) {
         setLayanan(layananResponse.data);
       }
-      
       setLoading(false);
     };
-    
     fetchData();
   }, []);
 
-  // Auto slide promos
   useEffect(() => {
     if (promos.length > 1) {
       const interval = setInterval(() => {
@@ -45,195 +36,180 @@ export function PromoSection() {
     }
   }, [promos.length]);
 
-  const getLayananNames = (layananIds: string[]) => {
-    return layananIds
-      .map(id => layanan.find(l => l.id === id)?.nama)
-      .filter(Boolean)
-      .join(', ');
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
+  const formatDate = (date: Date) =>
+    new Intl.DateTimeFormat("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     }).format(date);
-  };
 
-  const isExpiringSoon = (endDate: Date) => {
-    const now = new Date();
-    const diffTime = endDate.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 7;
-  };
+  const daysLeft = (endDate: Date) =>
+    Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
 
-  if (loading || promos.length === 0) {
-    return null;
-  }
+  const isExpiringSoon = (endDate: Date) => daysLeft(endDate) <= 7;
 
-  const currentPromoData = promos[currentPromo];
+  if (loading || promos.length === 0) return null;
+
+  const promo = promos[currentPromo];
 
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-            Promo <span className="text-primary">Special</span>
-          </h2>
-          <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+    <section className="py-24 bg-[#FAFAF8]">
+      <div className="max-w-7xl mx-auto px-6">
+
+        {/* Section header */}
+        <div className="mb-12">
+          <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-primary mb-4">
+            Special Offer
+          </p>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-950 tracking-tight">
+              Promo Eksklusif
+            </h2>
+            {promos.length > 1 && (
+              <div className="flex items-center gap-2">
+                {promos.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentPromo(i)}
+                    className={`h-[2px] transition-all duration-300 ${
+                      i === currentPromo ? "w-8 bg-primary" : "w-4 bg-gray-300 hover:bg-gray-400"
+                    }`}
+                    aria-label={`Promo ${i + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="w-full h-[1px] bg-gray-200 mt-8" />
         </div>
 
-        {/* Main Promo Display */}
-        <div className="relative">
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div className="md:flex">
-              {/* Promo Content */}
-              <div className="md:w-2/3 p-8 md:p-12">
-                {/* Discount Badge */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="bg-red-500 text-white px-6 py-3 rounded-full text-2xl font-bold">
-                    {currentPromoData.discountPercentage}% OFF
-                  </div>
-                  {isExpiringSoon(currentPromoData.tanggalBerakhir) && (
-                    <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium animate-pulse">
-                      ⏰ Segera Berakhir!
-                    </div>
-                  )}
+        {/* Main promo */}
+        <div className="border border-gray-200 bg-white">
+          <div className="grid md:grid-cols-3">
+
+            {/* Discount panel */}
+            <div className="bg-gray-950 flex flex-col items-center justify-center p-10 text-center">
+              <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-white/50 mb-4">
+                Diskon Spesial
+              </p>
+              <div className="text-7xl md:text-8xl font-bold text-white tabular-nums leading-none mb-2">
+                {promo.discountPercentage}
+                <span className="text-4xl text-primary">%</span>
+              </div>
+              <p className="text-white/40 text-sm mt-3">Hemat lebih banyak</p>
+
+              {isExpiringSoon(promo.tanggalBerakhir) && (
+                <div className="mt-6 flex items-center gap-2 border border-yellow-500/30 bg-yellow-500/10 px-3 py-2">
+                  <Clock className="w-3.5 h-3.5 text-yellow-400" />
+                  <span className="text-yellow-400 text-xs font-medium">Segera Berakhir</span>
                 </div>
+              )}
+            </div>
 
-                {/* Promo Title */}
-                <h3 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                  {currentPromoData.judul}
+            {/* Promo detail */}
+            <div className="md:col-span-2 p-8 md:p-10 flex flex-col justify-between">
+              <div>
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-950 tracking-tight mb-3">
+                  {promo.judul}
                 </h3>
-
-                {/* Promo Description */}
-                <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                  {currentPromoData.deskripsi}
+                <p className="text-gray-500 leading-relaxed mb-6">
+                  {promo.deskripsi}
                 </p>
 
-                {/* Affected Services */}
-                <div className="mb-6">
-                  <h4 className="font-semibold text-gray-800 mb-3">Berlaku untuk:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {currentPromoData.layananAffected.map((serviceId, index) => {
-                      const service = layanan.find(l => l.id === serviceId);
-                      return service ? (
-                        <span 
-                          key={index}
-                          className="px-4 py-2 rounded-full text-sm font-medium"
-                          style={{ 
-                            backgroundColor: `${service.warna}20`,
-                            color: service.warna,
-                            border: `1px solid ${service.warna}40`
-                          }}
-                        >
-                          {service.nama}
-                        </span>
-                      ) : null;
-                    })}
-                  </div>
-                </div>
-
-                {/* Validity Period */}
-                <div className="mb-8 p-4 bg-gray-50 rounded-2xl">
-                  <div className="flex items-center justify-between text-sm">
-                    <div>
-                      <span className="text-gray-600">Berlaku hingga:</span>
-                      <span className="font-semibold text-gray-800 ml-2">
-                        {formatDate(currentPromoData.tanggalBerakhir)}
-                      </span>
-                    </div>
-                    <div className="text-gray-600">
-                      {Math.ceil((currentPromoData.tanggalBerakhir.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} hari lagi
+                {/* Affected services */}
+                {promo.layananAffected.length > 0 && (
+                  <div className="mb-6">
+                    <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-gray-400 mb-3">
+                      Berlaku untuk
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {promo.layananAffected.map((id, i) => {
+                        const svc = layanan.find((l) => l.id === id);
+                        return svc ? (
+                          <span
+                            key={i}
+                            className="border border-gray-200 text-gray-700 text-xs font-medium px-3 py-1 tracking-wide"
+                          >
+                            {svc.nama}
+                          </span>
+                        ) : null;
+                      })}
                     </div>
                   </div>
-                </div>
+                )}
 
-                {/* CTA Button */}
-                <button className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                  Klaim Sekarang
-                </button>
+                {/* Validity */}
+                <div className="flex items-center gap-6 text-sm text-gray-500 border-t border-gray-100 pt-5">
+                  <div>
+                    <span className="text-[11px] uppercase tracking-wide text-gray-400 block mb-0.5">Berlaku hingga</span>
+                    <span className="font-medium text-gray-700">{formatDate(promo.tanggalBerakhir)}</span>
+                  </div>
+                  <div className="w-[1px] h-8 bg-gray-200" />
+                  <div>
+                    <span className="text-[11px] uppercase tracking-wide text-gray-400 block mb-0.5">Sisa waktu</span>
+                    <span className="font-medium text-gray-700">{daysLeft(promo.tanggalBerakhir)} hari lagi</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Promo Visual/Image */}
-              <div className="md:w-1/3 bg-primary/10 flex items-center justify-center p-8">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">🎉</div>
-                  <div className="text-2xl font-bold text-primary mb-2">
-                    Hemat hingga
-                  </div>
-                  <div className="text-4xl font-bold text-gray-800">
-                    {currentPromoData.discountPercentage}%
-                  </div>
-                </div>
+              <div className="mt-8">
+                <a
+                  href="https://wa.me/message/VRRB5IFQ7LQ4A1"
+                  className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-3 text-sm font-medium tracking-wide transition-colors"
+                >
+                  Klaim Sekarang
+                  <ArrowRight className="w-4 h-4" />
+                </a>
               </div>
             </div>
           </div>
 
-          {/* Carousel Navigation */}
-          {promos.length > 1 && (
-            <div className="flex justify-center mt-8 space-x-2">
-              {promos.map((_, index) => (
-                <Button
-                  key={index}
-                  onClick={() => setCurrentPromo(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentPromo 
-                      ? 'bg-primary scale-125' 
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                />
-              ))}
+          {/* Terms */}
+          {promo.termsConditions && (
+            <div className="border-t border-gray-100 px-8 md:px-10 py-4">
+              <details className="group">
+                <summary className="text-xs font-medium text-gray-400 tracking-wide cursor-pointer hover:text-gray-600 transition-colors list-none flex items-center gap-2">
+                  <span>Syarat & Ketentuan</span>
+                  <span className="group-open:rotate-180 transition-transform text-gray-300">▾</span>
+                </summary>
+                <p className="mt-3 text-xs text-gray-500 leading-relaxed">
+                  {promo.termsConditions}
+                </p>
+              </details>
             </div>
           )}
         </div>
 
-        {/* Terms & Conditions */}
-        {currentPromoData.termsConditions && (
-          <div className="mt-8 text-center">
-            <details className="bg-white rounded-2xl p-6 shadow-lg">
-              <summary className="font-semibold text-gray-800 cursor-pointer hover:text-primary transition-colors">
-                Syarat & Ketentuan
-              </summary>
-              <div className="mt-4 text-sm text-gray-600 text-left">
-                {currentPromoData.termsConditions}
-              </div>
-            </details>
+        {/* Other promos */}
+        {promos.length > 1 && (
+          <div className="mt-6 grid md:grid-cols-3 gap-px bg-gray-200">
+            {promos
+              .filter((_, i) => i !== currentPromo)
+              .slice(0, 3)
+              .map((p, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPromo(promos.findIndex((x) => x.id === p.id))}
+                  className="bg-white hover:bg-[#FAFAF8] transition-colors text-left p-5 group"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="text-2xl font-bold text-gray-950 tabular-nums">
+                      {p.discountPercentage}
+                      <span className="text-base text-primary">%</span>
+                    </span>
+                    {isExpiringSoon(p.tanggalBerakhir) && (
+                      <Clock className="w-3.5 h-3.5 text-yellow-500 mt-1" />
+                    )}
+                  </div>
+                  <p className="text-sm font-medium text-gray-800 mb-1">{p.judul}</p>
+                  <p className="text-xs text-gray-400">
+                    s/d {formatDate(p.tanggalBerakhir)}
+                  </p>
+                </button>
+              ))}
           </div>
         )}
 
-        {/* All Promos Quick View */}
-        {promos.length > 1 && (
-          <div className="mt-16">
-            <h3 className="text-2xl font-bold text-center text-gray-800 mb-8">
-              Promo Lainnya
-            </h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {promos.filter((_, index) => index !== currentPromo).slice(0, 3).map((promo, index) => (
-                <div 
-                  key={index}
-                  className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-                  onClick={() => setCurrentPromo(promos.findIndex(p => p.id === promo.id))}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-red-500 text-white px-4 py-2 rounded-full text-lg font-bold">
-                      {promo.discountPercentage}%
-                    </div>
-                    {isExpiringSoon(promo.tanggalBerakhir) && (
-                      <div className="text-yellow-600 text-sm">⏰</div>
-                    )}
-                  </div>
-                  <h4 className="font-bold text-gray-800 mb-2">{promo.judul}</h4>
-                  <p className="text-sm text-gray-600 mb-4">{promo.deskripsi.slice(0, 100)}...</p>
-                  <div className="text-sm text-gray-500">
-                    Berlaku hingga {formatDate(promo.tanggalBerakhir)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );

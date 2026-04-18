@@ -25,27 +25,31 @@ export const MenuItem = ({
   children?: React.ReactNode;
 }) => {
   return (
-    <div onMouseEnter={() => setActive(item)} className="relative ">
+    <div onMouseEnter={() => setActive(item)} className="relative h-full flex items-center">
       <motion.p
-        transition={{ duration: 0.3 }}
-        className="cursor-pointer text-black hover:opacity-[0.9]"
+        transition={{ duration: 0.2 }}
+        className={`cursor-pointer text-sm tracking-wide px-4 h-full flex items-center border-b-2 transition-colors ${
+          active === item
+            ? "text-black border-primary"
+            : "text-gray-600 hover:text-black border-transparent"
+        }`}
       >
         {item}
       </motion.p>
       {active !== null && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={transition}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
         >
           {active === item && (
-            <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
+            <div className="absolute top-full left-0 pt-0">
               <motion.div
                 transition={transition}
                 layoutId="active"
-                className="bg-white backdrop-blur-sm rounded-2xl border border-black/[0.2] shadow-xl"
+                className="bg-white border border-gray-200 shadow-lg"
               >
-                <motion.div layout className="w-max h-full p-4">
+                <motion.div layout className="w-max h-full p-5 min-w-[180px]">
                   {children}
                 </motion.div>
               </motion.div>
@@ -66,8 +70,8 @@ export const Menu = ({
 }) => {
   return (
     <nav
-      onMouseLeave={() => setActive(null)} // resets the state
-      className="relative rounded-full border border-transparent bg-white shadow-input flex justify-center space-x-4 px-8 py-6 "
+      onMouseLeave={() => setActive(null)}
+      className="relative flex items-center space-x-1 h-16"
     >
       {children}
     </nav>
@@ -174,7 +178,7 @@ export const HoveredLink = ({
                 <motion.div
                   transition={transition}
                   layoutId="activeSecondary"
-                  className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] shadow-xl min-w-[250px]"
+                  className="bg-white border border-gray-200 shadow-lg min-w-[250px]"
                 >
                 <motion.div layout className="w-max h-full p-4">
                   <div className="space-y-2">
@@ -182,7 +186,7 @@ export const HoveredLink = ({
                       <a
                         key={idx}
                         href={item.href}
-                        className="block px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="block px-3 py-2 hover:bg-gray-50 transition-colors"
                       >
                         <div className="font-medium text-sm text-black">{item.title}</div>
                         {item.description && (

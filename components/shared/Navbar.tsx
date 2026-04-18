@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import {
   Navbar as RootNavbar,
   NavBody,
-  NavbarButton,
   MobileNav,
   MobileNavHeader,
   MobileNavMenu,
@@ -13,11 +12,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-import { AuthDialog } from "@/components/shared/AuthDialog";
 import { newGetCurrentUser, newLogoutUser, type NewUser } from "@/lib/auth-new";
 import { authEvents } from "@/lib/events/auth-events";
-import { Button } from "@/components/ui/button";
-import { User as UserIcon, BookOpen, Heart, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { toast } from "sonner";
 import { SavedNewsModal } from "@/components/dashboard/modal";
 import { UserDropdown, NavMenuSections, MobileNavContent } from "./navbar-components";
@@ -159,24 +156,24 @@ export const Navbar = () => {
               onCloseDropdown={() => setShowUserDropdown(false)}
             />
           ) : (
-            <div className="flex items-center space-x-3">
-              <AuthDialog defaultMode="login">
+            <div className="flex items-center">
+              {/* <AuthDialog defaultMode="login">
                 <Button
                   variant="ghost"
-                  className="text-[var(--color-foreground)] hover:text-white hover:bg-primary flex items-center space-x-2"
+                  className="text-gray-600 hover:text-black hover:bg-gray-100 flex items-center space-x-2 rounded-none text-sm tracking-wide h-16 px-4"
                 >
                   <UserIcon className="w-4 h-4" />
                   <span>Login</span>
                 </Button>
-              </AuthDialog>
-              <AuthDialog>
-                <NavbarButton
-                  variant="primary"
-                  className="bg-[var(--color-primary)] text-white hover:bg-white hover:text-primary"
-                >
-                  Get Started
-                </NavbarButton>
-              </AuthDialog>
+              </AuthDialog> */}
+              <a
+                href="https://wa.me/message/VRRB5IFQ7LQ4A1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary hover:bg-primary/90 text-white px-5 py-2 text-sm font-medium tracking-wide transition-colors"
+              >
+                Konsultasi Sekarang
+              </a>
             </div>
           )}
         </div>

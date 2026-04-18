@@ -3,6 +3,19 @@ import React, { useEffect, useState } from "react";
 import { TestimonialData } from "@/types";
 import { testimonialAPI } from "@/lib/api-dummy";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
+import { ArrowRight } from "lucide-react";
+
+const socialProofData = [
+  { name: "Asih Luklu Susiati", position: "Dosen", institution: "Universitas Negeri Malang", photo: "/social-proof/Asih Luklu Susiati.jpeg" },
+  { name: "Zakia Asrifah Ramly", position: "Dosen", institution: "Universitas Negeri Malang", photo: "/social-proof/Zakia Asrifah Ramly.jpeg" },
+  { name: "Oriny Tri Ananda", position: "Peneliti", institution: "Universitas Negeri Malang", photo: "/social-proof/Oriny Tri Ananda.jpeg" },
+  { name: "Hikmah Nur Fadillah", position: "Peneliti", institution: "Universitas Negeri Malang", photo: "/social-proof/Hikmah Nur Fadillah.jpeg" },
+  { name: "Fitrah Amalia Salim", position: "Peneliti", institution: "Universitas Negeri Malang", photo: "/social-proof/Fitrah Amalia Salim.jpeg" },
+  { name: "Arifah Novia Arifin", position: "Dosen", institution: "Universitas Negeri Malang", photo: "/social-proof/Arifah Novia Arifin.jpeg" },
+  { name: "Dr. Hardianto", position: "Direktur", institution: "PT Cognifera Education Academy", photo: "/social-proof/Hardianto.jpeg" },
+  { name: "Maisuna Kundariati", position: "Dosen", institution: "Universitas Negeri Malang", photo: "/social-proof/Maisuna Kundariati.jpeg" },
+  { name: "Wahyudi Jasman", position: "Peneliti", institution: "Universitas Negeri Malang", photo: "/social-proof/Wahyudi Jasman.jpg" },
+];
 
 export function TestimonialSection() {
   const [testimonials, setTestimonials] = useState<TestimonialData[]>([]);
@@ -10,146 +23,64 @@ export function TestimonialSection() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const testimonialsResponse = await testimonialAPI.getAll({ status: 'aktif' });
-      
-      if (testimonialsResponse.success && testimonialsResponse.data) {
-        // Prioritize featured testimonials
-        const sortedTestimonials = testimonialsResponse.data.sort((a, b) => {
-          if (a.featured && !b.featured) return -1;
-          if (!a.featured && b.featured) return 1;
-          return 0;
-        });
-        setTestimonials(sortedTestimonials);
+      const res = await testimonialAPI.getAll({ status: "aktif" });
+      if (res.success && res.data) {
+        setTestimonials(
+          res.data.sort((a, b) => (a.featured === b.featured ? 0 : a.featured ? -1 : 1))
+        );
       }
-      
       setLoading(false);
     };
-    
     fetchData();
   }, []);
 
   if (loading || testimonials.length === 0) {
     return (
-      <section className="py-20 bg-white">
+      <section className="py-18 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded w-96 mx-auto"></div>
-            </div>
+          <div className="animate-pulse space-y-4">
+            <div className="h-3 bg-gray-100 rounded w-24" />
+            <div className="h-8 bg-gray-100 rounded w-64" />
           </div>
         </div>
       </section>
     );
   }
 
-  // Array data social proof dengan nama dan foto yang sesuai
-  const socialProofData = [
-    {
-      name: "Asih Luklu Susiati",
-      position: "Dosen",
-      institution: "Universitas Negeri Malang",
-      photo: "/social-proof/Asih Luklu Susiati.jpeg"
-    },
-    {
-      name: "Zakia Asrifah Ramly",
-      position: "Dosen",
-      institution: "Universitas Negeri Malang",
-      photo: "/social-proof/Zakia Asrifah Ramly.jpeg"
-    },
-    {
-      name: "Oriny Tri Ananda",
-      position: "Peneliti",
-      institution: "Universitas Negeri Malang",
-      photo: "/social-proof/Oriny Tri Ananda.jpeg"
-    },
-    {
-      name: "Hikmah Nur Fadillah",
-      position: "Peneliti",
-      institution: "Universitas Negeri Malang",
-      photo: "/social-proof/Hikmah Nur Fadillah.jpeg"
-    },
-    {
-      name: "Fitrah Amalia Salim",
-      position: "Peneliti",
-      institution: "Universitas Negeri Malang",
-      photo: "/social-proof/Fitrah Amalia Salim.jpeg"
-    },
-    {
-      name: "Arifah Novia Arifin",
-      position: "Dosen",
-      institution: "Universitas Negeri Malang",
-      photo: "/social-proof/Arifah Novia Arifin.jpeg"
-    },
-    {
-      name: "Dr. Hardianto",
-      position: "Direktur",
-      institution: "PT Cognifera Education Academy",
-      photo: "/social-proof/Hardianto.jpeg"
-    },
-    {
-      name: "Maisuna Kundariati",
-      position: "Dosen",
-      institution: "Universitas Negeri Malang",
-      photo: "/social-proof/Maisuna Kundariati.jpeg"
-    },
-    {
-      name: "Wahyudi Jasman",
-      position: "Peneliti",
-      institution: "Universitas Negeri Malang",
-      photo: "/social-proof/Wahyudi Jasman.jpg"
-    }
-  ];
-
-  // Transform testimonial data to match AnimatedTestimonials format
-  const formattedTestimonials = testimonials.map((testimonial, index) => {
-    const socialProofPerson = socialProofData[index % socialProofData.length];
+  const formattedTestimonials = testimonials.map((t, i) => {
+    const person = socialProofData[i % socialProofData.length];
     return {
-      id: testimonial.id,
-      quote: testimonial.testimonialText,
-      name: socialProofPerson.name,
-      designation: `${socialProofPerson.position} • ${socialProofPerson.institution}`,
-      src: socialProofPerson.photo
+      id: t.id,
+      quote: t.testimonialText,
+      name: person.name,
+      designation: `${person.position} · ${person.institution}`,
+      src: person.photo,
     };
   });
 
   return (
-    <section id="testimonial" className="py-20 bg-white">
+    <section id="testimonial" className="py-0 bg-white">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-            Kata Klien <span className="text-primary">Kami</span>
-          </h2>
-          <div className="w-24 h-1 bg-primary mx-auto mb-8 rounded-full"></div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Kepercayaan klien adalah motivasi terbesar kami. Simak cerita sukses 
-            mereka yang telah mempercayakan perjalanan riset kepada Cognifera.
+
+        {/* Section header */}
+        <div className="mb-12">
+          <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-primary mb-4">
+            Testimonials
           </p>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-950 tracking-tight">
+              Kata Klien Kami
+            </h2>
+            <p className="text-gray-500 text-sm leading-relaxed max-w-sm md:text-right">
+              Kepercayaan klien adalah motivasi terbesar kami dalam terus berkembang.
+            </p>
+          </div>
+          <div className="w-full h-[1px] bg-gray-200 mt-8" />
         </div>
 
-        {/* Animated Testimonials */}
+        {/* Testimonials */}
         <AnimatedTestimonials testimonials={formattedTestimonials} autoplay={true} />
 
-        {/* CTA */}
-        <div className="mt-16 text-center">
-          <div className="bg-primary/10 rounded-3xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              Siap Menjadi Success Story Selanjutnya?
-            </h3>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Bergabunglah dengan ratusan peneliti yang telah mempercayakan perjalanan riset mereka kepada Cognifera.
-            </p>
-            <a
-              href="https://wa.me/message/VRRB5IFQ7LQ4A1"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-block"
-            >
-              Mulai Konsultasi
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );

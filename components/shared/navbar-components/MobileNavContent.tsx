@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { NavbarButton } from "@/components/ui/resizable-navbar";
-import { AuthDialog } from "@/components/shared/AuthDialog";
-import { LogOut, ChevronDown, ChevronUp, type LucideIcon, User } from "lucide-react";
+import { LogOut, ChevronDown, ChevronUp, type LucideIcon } from "lucide-react";
 import type { NewUser } from "@/lib/auth-new";
 
 interface DropdownItem {
@@ -89,16 +87,16 @@ export const MobileNavContent = ({
         </Button>
         {expandedMenu === 'services' && (
           <div className="pl-6 py-1 space-y-1 bg-gray-50">
-            <Link href="/services/feradata" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
+            <Link href="/#layanan" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
               FERADATA
             </Link>
-            <Link href="/services/feraguide" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
+            <Link href="/#layanan" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
               FERAGUIDE
             </Link>
-            <Link href="/services/ferapub" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
+            <Link href="/#layanan" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
               FERAPUB
             </Link>
-            <Link href="/services/feragrant" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
+            <Link href="/#layanan" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
               FERAGRANT
             </Link>
           </div>
@@ -118,16 +116,10 @@ export const MobileNavContent = ({
         {expandedMenu === 'publications' && (
           <div className="pl-6 py-1 space-y-1 bg-gray-50">
             <Link href="/publications" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
-              All Publications
-            </Link>
-            <Link href="/publications?section=books" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
               Books
             </Link>
-            <Link href="/publications?section=journals" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
-              Journals
-            </Link>
-            <a href="https://ojs.cognifera.web.id" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile} target="_blank" rel="noopener noreferrer">
-              Journal Al-Musannif ↗
+            <a href="https://journal.cognifera.web.id/" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile} target="_blank" rel="noopener noreferrer">
+              Journals ↗
             </a>
           </div>
         )}
@@ -148,9 +140,9 @@ export const MobileNavContent = ({
             <Link href="/news" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
               All News
             </Link>
-            <Link href="/news?category=industry" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
+            {/* <Link href="/news?category=industry" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
               Industry News
-            </Link>
+            </Link> */}
             <Link href="/news?category=research" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
               Research News
             </Link>
@@ -235,24 +227,16 @@ export const MobileNavContent = ({
           </Button>
         </div>
       ) : (
-        <div className="w-full space-y-3">
-          <AuthDialog defaultMode="login">
-            <Button
-              variant="outline"
-              className="w-full flex items-center justify-center space-x-2"
-            >
-              <User className="w-4 h-4" />
-              <span>Login</span>
-            </Button>
-          </AuthDialog>
-          <AuthDialog>
-            <NavbarButton
-              variant="primary"
-              className="w-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)] cursor-pointer"
-            >
-              Get Started
-            </NavbarButton>
-          </AuthDialog>
+        <div className="w-full">
+          <a
+            href="https://wa.me/message/VRRB5IFQ7LQ4A1"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full bg-primary hover:bg-primary/90 text-white text-center py-3 text-sm font-medium tracking-wide transition-colors"
+            onClick={onCloseMobile}
+          >
+            Konsultasi Sekarang
+          </a>
         </div>
       )}
     </>

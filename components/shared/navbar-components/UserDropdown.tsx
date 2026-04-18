@@ -43,7 +43,7 @@ export const UserDropdown = ({
       <Button
         variant="ghost"
         onClick={onToggleDropdown}
-        className="flex items-center space-x-2 px-3 py-6 rounded-full hover:bg-gray-200 transition-colors"
+        className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 transition-colors h-16"
       >
         <Avatar className="h-8 w-8">
           <AvatarImage
@@ -60,7 +60,7 @@ export const UserDropdown = ({
 
       {/* Dropdown Menu */}
       {showDropdown && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+        <div className="absolute right-0 mt-0 w-64 bg-white shadow-lg border border-gray-200 py-2 z-50">
           {/* User Info */}
           <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
             <Avatar className="h-12 w-12">

@@ -106,27 +106,44 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="min-h-screen bg-white">
-        <div className="pt-16 pb-16 px-4 md:pt-20">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-6">
-              <Link
-                href="/publications?section=books"
-                className="inline-flex items-center gap-2 text-[var(--color-primary)] hover:underline"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back to Books
-              </Link>
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <BookCover book={book} />
-              <BookDetails book={book} inquiryUrl={inquiryUrl} />
-            </div>
-
-            <PromoBanner />
-            <BookRecommendations relatedBooks={relatedBooks} currentBook={book} />
+        {/* Breadcrumb bar */}
+        <div className="border-b border-gray-200 bg-white">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-2 text-xs text-gray-400">
+            <Link href="/publications" className="hover:text-primary transition-colors">
+              Publikasi
+            </Link>
+            <span>/</span>
+            <Link href="/publications" className="hover:text-primary transition-colors">
+              Buku
+            </Link>
+            <span>/</span>
+            <span className="text-gray-600 line-clamp-1">{book.title}</span>
           </div>
         </div>
+
+        {/* Back link */}
+        <div className="max-w-7xl mx-auto px-6 pt-8 pb-2">
+          <Link
+            href="/publications"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-950 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Kembali ke Koleksi Buku
+          </Link>
+        </div>
+
+        {/* Main content */}
+        <div className="max-w-7xl mx-auto px-6 py-10 pb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <BookCover book={book} />
+            <BookDetails book={book} inquiryUrl={inquiryUrl} />
+          </div>
+
+          <PromoBanner />
+          <BookRecommendations relatedBooks={relatedBooks} currentBook={book} />
+        </div>
+
       </div>
     </>
   );
