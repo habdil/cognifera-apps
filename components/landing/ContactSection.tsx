@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/button";
 import { ContactFormData } from "@/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { MapPin, Phone, Mail, MessageSquare, Clock, ArrowRight } from "lucide-react";
@@ -62,8 +61,21 @@ export function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus("idle");
+
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
       setSubmitStatus("success");
       setFormData({ name: "", email: "", layananInterest: "", message: "" });
     } catch {

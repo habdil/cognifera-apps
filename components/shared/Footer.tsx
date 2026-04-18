@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 const services = [
-  { label: "FERADATA — Analisis Data", href: "/services/feradata" },
-  { label: "FERAGUIDE — Bimbingan Karya Ilmiah", href: "/services/feraguide" },
-  { label: "FERAPUB — Publikasi Jurnal", href: "/services/ferapub" },
-  { label: "FERAGRANT — Pendanaan Penelitian", href: "/services/feragrant" },
-  { label: "Penerbitan Buku", href: "/services?category=penerbitan-buku" },
+  { label: "FERADATA - Analisis Data", href: "/#layanan" },
+  { label: "FERAGUIDE - Bimbingan Karya Ilmiah", href: "/#layanan" },
+  { label: "FERAPUB - Publikasi Jurnal", href: "/#layanan" },
+  { label: "FERAGRANT - Pendanaan Penelitian", href: "/#layanan" },
+  { label: "Penerbitan Buku", href: "/#layanan" },
 ];
 
 const company = [
@@ -14,15 +14,15 @@ const company = [
   { label: "Visi & Misi", href: "/visi-misi" },
   { label: "Our Team", href: "/our-team" },
   { label: "Testimonial", href: "/#testimonial" },
-  { label: "Berita", href: "/news" },
+  // { label: "Berita", href: "/news" },
 ];
 
 const publications = [
-  { label: "All Publications", href: "/publications" },
+  // { label: "All Publications", href: "/publications" },
   { label: "Books", href: "/publications?section=books" },
-  { label: "Global Journal of Science Education", href: "/journal" },
-  { label: "Journal of Social Responsibility", href: "/journal-social" },
-  { label: "Journal Al-Musannif", href: "https://ojs.cognifera.web.id" },
+  { label: "Journals", href: "https://journal.cognifera.web.id/" },
+  // { label: "Journal of Social Responsibility", href: "/journal-social" },
+  // { label: "Journal Al-Musannif", href: "https://ojs.cognifera.web.id" },
 ];
 
 const socials = [
@@ -58,12 +58,8 @@ const socials = [
 export function Footer() {
   return (
     <footer className="bg-gray-950 text-white">
-
-      {/* Main grid */}
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
-
-          {/* Brand */}
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3">
               <Image
@@ -78,7 +74,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm text-white/50 leading-relaxed max-w-xs">
-              Platform riset terintegrasi yang mendampingi perjalanan lengkap penelitian Anda — dari bimbingan hingga publikasi jurnal internasional.
+              Platform riset terintegrasi yang mendampingi perjalanan lengkap penelitian Anda - dari bimbingan hingga publikasi jurnal internasional.
             </p>
             <div className="flex items-center gap-3 pt-1">
               {socials.map(({ label, href, icon }) => (
@@ -96,7 +92,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Services */}
           <div className="space-y-4">
             <h4 className="text-[11px] font-medium tracking-[0.15em] uppercase text-white/40">
               Layanan
@@ -115,7 +110,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Company */}
           <div className="space-y-4">
             <h4 className="text-[11px] font-medium tracking-[0.15em] uppercase text-white/40">
               Perusahaan
@@ -134,7 +128,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Publications */}
           <div className="space-y-4">
             <h4 className="text-[11px] font-medium tracking-[0.15em] uppercase text-white/40">
               Publikasi
@@ -152,10 +145,8 @@ export function Footer() {
               ))}
             </ul>
           </div>
-
         </div>
 
-        {/* Contact strip */}
         <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { label: "Email", value: "cognifera.edu@gmail.com" },
@@ -169,7 +160,6 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-8 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-white/30">
             &copy; {new Date().getFullYear()} PT Cognifera Education Academy. All rights reserved.
@@ -183,7 +173,6 @@ export function Footer() {
           </div>
         </div>
       </div>
-
     </footer>
   );
 }

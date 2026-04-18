@@ -34,6 +34,8 @@ const nextConfig: NextConfig = {
 
   // Image optimization for better Core Web Vitals
   images: {
+    deviceSizes: [640, 750, 828, 1080, 1200, 1600, 1920],
+    imageSizes: [16, 32, 48, 64, 80, 96, 128, 256, 384],
     remotePatterns: [
       {
         protocol: "https",
@@ -45,7 +47,7 @@ const nextConfig: NextConfig = {
       },
     ],
     formats: ["image/webp", "image/avif"],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 86400,
   },
 };
 

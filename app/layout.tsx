@@ -5,6 +5,8 @@ import PromoPopupProvider from "@/components/PromoPopupProvider";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 import "./globals.css";
 
+const PROMO_POPUP_ENABLED = false;
+
 const workSans = Work_Sans({
   variable: "--font-work-sans",
   subsets: ["latin"],
@@ -133,7 +135,7 @@ export default function RootLayout({
       >
         <QueryProvider>
           {children}
-          <PromoPopupProvider />
+          <PromoPopupProvider enabled={PROMO_POPUP_ENABLED} />
           <Toaster
             position="bottom-right"
             toastOptions={{

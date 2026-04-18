@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
 
 function AuthCallbackContent() {
@@ -106,9 +107,12 @@ function AuthCallbackContent() {
           <div className="flex justify-center mb-6 sm:mb-8">
             <div className="relative">
               <div className="absolute inset-0 bg-[var(--color-primary)]/10 rounded-full blur-xl" />
-              <img
+              <Image
                 src="/logo.png"
                 alt="Logo Cognifera"
+                width={80}
+                height={80}
+                sizes="(min-width: 768px) 80px, 56px"
                 className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain"
               />
             </div>

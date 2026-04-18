@@ -85,7 +85,15 @@ export default function OurTeamContent() {
       {/* Hero */}
       <section className="relative text-white py-28 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/hero-carousel/hero-research.jpg" alt="" className="w-full h-full object-cover object-center" />
+          <Image
+            src="/hero-carousel/hero-research.jpg"
+            alt=""
+            fill
+            priority
+            quality={65}
+            sizes="100vw"
+            className="object-cover object-center"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/75" />
         </div>
         <motion.div
@@ -145,6 +153,8 @@ export default function OurTeamContent() {
                     src={member.image}
                     alt={`${member.name} — ${member.position}`}
                     fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    quality={70}
                     className="object-cover object-top group-hover:scale-[1.03] transition-transform duration-500"
                     loading="lazy"
                   />

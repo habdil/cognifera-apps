@@ -1,4 +1,5 @@
 import { memo, useState } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Heart, Trash2, ExternalLink, Calendar, User } from 'lucide-react';
 import { toast } from 'sonner';
@@ -89,13 +90,12 @@ export const SavedNewsContent = memo(() => {
             <div key={news.id} className="bg-[var(--color-background)] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow border border-[var(--color-border)]">
               {/* Image */}
               <div className="h-48 bg-[var(--color-muted)] relative">
-                <img
+                <Image
                   src={news.imageUrl}
                   alt={news.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/api/placeholder/300/200';
-                  }}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                  className="object-cover"
                 />
                 <div className="absolute top-2 right-2">
                   <span className="bg-[var(--color-primary)] text-[var(--color-primary-foreground)] px-2 py-1 rounded-full text-xs">

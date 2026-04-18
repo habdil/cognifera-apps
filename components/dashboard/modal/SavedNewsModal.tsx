@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -105,13 +106,12 @@ export const SavedNewsModal = memo(({ open, onOpenChange }: SavedNewsModalProps)
                   <div className="flex gap-4">
                     {/* Image */}
                     <div className="flex-shrink-0 w-32 h-24 bg-gray-200 rounded-lg overflow-hidden relative">
-                      <img
+                      <Image
                         src={news.imageUrl}
                         alt={news.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/api/placeholder/300/200';
-                        }}
+                        fill
+                        sizes="128px"
+                        className="object-cover"
                       />
                       <div className="absolute top-1 right-1">
                         <span className="bg-[var(--color-primary)] text-white px-2 py-0.5 rounded-full text-xs">

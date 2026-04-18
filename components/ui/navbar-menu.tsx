@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { motion } from "motion/react";
 
 
@@ -91,11 +92,13 @@ export const ProductItem = ({
 }) => {
   return (
     <a href={href} className="flex space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
-      <img
+      <Image
         src={src}
         width={80}
         height={50}
         alt={title}
+        quality={70}
+        sizes="80px"
         className="shrink-0 object-cover"
       />
       <div className="flex-1">

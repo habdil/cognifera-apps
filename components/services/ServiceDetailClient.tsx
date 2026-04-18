@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { LayananData } from "@/types";
 import { layananAPI } from "@/lib/api-dummy";
 import {
@@ -202,11 +203,14 @@ export function ServiceDetailClient({ initialService }: ServiceDetailClientProps
 
               {/* Right Side - Large Hero Character */}
               <div className="flex justify-center lg:justify-end">
-                <div className="relative">
-                  <img
+                <div className="relative w-80 h-80 lg:w-[36rem] lg:h-[36rem]">
+                  <Image
                     src={`/hero/hero-${service.id}.png`}
                     alt={`${service.nama} hero character`}
-                    className="w-150 h-150 lg:w-150 lg:h-150 object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500"
+                    fill
+                    quality={70}
+                    sizes="(min-width: 1024px) 36rem, 20rem"
+                    className="object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500"
                   />
                 </div>
               </div>

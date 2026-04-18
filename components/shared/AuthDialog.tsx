@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -95,7 +96,7 @@ export const AuthDialog = ({ children, defaultMode = "register" }: AuthDialogPro
       <DialogContent className="sm:max-w-md border-none">
         <DialogHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <img
+            <Image
               src="/logo.png"
               alt="Logo Cognifera"
               width={40}

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -80,11 +81,13 @@ export const AnimatedTestimonials = ({
                   }}
                   className="absolute inset-0 origin-bottom"
                 >
-                  <img
+                  <Image
                     src={testimonial.src}
                     alt={testimonial.name}
                     width={500}
                     height={500}
+                    quality={70}
+                    sizes="(min-width: 768px) 50vw, 100vw"
                     draggable={false}
                     className="h-full w-full rounded-3xl object-cover object-center"
                   />

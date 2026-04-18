@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, CheckCircle, Eye, EyeOff } from "lucide-react";
@@ -87,7 +88,7 @@ function ResetPasswordContent() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              <img
+              <Image
                 src="/logo.png"
                 alt="Logo Cognifera"
                 width={60}

@@ -3,11 +3,17 @@
 import { useState, useEffect } from 'react';
 import PromoPopup from './PromoPopup';
 
-const PromoPopupProvider = () => {
+interface PromoPopupProviderProps {
+  enabled?: boolean;
+}
+
+const PromoPopupProvider = ({ enabled = true }: PromoPopupProviderProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [hasShownPopup, setHasShownPopup] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return;
+
     // Check if popup has been shown in this session
     const popupShown = sessionStorage.getItem('promoPopupShown');
 
@@ -21,11 +27,13 @@ const PromoPopupProvider = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [hasShownPopup]);
+  }, [enabled, hasShownPopup]);
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
+
+  if (!enabled) return null;
 
   return (
     <PromoPopup

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { Target, TrendingUp, Users, Award, Lightbulb, Handshake, Sprout, ShieldCheck } from "lucide-react";
 
@@ -44,7 +45,15 @@ export default function VisiMisiContent() {
       {/* Hero */}
       <section className="relative text-white py-28 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/hero-carousel/hero-academic.jpg" alt="" className="w-full h-full object-cover object-center" />
+          <Image
+            src="/hero-carousel/hero-academic.jpg"
+            alt=""
+            fill
+            priority
+            quality={65}
+            sizes="100vw"
+            className="object-cover object-center"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/75" />
         </div>
         <motion.div
