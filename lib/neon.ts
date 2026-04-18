@@ -1,14 +1,22 @@
 import { neon } from "@neondatabase/serverless";
 
-const databaseUrl = process.env.DATABASE_URL;
+function getDatabaseUrl() {
+  const databaseUrl = process.env.DATABASE_URL;
 
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is not configured");
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is not configured");
+  }
+
+  return databaseUrl;
 }
 
-export const sql = neon(databaseUrl);
+export function getSql() {
+  return neon(getDatabaseUrl());
+}
 
 export async function ensureContactLeadsTable() {
+  const sql = getSql();
+
   await sql`
     CREATE EXTENSION IF NOT EXISTS pgcrypto;
   `;

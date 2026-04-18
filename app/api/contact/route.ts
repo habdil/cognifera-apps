@@ -3,7 +3,7 @@ import {
   isEmailNotificationConfigured,
   sendContactNotificationEmail,
 } from "@/lib/email";
-import { ensureContactLeadsTable, sql } from "@/lib/neon";
+import { ensureContactLeadsTable, getSql } from "@/lib/neon";
 
 export const runtime = "nodejs";
 
@@ -39,6 +39,7 @@ export async function POST(request: Request) {
     }
 
     await ensureContactLeadsTable();
+    const sql = getSql();
 
     await sql`
       INSERT INTO contact_leads (name, email, layanan_interest, message)
