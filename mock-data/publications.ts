@@ -836,7 +836,7 @@ export const mockBooks: BookData[] = [
       "Nurul Fadhilah",
       "Sri Wahyuni",
       "Ernawati",
-      "Ryan Adiyatama Putra",
+      "Ryan Putra Adhytama S",
       "Ayun Atira"
     ],
     publisher: "PT Cognifera Education Academy",
