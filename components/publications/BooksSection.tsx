@@ -15,6 +15,18 @@ const comingSoonBooks = [
   { title: "Penulisan Karya Ilmiah Internasional", category: "Panduan", year: "2026" },
 ];
 
+const getBooksGridClassName = (bookCount: number) => {
+  if (bookCount === 2) {
+    return "grid gap-6 md:grid-cols-2 max-w-4xl mx-auto";
+  }
+
+  if (bookCount === 3) {
+    return "grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto";
+  }
+
+  return "grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+};
+
 export const BooksSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory] = useState<string>("all");
@@ -116,7 +128,7 @@ export const BooksSection = () => {
         <FeaturedBookCard book={filteredBooks[0]} />
       ) : (
         /* Multiple books — grid */
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px bg-gray-200">
+        <div className={getBooksGridClassName(filteredBooks.length)}>
           {filteredBooks.map((book) => (
             <BookCard key={book.id} book={book} />
           ))}
@@ -251,7 +263,7 @@ const BookCard = ({ book }: { book: BookData }) => {
   }[book.availability] ?? book.availability;
 
   return (
-    <div className="bg-white group hover:bg-[#FAFAF8] transition-colors duration-200 flex flex-col">
+    <div className="bg-white border border-gray-200 group hover:bg-[#FAFAF8] hover:border-gray-300 transition-colors duration-200 flex flex-col">
       <div className="h-[2px] bg-gray-100 group-hover:bg-primary transition-colors duration-200" />
       <Link href={getBookHref(book)}>
         <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden border-b border-gray-100">

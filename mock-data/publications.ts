@@ -826,6 +826,57 @@ export const mockCommunityServiceJournals: CommunityServiceJournalData[] = [
 
 export const mockBooks: BookData[] = [
   {
+    id: "book-006",
+    slug: "desain-pembelajaran-biologi-di-pendidikan-tinggi",
+    title: "Desain Pembelajaran Biologi di Pendidikan Tinggi",
+    authors: [
+      "Arifah Novia Arifin",
+      "Adnan",
+      "Nurul Magfirah",
+      "Nurul Fadhilah",
+      "Sri Wahyuni",
+      "Ernawati",
+      "Ryan Adiyatama Putra",
+      "Ayun Atira"
+    ],
+    publisher: "PT Cognifera Education Academy",
+    publicationYear: 2026,
+    isbn: "-",
+    pages: 305,
+    pageLabel: "i-viii + 305 halaman",
+    language: "id",
+    category: "textbook",
+    description: "Buku ini membahas desain pembelajaran biologi di pendidikan tinggi sebagai rujukan bagi dosen, mahasiswa, dan praktisi pendidikan dalam merancang pembelajaran yang sistematis dan kontekstual.",
+    longDescription: [
+      "Disusun untuk kebutuhan akademik di pendidikan tinggi, buku ini menghadirkan materi desain pembelajaran biologi yang dapat digunakan sebagai pegangan dalam pengembangan perkuliahan, perencanaan strategi pembelajaran, dan penguatan kualitas proses belajar."
+    ],
+    keywords: [
+      "desain pembelajaran",
+      "biologi",
+      "pendidikan tinggi",
+      "pembelajaran biologi",
+      "buku akademik"
+    ],
+    coverImage: "/books/dpbpt/cover.jpg",
+    coverAlt: "Cover buku Desain Pembelajaran Biologi di Pendidikan Tinggi",
+    previewImages: [
+      "/books/dpbpt/cover.jpg",
+      "/books/dpbpt/previews/1.jpg",
+      "/books/dpbpt/previews/2.jpg",
+      "/books/dpbpt/previews/3.jpg",
+      "/books/dpbpt/previews/4.jpg"
+    ],
+    availability: "available",
+    format: "print",
+    purchaseLabel: "Tanya Buku Ini",
+    highlights: [
+      "Editor: Saparuddin",
+      "Cetakan pertama, Mei 2026",
+      "Ukuran buku 15,5 x 23,0 cm",
+      "Diterbitkan oleh PT Cognifera Education Academy"
+    ]
+  },
+  {
     id: "book-005",
     slug: "kinerja-karyawan-kajian-teori-dan-praktis",
     title: "Kinerja Karyawan",
@@ -842,13 +893,13 @@ export const mockBooks: BookData[] = [
       "Disusun untuk pembaca akademik maupun praktisi, buku ini menyajikan pembahasan yang sistematis mengenai kinerja karyawan, mulai dari landasan konseptual hingga implementasinya dalam dunia kerja."
     ],
     keywords: [],
-    coverImage: "/books/covers/kinerja-karyawan.jpg",
+    coverImage: "/books/kinerja-karyawan/cover.jpg",
     coverAlt: "Cover buku Kinerja Karyawan: Kajian Teori dan Praktis",
     previewImages: [
-      "/books/covers/kinerja-karyawan.jpg",
-      "/books/previews/kinerja-karyawan-1.png",
-      "/books/previews/kinerja-karyawan-2.png",
-      "/books/previews/kinerja-karyawan-3.png"
+      "/books/kinerja-karyawan/cover.jpg",
+      "/books/kinerja-karyawan/previews/1.png",
+      "/books/kinerja-karyawan/previews/2.png",
+      "/books/kinerja-karyawan/previews/3.png"
     ],
     availability: "available",
     format: "print",
