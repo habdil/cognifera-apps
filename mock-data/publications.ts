@@ -877,6 +877,53 @@ export const mockBooks: BookData[] = [
     ]
   },
   {
+    id: "book-007",
+    slug: "citizen-science-project-inovasi-pembelajaran-biologi-partisipatif",
+    title: "Citizen Science Project (CSP): Inovasi Pembelajaran Biologi Partisipatif",
+    authors: [
+      "Asih Luklu Susiati",
+      "Andi Asmawati",
+      "Abd Muis",
+      "Arsad Bahri"
+    ],
+    publisher: "PT Cognifera Education Academy",
+    publicationYear: 2026,
+    isbn: "-",
+    pages: 100,
+    pageLabel: "i-viii + 100 halaman",
+    language: "id",
+    category: "textbook",
+    description: "Buku ini menghadirkan konsep Citizen Science Project (CSP) sebagai pendekatan inovatif dalam pembelajaran biologi partisipatif yang melibatkan masyarakat dalam proses ilmiah.",
+    longDescription: [
+      "Citizen Science Project (CSP) merupakan pendekatan pembelajaran biologi yang mengintegrasikan partisipasi aktif masyarakat dalam kegiatan ilmiah. Buku ini menyajikan landasan konseptual, desain, serta implementasi proyek sains warga dalam konteks pendidikan biologi.",
+      "Ditujukan bagi dosen, guru, mahasiswa, dan praktisi pendidikan yang ingin mengembangkan pembelajaran biologi berbasis partisipasi komunitas secara sistematis dan bermakna."
+    ],
+    keywords: [
+      "citizen science",
+      "pembelajaran biologi",
+      "partisipatif",
+      "CSP",
+      "inovasi pendidikan"
+    ],
+    coverImage: "/books/citizen-science-project/cover.png",
+    coverAlt: "Cover buku Citizen Science Project (CSP): Inovasi Pembelajaran Biologi Partisipatif",
+    previewImages: [
+      "/books/citizen-science-project/cover.png",
+      "/books/citizen-science-project/previews/1.png",
+      "/books/citizen-science-project/previews/2.png",
+      "/books/citizen-science-project/previews/3.png"
+    ],
+    availability: "available",
+    format: "print",
+    purchaseLabel: "Tanya Buku Ini",
+    highlights: [
+      "Editor: Tim PT Cognifera Education Academy",
+      "Cetakan pertama, Mei 2026",
+      "Ukuran buku 15,5 x 23,0 cm",
+      "Diterbitkan oleh PT Cognifera Education Academy"
+    ]
+  },
+  {
     id: "book-005",
     slug: "kinerja-karyawan-kajian-teori-dan-praktis",
     title: "Kinerja Karyawan",
