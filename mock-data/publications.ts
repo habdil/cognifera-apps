@@ -861,7 +861,6 @@ export const mockBooks: BookData[] = [
     coverAlt: "Cover buku Desain Pembelajaran Biologi di Pendidikan Tinggi",
     previewImages: [
       "/books/dpbpt/cover.jpg",
-      "/books/dpbpt/previews/1.jpg",
       "/books/dpbpt/previews/2.jpg",
       "/books/dpbpt/previews/3.jpg",
       "/books/dpbpt/previews/4.jpg"
@@ -883,14 +882,15 @@ export const mockBooks: BookData[] = [
     authors: [
       "Asih Luklu Susiati",
       "Andi Asmawati",
-      "Abd Muis",
+      "Abd. Muis",
+      "Ismail",
       "Arsad Bahri"
     ],
     publisher: "PT Cognifera Education Academy",
     publicationYear: 2026,
     isbn: "-",
     pages: 100,
-    pageLabel: "i-viii + 100 halaman",
+    pageLabel: "i-vii + 100 halaman",
     language: "id",
     category: "textbook",
     description: "Buku ini menghadirkan konsep Citizen Science Project (CSP) sebagai pendekatan inovatif dalam pembelajaran biologi partisipatif yang melibatkan masyarakat dalam proses ilmiah.",
