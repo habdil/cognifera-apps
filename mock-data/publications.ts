@@ -841,7 +841,7 @@ export const mockBooks: BookData[] = [
     ],
     publisher: "PT Cognifera Education Academy",
     publicationYear: 2026,
-    isbn: "-",
+    isbn: "978-634-05-1231-1",
     pages: 305,
     pageLabel: "i-viii + 305 halaman",
     language: "id",
