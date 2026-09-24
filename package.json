@@ -9,6 +9,7 @@
     "lint": "eslint",
     "db:schema": "node scripts/apply-schema.mjs",
     "db:seed-books": "node scripts/seed-books.mjs",
+    "db:seed-articles": "node scripts/seed-articles.mjs",
     "admin:create": "node scripts/create-admin.mjs"
   },
   "dependencies": {
