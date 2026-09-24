@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Image from "next/image";
+import { ContentImage } from "@/components/shared/ContentImage";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
@@ -147,7 +147,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
           {/* Cover */}
           {article.coverImage && (
             <div className="relative aspect-[16/9] bg-gray-50 border border-gray-100 mb-10 overflow-hidden">
-              <Image
+              <ContentImage
                 src={article.coverImage}
                 alt={article.title}
                 fill

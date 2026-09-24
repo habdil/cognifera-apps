@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ContentImage } from "@/components/shared/ContentImage";
 import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { ArticleData, getCategoryLabel } from "@/lib/articles-shared";
@@ -21,7 +21,7 @@ export function NewsCard({ article }: { article: ArticleData }) {
       <div className="h-[2px] bg-gray-100 group-hover:bg-primary transition-colors duration-200" />
       <div className="relative aspect-[16/9] bg-gray-50 overflow-hidden border-b border-gray-100">
         {article.coverImage ? (
-          <Image
+          <ContentImage
             src={article.coverImage}
             alt={article.title}
             fill
