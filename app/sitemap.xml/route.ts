@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server'
 import { getActiveServices } from '@/content/services'
-import { mockBooks } from '@/mock-data/publications'
+import { listPublishedBooks } from '@/lib/books'
+
+export const revalidate = 3600
 
 export async function GET() {
+  const books = await listPublishedBooks()
   const baseUrl = 'https://www.cognifera.web.id'
   const currentDate = new Date().toISOString()
 
@@ -55,7 +58,7 @@ export async function GET() {
   }))
 
   // Dynamic book pages
-  const bookPages = mockBooks.map(book => ({
+  const bookPages = books.map(book => ({
     url: `${baseUrl}/publications/books/${book.slug}`,
     lastmod: currentDate,
     changefreq: 'monthly',
