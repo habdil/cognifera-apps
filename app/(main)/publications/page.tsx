@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
+import { listPublishedBooks } from "@/lib/books";
 import PublicationsContent from "./components/PublicationsContent";
+
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Publikasi - Buku Akademik",
@@ -21,7 +24,9 @@ export const metadata: Metadata = {
 };
 
 
-export default function PublicationsPage() {
+export default async function PublicationsPage() {
+  const books = await listPublishedBooks();
+
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-white animate-pulse">
@@ -35,7 +40,7 @@ export default function PublicationsPage() {
         </div>
       </div>
     }>
-      <PublicationsContent />
+      <PublicationsContent books={books} />
     </Suspense>
   );
 }

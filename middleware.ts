@@ -1,62 +1,50 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
+import { jwtVerify } from "jose";
 
-// Protected routes that require authentication
-const protectedRoutes = [
-  '/dashboard/author-journal',
-  '/dashboard/reviewer-journal', 
-  '/dashboard/editor-journal',
-  '/dashboard/manager-journal',
-  '/dashboard/author-book',
-  '/dashboard/editor-book',
-  '/dashboard/manager-book',
-  '/dashboard/author-news',
-  '/dashboard/admin'
-]
+// Same cookie/secret as lib/auth.ts — inlined because middleware runs on the
+// edge runtime and cannot import next/headers-based helpers.
+const SESSION_COOKIE = "cognifera_admin_session";
 
-export function middleware(request: NextRequest) {
-  // Temporarily disable middleware for debugging
-  // TODO: Re-enable after fixing redirect issue
-  console.log(`Middleware: Accessing ${request.nextUrl.pathname}`)
-  return NextResponse.next()
+const PUBLIC_ADMIN_PATHS = ["/admin/login", "/api/admin/login"];
 
-  /*
-  const { pathname } = request.nextUrl
-  
-  // Check if the current path is a protected route
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
-  
-  if (isProtectedRoute) {
-    // Check for access token in cookies or headers
-    const accessToken = request.cookies.get('cognifera_access_token')?.value ||
-                       request.headers.get('authorization')?.replace('Bearer ', '')
-    
-    // Allow if coming from login redirect (temporary bypass)
-    const fromAuth = request.nextUrl.searchParams.get('from') === 'auth'
-    
-    // If no token found and not from auth redirect, redirect to home page
-    if (!accessToken && !fromAuth) {
-      console.log(`Access denied to ${pathname}: No token found`)
-      const url = request.nextUrl.clone()
-      url.pathname = '/'
-      url.searchParams.set('message', 'login-required')
-      return NextResponse.redirect(url)
-    }
+async function isAuthenticated(request: NextRequest): Promise<boolean> {
+  const token = request.cookies.get(SESSION_COOKIE)?.value;
+  if (!token) return false;
+
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) return false;
+
+  try {
+    await jwtVerify(token, new TextEncoder().encode(secret));
+    return true;
+  } catch {
+    return false;
   }
-  
-  return NextResponse.next()
-  */
+}
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (PUBLIC_ADMIN_PATHS.some((path) => pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
+
+  if (await isAuthenticated(request)) {
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.json(
+      { success: false, message: "Tidak terautentikasi." },
+      { status: 401 }
+    );
+  }
+
+  const loginUrl = new URL("/admin/login", request.url);
+  loginUrl.searchParams.set("next", pathname);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
-}
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
+};

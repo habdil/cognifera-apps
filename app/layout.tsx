@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Work_Sans, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import PromoPopupProvider from "@/components/PromoPopupProvider";
-import { QueryProvider } from "@/lib/providers/QueryProvider";
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 import "./globals.css";
 
 const PROMO_POPUP_ENABLED = false;
@@ -133,22 +133,21 @@ export default function RootLayout({
       <body
         className={`${workSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProvider>
-          {children}
-          <PromoPopupProvider enabled={PROMO_POPUP_ENABLED} />
-          <Toaster
-            position="bottom-right"
-            toastOptions={{
-              style: {
-                background: 'var(--background)',
-                border: '1px solid var(--border)',
-                color: 'var(--foreground)',
-              },
-              className: 'my-toast',
-              duration: 4000,
-            }}
-          />
-        </QueryProvider>
+        {children}
+        <AnalyticsTracker />
+        <PromoPopupProvider enabled={PROMO_POPUP_ENABLED} />
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: 'var(--background)',
+              border: '1px solid var(--border)',
+              color: 'var(--foreground)',
+            },
+            className: 'my-toast',
+            duration: 4000,
+          }}
+        />
       </body>
     </html>
   );

@@ -6,8 +6,10 @@ import { BookCover } from "@/components/publications/books/BookCover";
 import { BookDetails } from "@/components/publications/books/BookDetails";
 import { BookRecommendations } from "@/components/publications/books/BookRecommendations";
 import { PromoBanner } from "@/components/publications/books/PromoBanner";
-import { getBookByParam, getBookHref, getBookInquiryUrl, getRelatedBooks } from "@/lib/books";
-import { mockBooks } from "@/mock-data/publications";
+import { getBookByParam, getRelatedBooks } from "@/lib/books";
+import { getBookHref, getBookInquiryUrl } from "@/lib/books-shared";
+
+export const revalidate = 300;
 
 interface BookDetailPageProps {
   params: Promise<{
@@ -15,17 +17,15 @@ interface BookDetailPageProps {
   }>;
 }
 
-export function generateStaticParams() {
-  return mockBooks.map((book) => ({
-    id: book.slug,
-  }));
+function absoluteImageUrl(path: string) {
+  return path.startsWith("http") ? path : `https://www.cognifera.web.id${path}`;
 }
 
 export async function generateMetadata({
   params,
 }: BookDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const book = getBookByParam(id);
+  const book = await getBookByParam(id);
 
   if (!book) {
     return {
@@ -48,7 +48,7 @@ export async function generateMetadata({
       type: "website",
       images: [
         {
-          url: `https://www.cognifera.web.id${book.coverImage}`,
+          url: absoluteImageUrl(book.coverImage),
           alt: book.coverAlt ?? book.title,
         },
       ],
@@ -58,13 +58,13 @@ export async function generateMetadata({
 
 export default async function BookDetailPage({ params }: BookDetailPageProps) {
   const { id } = await params;
-  const book = getBookByParam(id);
+  const book = await getBookByParam(id);
 
   if (!book) {
     notFound();
   }
 
-  const relatedBooks = getRelatedBooks(book);
+  const relatedBooks = await getRelatedBooks(book);
   const inquiryUrl = getBookInquiryUrl(book);
 
   const jsonLd = {
@@ -83,7 +83,7 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
     inLanguage: book.language === "id" ? "id-ID" : "en-US",
     datePublished: `${book.publicationYear}-01-01`,
     description: book.description,
-    image: `https://www.cognifera.web.id${book.coverImage}`,
+    image: absoluteImageUrl(book.coverImage),
     url: `https://www.cognifera.web.id${getBookHref(book)}`,
     offers: {
       "@type": "Offer",

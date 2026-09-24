@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Share2, ExternalLink, FileText, MessageCircle, Check } from "lucide-react";
 import { BookData } from "@/types/publications";
-import { formatBookPrice } from "@/lib/books";
+import { formatBookPrice } from "@/lib/books-shared";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 

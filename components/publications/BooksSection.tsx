@@ -4,8 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Search, Eye, ShoppingCart, Calendar, Users, Clock } from "lucide-react";
-import { formatBookPrice, getBookHref, getBookInquiryUrl } from "@/lib/books";
-import { mockBooks } from "@/mock-data/publications";
+import { formatBookPrice, getBookHref, getBookInquiryUrl } from "@/lib/books-shared";
 import { BookData } from "@/types/publications";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
@@ -27,7 +26,7 @@ const getBooksGridClassName = (bookCount: number) => {
   return "grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 };
 
-export const BooksSection = () => {
+export const BooksSection = ({ books }: { books: BookData[] }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory] = useState<string>("all");
   const [sortBy] = useState<"year" | "title" | "price">("year");
@@ -40,7 +39,7 @@ export const BooksSection = () => {
   //   { id: "proceedings", label: "Prosiding" },
   // ];
 
-  const filteredBooks = mockBooks
+  const filteredBooks = books
     .filter((book) => {
       const query = searchQuery.toLowerCase();
       const matchesSearch =

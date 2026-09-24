@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { ContactFormData } from "@/types";
+import { track } from "@/lib/analytics-client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { MapPin, Phone, Mail, MessageSquare, Clock, ArrowRight } from "lucide-react";
 
@@ -77,6 +78,7 @@ export function ContactSection() {
       }
 
       setSubmitStatus("success");
+      track("contact_submit");
       setFormData({ name: "", email: "", layananInterest: "", message: "" });
     } catch {
       setSubmitStatus("error");

@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
-import { mockBerita } from '@/mock-data/berita'
-import { mockLayanan } from '@/mock-data/layanan'
-import { mockBooks } from '@/mock-data/publications'
+import { getActiveServices } from '@/content/services'
+import { listPublishedBooks } from '@/lib/books'
+import { listPublishedArticles } from '@/lib/articles'
+
+export const revalidate = 3600
 
 export async function GET() {
+  const books = await listPublishedBooks()
+  const { articles } = await listPublishedArticles({ limit: 500 })
   const baseUrl = 'https://www.cognifera.web.id'
   const currentDate = new Date().toISOString()
 
@@ -48,15 +52,15 @@ export async function GET() {
   ]
 
   // Dynamic news pages
-  const newsPages = mockBerita.map(article => ({
-    url: `${baseUrl}/news/${article.id}`,
-    lastmod: new Date(article.publicationDate).toISOString(),
+  const newsPages = articles.map(article => ({
+    url: `${baseUrl}/news/${article.slug}`,
+    lastmod: (article.publishedAt ?? article.updatedAt).toISOString(),
     changefreq: 'monthly',
     priority: 0.7
   }))
 
   // Dynamic service pages
-  const servicePages = mockLayanan.map(service => ({
+  const servicePages = getActiveServices().map(service => ({
     url: `${baseUrl}/services/${service.id}`,
     lastmod: currentDate,
     changefreq: 'weekly',
@@ -64,7 +68,7 @@ export async function GET() {
   }))
 
   // Dynamic book pages
-  const bookPages = mockBooks.map(book => ({
+  const bookPages = books.map(book => ({
     url: `${baseUrl}/publications/books/${book.slug}`,
     lastmod: currentDate,
     changefreq: 'monthly',

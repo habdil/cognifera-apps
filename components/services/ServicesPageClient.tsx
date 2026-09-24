@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { LayananData } from "@/types";
-import { layananAPI, iklanAPI } from "@/lib/api-dummy";
+import { getActiveServices } from "@/content/services";
+import { getActivePromos } from "@/content/promos";
 import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 
 // Animation variants
@@ -50,45 +51,29 @@ export default function ServicesPageClient() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [loading, setLoading] = useState(true);
 
-  // Fetch data
+  // Data diisi di effect agar penentuan promo berbasis tanggal terjadi di
+  // client dan bebas hydration mismatch.
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [servicesRes, promosRes] = await Promise.all([
-          layananAPI.getAll({ status: "aktif" }),
-          iklanAPI.getAll({ status: "aktif" })
-        ]);
+    const activePromos = getActivePromos();
 
-        if (servicesRes.success && servicesRes.data) {
-          const activePromos = promosRes.success ? promosRes.data || [] : [];
+    const enhancedServices: ServiceWithPromo[] = getActiveServices().map((service, index) => {
+      const servicePromo = activePromos.find(promo =>
+        promo.layananAffected.includes(service.id) &&
+        new Date() >= new Date(promo.tanggalMulai) &&
+        new Date() <= new Date(promo.tanggalBerakhir)
+      );
 
-          const enhancedServices: ServiceWithPromo[] = servicesRes.data.map((service, index) => {
-            const servicePromo = activePromos.find(promo =>
-              promo.layananAffected.includes(service.id) &&
-              new Date() >= new Date(promo.tanggalMulai) &&
-              new Date() <= new Date(promo.tanggalBerakhir)
-            );
+      return {
+        ...service,
+        hasPromo: !!servicePromo,
+        promoDiscount: servicePromo?.discountPercentage,
+        isTrending: index < 2
+      };
+    });
 
-            return {
-              ...service,
-              hasPromo: !!servicePromo,
-              promoDiscount: servicePromo?.discountPercentage,
-              isTrending: index < 2
-            };
-          });
-
-          setServices(enhancedServices);
-          setFilteredServices(enhancedServices);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    setServices(enhancedServices);
+    setFilteredServices(enhancedServices);
+    setLoading(false);
   }, []);
 
   // Filter services

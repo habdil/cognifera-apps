@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 import { BooksSection } from "@/components/publications/BooksSection";
+import { BookData } from "@/types/publications";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -21,7 +22,7 @@ const fadeIn = {
   visible: { opacity: 1, transition: { duration: 0.7 } },
 };
 
-export default function PublicationsContent() {
+export default function PublicationsContent({ books }: { books: BookData[] }) {
   return (
     <div className="min-h-screen bg-white">
 
@@ -61,7 +62,7 @@ export default function PublicationsContent() {
       {/* Books */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <BooksSection />
+          <BooksSection books={books} />
         </div>
       </section>
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BookData } from "@/types/publications";
-import { formatBookPrice, getBookHref, getBookInquiryUrl } from "@/lib/books";
+import { formatBookPrice, getBookHref, getBookInquiryUrl } from "@/lib/books-shared";
 
 interface BookRecommendationsProps {
   relatedBooks: BookData[];
