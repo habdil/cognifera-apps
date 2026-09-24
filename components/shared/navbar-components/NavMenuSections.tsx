@@ -77,14 +77,17 @@ export const NavMenuSections = ({ active, setActive }: NavMenuSectionsProps) => 
         </div>
       </MenuItem>
 
-      {/* <MenuItem setActive={setActive} active={active} item="News">
+      <MenuItem setActive={setActive} active={active} item="News">
         <div className="flex flex-col space-y-4 text-sm">
-          <HoveredLink href="/news">All News</HoveredLink>
-          <HoveredLink href="/news?category=industry">Industry News</HoveredLink>
-          <HoveredLink href="/news?category=research">Research News</HoveredLink>
-          <HoveredLink href="/news?category=company">Company News</HoveredLink>
+          <HoveredLink href="/news">
+            <span className="font-semibold">Semua Berita</span>
+          </HoveredLink>
+          <HoveredLink href="/news?category=company">Berita Perusahaan</HoveredLink>
+          <HoveredLink href="/news?category=research">Riset &amp; Publikasi</HoveredLink>
+          <HoveredLink href="/news?category=announcement">Pengumuman</HoveredLink>
+          <HoveredLink href="/news?category=tips">Tips &amp; Panduan</HoveredLink>
         </div>
-      </MenuItem> */}
+      </MenuItem>
     </Menu>
   );
 };
