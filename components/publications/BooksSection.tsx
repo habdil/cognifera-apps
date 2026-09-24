@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { ContentImage } from "@/components/shared/ContentImage";
 import Link from "next/link";
 import { useState } from "react";
 import { Search, Eye, ShoppingCart, Calendar, Users, Clock } from "lucide-react";
@@ -172,7 +172,7 @@ const FeaturedBookCard = ({ book }: { book: BookData }) => (
       {/* Cover */}
       <Link href={getBookHref(book)} className="block">
         <div className="relative aspect-[3/4] bg-gray-50 border-r border-gray-100 overflow-hidden">
-          <Image
+          <ContentImage
             src={book.coverImage}
             alt={book.coverAlt ?? book.title}
             fill
@@ -266,7 +266,7 @@ const BookCard = ({ book }: { book: BookData }) => {
       <div className="h-[2px] bg-gray-100 group-hover:bg-primary transition-colors duration-200" />
       <Link href={getBookHref(book)}>
         <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden border-b border-gray-100">
-          <Image
+          <ContentImage
             src={book.coverImage}
             alt={book.coverAlt ?? book.title}
             fill

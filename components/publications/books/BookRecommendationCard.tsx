@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { ContentImage } from "@/components/shared/ContentImage";
 import Link from "next/link";
 import { BookData } from "@/types/publications";
 import { formatBookPrice, getBookHref } from "@/lib/books-shared";
@@ -13,7 +13,7 @@ export function BookRecommendationCard({ book }: BookRecommendationCardProps) {
   return (
     <Link href={getBookHref(book)} className="group block">
       <div className="relative mb-3 aspect-[3/4] overflow-hidden rounded-lg border border-[var(--color-border)] bg-white p-2 transition-shadow group-hover:shadow-lg">
-        <Image
+        <ContentImage
           src={book.coverImage}
           alt={book.coverAlt ?? book.title}
           fill

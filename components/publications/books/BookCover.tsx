@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { motion } from "motion/react";
+import { ContentImage } from "@/components/shared/ContentImage";
 import { BookData } from "@/types/publications";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
@@ -24,7 +24,7 @@ export function BookCover({ book }: BookCoverProps) {
     >
       {/* Main image */}
       <div className="relative aspect-[3/4] overflow-hidden border border-gray-200 bg-gray-50">
-        <Image
+        <ContentImage
           src={selectedImage}
           alt={book.coverAlt ?? book.title}
           fill
@@ -45,7 +45,7 @@ export function BookCover({ book }: BookCoverProps) {
                 image === selectedImage ? "border-primary" : "border-gray-200 hover:border-gray-400"
               }`}
             >
-              <Image
+              <ContentImage
                 src={image}
                 alt={`${book.title} preview ${index + 1}`}
                 fill

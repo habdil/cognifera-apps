@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
+import { ContentImage } from "@/components/shared/ContentImage";
 import { toast } from "sonner";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { uploadImage, type UploadFolder } from "@/lib/upload-client";
@@ -43,7 +43,7 @@ export function ImageUploadField({ folder, value, onChange, label }: SingleProps
       />
       {value ? (
         <div className="relative w-32 aspect-[3/4] bg-gray-50 border border-gray-200 group">
-          <Image src={value} alt={label} fill className="object-contain p-1" sizes="128px" />
+          <ContentImage src={value} alt={label} fill className="object-contain p-1" sizes="128px" />
           <button
             type="button"
             onClick={() => onChange("")}
@@ -115,7 +115,7 @@ export function MultiImageUploadField({ folder, values, onChange }: MultiProps) 
       />
       {values.map((url, index) => (
         <div key={url + index} className="relative w-24 aspect-[3/4] bg-gray-50 border border-gray-200 group">
-          <Image src={url} alt={`Preview ${index + 1}`} fill className="object-contain p-1" sizes="96px" />
+          <ContentImage src={url} alt={`Preview ${index + 1}`} fill className="object-contain p-1" sizes="96px" />
           <button
             type="button"
             onClick={() => onChange(values.filter((_, i) => i !== index))}

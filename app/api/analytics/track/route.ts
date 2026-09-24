@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { getSql } from "@/lib/neon";
 
 export const runtime = "nodejs";
@@ -48,18 +49,31 @@ export async function POST(request: Request) {
       return new Response(null, { status: 204 });
     }
 
-    const sql = getSql();
-    await sql`
-      INSERT INTO analytics_events (
-        device_id, session_id, event_type, path, entity_id,
-        referrer, utm_source, utm_medium, utm_campaign, user_agent
-      ) VALUES (
-        ${deviceId}, ${sessionId}, ${eventType}, ${path}, ${clip(body?.entityId, 256)},
-        ${clip(body?.referrer, 512)}, ${clip(body?.utmSource, 128)},
-        ${clip(body?.utmMedium, 128)}, ${clip(body?.utmCampaign, 128)},
-        ${userAgent.slice(0, 512)}
-      );
-    `;
+    const entityId = clip(body?.entityId, 256);
+    const referrer = clip(body?.referrer, 512);
+    const utmSource = clip(body?.utmSource, 128);
+    const utmMedium = clip(body?.utmMedium, 128);
+    const utmCampaign = clip(body?.utmCampaign, 128);
+
+    // Respond immediately; the insert runs after the response is sent so a
+    // slow DB connection never delays (or errors) the visitor's request.
+    after(async () => {
+      try {
+        const sql = getSql();
+        await sql`
+          INSERT INTO analytics_events (
+            device_id, session_id, event_type, path, entity_id,
+            referrer, utm_source, utm_medium, utm_campaign, user_agent
+          ) VALUES (
+            ${deviceId}, ${sessionId}, ${eventType}, ${path}, ${entityId},
+            ${referrer}, ${utmSource}, ${utmMedium}, ${utmCampaign},
+            ${userAgent.slice(0, 512)}
+          );
+        `;
+      } catch (error) {
+        console.error("Analytics track failed:", error);
+      }
+    });
   } catch (error) {
     console.error("Analytics track failed:", error);
   }

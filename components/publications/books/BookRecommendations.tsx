@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { ContentImage } from "@/components/shared/ContentImage";
 import Link from "next/link";
 import { BookData } from "@/types/publications";
 import { formatBookPrice, getBookHref, getBookInquiryUrl } from "@/lib/books-shared";
@@ -34,7 +34,7 @@ export function BookRecommendations({ relatedBooks, currentBook }: BookRecommend
             <div className="h-[2px] bg-gray-100 group-hover:bg-primary transition-colors duration-200" />
             <div className="p-3">
               <div className="relative aspect-[3/4] bg-gray-50 border border-gray-100 overflow-hidden mb-3">
-                <Image
+                <ContentImage
                   src={book.coverImage}
                   alt={book.coverAlt ?? book.title}
                   fill
@@ -55,7 +55,7 @@ export function BookRecommendations({ relatedBooks, currentBook }: BookRecommend
       <div className="mt-6 border border-gray-200 bg-[#FAFAF8] p-5 flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
           <div className="relative h-14 w-10 overflow-hidden border border-gray-200 bg-white flex-shrink-0">
-            <Image
+            <ContentImage
               src={currentBook.coverImage}
               alt={currentBook.coverAlt ?? currentBook.title}
               fill

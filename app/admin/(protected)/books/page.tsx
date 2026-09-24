@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ContentImage } from "@/components/shared/ContentImage";
 import Link from "next/link";
 import { Plus, Pencil } from "lucide-react";
 import { listAllBooks } from "@/lib/books";
@@ -47,7 +47,7 @@ export default async function AdminBooksPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="relative w-10 h-14 bg-gray-50 border border-gray-100 shrink-0">
-                        <Image
+                        <ContentImage
                           src={book.coverImage}
                           alt={book.coverAlt ?? book.title}
                           fill
