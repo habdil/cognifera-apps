@@ -89,6 +89,82 @@ export async function getBookByParam(value: string): Promise<BookRecord | null> 
   return rows.length > 0 ? mapRow(rows[0]) : null;
 }
 
+export type BookInput = Omit<BookData, "id"> & { status: "draft" | "published" };
+
+export async function isSlugTaken(slug: string, excludeId?: string): Promise<boolean> {
+  const sql = getSql();
+  const rows = excludeId
+    ? await sql`SELECT 1 FROM books WHERE slug = ${slug} AND id != ${excludeId} LIMIT 1;`
+    : await sql`SELECT 1 FROM books WHERE slug = ${slug} LIMIT 1;`;
+  return rows.length > 0;
+}
+
+export async function createBook(input: BookInput): Promise<BookRecord> {
+  const sql = getSql();
+  const rows = await sql`
+    INSERT INTO books (
+      slug, title, authors, publisher, publication_year, isbn, pages, page_label,
+      language, category, description, long_description, keywords,
+      cover_image, cover_alt, preview_images, price, availability, format,
+      preview_url, purchase_url, purchase_label, table_of_contents, highlights, status
+    ) VALUES (
+      ${input.slug}, ${input.title}, ${input.authors}, ${input.publisher},
+      ${input.publicationYear}, ${input.isbn}, ${input.pages}, ${input.pageLabel ?? null},
+      ${input.language}, ${input.category}, ${input.description},
+      ${input.longDescription ?? null}, ${input.keywords},
+      ${input.coverImage}, ${input.coverAlt ?? null}, ${input.previewImages ?? null},
+      ${input.price ?? null}, ${input.availability}, ${input.format},
+      ${input.previewUrl ?? null}, ${input.purchaseUrl ?? null},
+      ${input.purchaseLabel ?? null}, ${input.tableOfContents ?? null},
+      ${input.highlights ?? null}, ${input.status}
+    )
+    RETURNING *;
+  `;
+  return mapRow(rows[0]);
+}
+
+export async function updateBook(id: string, input: BookInput): Promise<BookRecord | null> {
+  const sql = getSql();
+  const rows = await sql`
+    UPDATE books SET
+      slug = ${input.slug},
+      title = ${input.title},
+      authors = ${input.authors},
+      publisher = ${input.publisher},
+      publication_year = ${input.publicationYear},
+      isbn = ${input.isbn},
+      pages = ${input.pages},
+      page_label = ${input.pageLabel ?? null},
+      language = ${input.language},
+      category = ${input.category},
+      description = ${input.description},
+      long_description = ${input.longDescription ?? null},
+      keywords = ${input.keywords},
+      cover_image = ${input.coverImage},
+      cover_alt = ${input.coverAlt ?? null},
+      preview_images = ${input.previewImages ?? null},
+      price = ${input.price ?? null},
+      availability = ${input.availability},
+      format = ${input.format},
+      preview_url = ${input.previewUrl ?? null},
+      purchase_url = ${input.purchaseUrl ?? null},
+      purchase_label = ${input.purchaseLabel ?? null},
+      table_of_contents = ${input.tableOfContents ?? null},
+      highlights = ${input.highlights ?? null},
+      status = ${input.status},
+      updated_at = NOW()
+    WHERE id = ${id}
+    RETURNING *;
+  `;
+  return rows.length > 0 ? mapRow(rows[0]) : null;
+}
+
+export async function deleteBook(id: string): Promise<boolean> {
+  const sql = getSql();
+  const rows = await sql`DELETE FROM books WHERE id = ${id} RETURNING id;`;
+  return rows.length > 0;
+}
+
 export async function getRelatedBooks(
   currentBook: BookData,
   limit = 6

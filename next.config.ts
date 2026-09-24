@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "lnjcdrchybzurinizeek.supabase.co",
+        hostname: "res.cloudinary.com",
       },
     ],
     formats: ["image/webp", "image/avif"],
