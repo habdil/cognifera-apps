@@ -114,16 +114,19 @@ export const MobileNavContent = ({
         {expandedMenu === 'news' && (
           <div className="pl-6 py-1 space-y-1 bg-gray-50">
             <Link href="/news" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
-              All News
-            </Link>
-            {/* <Link href="/news?category=industry" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
-              Industry News
-            </Link> */}
-            <Link href="/news?category=research" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
-              Research News
+              Semua Berita
             </Link>
             <Link href="/news?category=company" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
-              Company News
+              Berita Perusahaan
+            </Link>
+            <Link href="/news?category=research" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
+              Riset &amp; Publikasi
+            </Link>
+            <Link href="/news?category=announcement" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
+              Pengumuman
+            </Link>
+            <Link href="/news?category=tips" className="block w-full rounded-md px-4 py-2 text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-primary)] hover:bg-white" onClick={onCloseMobile}>
+              Tips &amp; Panduan
             </Link>
           </div>
         )}
