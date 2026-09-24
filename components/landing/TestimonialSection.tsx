@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { TestimonialData } from "@/types";
 import { getActiveTestimonials } from "@/content/testimonials";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
-import { ArrowRight } from "lucide-react";
 
 const socialProofData = [
   { name: "Asih Luklu Susiati", position: "Dosen", institution: "Universitas Negeri Malang", photo: "/social-proof/Asih Luklu Susiati.jpeg" },
