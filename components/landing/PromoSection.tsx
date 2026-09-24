@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { IklanData, LayananData } from "@/types";
-import { iklanAPI, layananAPI } from "@/lib/api-dummy";
+import { getActivePromos } from "@/content/promos";
+import { getActiveServices } from "@/content/services";
 import { ArrowRight, Clock } from "lucide-react";
 
 export function PromoSection() {
@@ -10,21 +11,12 @@ export function PromoSection() {
   const [currentPromo, setCurrentPromo] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // Data diisi di effect (bukan initializer) agar penentuan promo aktif
+  // berbasis tanggal terjadi di client dan bebas hydration mismatch.
   useEffect(() => {
-    const fetchData = async () => {
-      const [promosResponse, layananResponse] = await Promise.all([
-        iklanAPI.getAll({ status: "aktif", sortBy: "priority", sortOrder: "asc" }),
-        layananAPI.getAll({ status: "aktif" }),
-      ]);
-      if (promosResponse.success && promosResponse.data) {
-        setPromos(promosResponse.data.filter((p) => new Date() <= p.tanggalBerakhir));
-      }
-      if (layananResponse.success && layananResponse.data) {
-        setLayanan(layananResponse.data);
-      }
-      setLoading(false);
-    };
-    fetchData();
+    setPromos(getActivePromos());
+    setLayanan(getActiveServices());
+    setLoading(false);
   }, []);
 
   useEffect(() => {

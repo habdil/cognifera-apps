@@ -1,0 +1,181 @@
+import { LayananData } from '../types';
+
+export const services: LayananData[] = [
+  {
+    id: "feradata",
+    nama: "FERADATA",
+    tagline: "Paket Analisis Data Premium",
+    deskripsi: "Paket Analisis Data Premium dengan dukungan statistisi berpengalaman",
+    deskripsiLengkap: "FERADATA adalah solusi komprehensif untuk kebutuhan analisis data penelitian Anda. Dengan dukungan statistisi berpengalaman dan tools modern, kami membantu mengubah data mentah menjadi insights yang bermakna untuk publikasi berkualitas tinggi.",
+    icon: "bar-chart-3",
+    hargaMulai: 500000,
+    fiturUtama: [
+      "Konsultasi desain penelitian",
+      "Analisis statistik profesional",
+      "Interpretasi hasil mendalam",
+      "Visualisasi data menarik",
+      "Laporan siap publikasi"
+    ],
+    targetMarket: ["Mahasiswa S1/S2/S3", "Dosen muda", "Peneliti"],
+    successRate: "95%",
+    warna: "#EC7A01",
+    kategori: "analisis-data",
+    status: "aktif",
+    createdAt: new Date("2024-01-01"),
+    updatedAt: new Date("2024-08-20")
+  },
+  {
+    id: "feraguide",
+    nama: "FERAGUIDE",
+    tagline: "Paket Bimbingan Karya Tulis Ilmiah",
+    deskripsi: "Paket Bimbingan Karya Tulis Ilmiah dengan mentoring menyeluruh",
+    deskripsiLengkap: "FERAGUIDE adalah layanan mentoring penelitian yang komprehensif. Tim expert kami akan memandu setiap langkah perjalanan riset Anda, mulai dari penyusunan proposal, metodologi, hingga strategi publikasi di jurnal bereputasi.",
+    icon: "compass",
+    hargaMulai: 750000,
+    fiturUtama: [
+      "Mentoring proposal penelitian",
+      "Guidance metodologi penelitian",
+      "Review dan feedback berkala",
+      "Strategi publikasi jurnal",
+      "Template dan tools penelitian"
+    ],
+    targetMarket: ["Mahasiswa S1/S2/S3", "Dosen", "Peneliti senior"],
+    successRate: "90%",
+    warna: "#FFDD02",
+    kategori: "bimbingan",
+    status: "aktif",
+    createdAt: new Date("2024-01-15"),
+    updatedAt: new Date("2024-08-22")
+  },
+  {
+    id: "ferapub",
+    nama: "FERAPUB",
+    tagline: "Paket Publikasi Jurnal Internasional",
+    deskripsi: "Paket Publikasi Jurnal Internasional dengan strategi submission terpadu",
+    deskripsiLengkap: "FERAPUB adalah layanan konsultasi khusus untuk membantu peneliti menavigasi dunia publikasi ilmiah. Kami membantu memilih jurnal yang tepat, menyusun strategi submission, dan meningkatkan peluang acceptance di jurnal bereputasi.",
+    icon: "send",
+    hargaMulai: 400000,
+    fiturUtama: [
+      "Analisis jurnal target",
+      "Strategi submission",
+      "Review pre-submission",
+      "Follow-up komunikasi editor",
+      "Revisi berdasarkan reviewer"
+    ],
+    targetMarket: ["Dosen", "Peneliti senior", "Institusi riset"],
+    successRate: "92%",
+    warna: "#10b981",
+    kategori: "publikasi",
+    status: "aktif",
+    createdAt: new Date("2024-03-01"),
+    updatedAt: new Date("2024-08-23")
+  },
+  {
+    id: "feragrant",
+    nama: "FERAGRANT",
+    tagline: "Paket Hibah dan Pendanaan Penelitian",
+    deskripsi: "Paket Hibah dan Pendanaan Penelitian dengan dukungan proposal berkualitas",
+    deskripsiLengkap: "FERAGRANT adalah layanan konsultasi untuk membantu peneliti memperoleh hibah dan pendanaan penelitian. Tim ahli kami akan membantu menyusun proposal hibah yang kompetitif dan meningkatkan peluang mendapatkan funding dari berbagai sumber.",
+    icon: "pen-tool",
+    hargaMulai: 600000,
+    fiturUtama: [
+      "Konsultasi strategi hibah",
+      "Penulisan proposal hibah",
+      "Review dan perbaikan proposal",
+      "Database sumber funding",
+      "Follow-up aplikasi hibah"
+    ],
+    targetMarket: ["Dosen", "Peneliti senior", "Institusi riset", "Startup riset"],
+    successRate: "85%",
+    warna: "#97D5EE",
+    kategori: "hibah",
+    status: "aktif",
+    createdAt: new Date("2024-04-01"),
+    updatedAt: new Date("2024-08-25")
+  },
+  {
+    id: "bukuhemat",
+    nama: "Paket Penerbitan Buku Hemat",
+    tagline: "Paket Hemat - Solusi Terjangkau",
+    deskripsi: "Paket penerbitan buku dengan harga terjangkau, cocok untuk penulis pemula",
+    deskripsiLengkap: "Paket Hemat adalah solusi penerbitan buku yang ekonomis namun tetap profesional. Cocok untuk penulis pemula yang ingin menerbitkan karya pertama mereka dengan ISBN resmi dan terindeks Google Scholar.",
+    icon: "book-open",
+    hargaMulai: 500000,
+    fiturUtama: [
+      "ISBN Buku",
+      "Layouting Cover dan Isi Sederhana (Tanpa Revisi)",
+      "Terindeks Google Scholar",
+      "E-Sertifikat bagi Penulis Pertama",
+      "E-Book",
+      "Ukuran Buku Standar UNESCO",
+      "Biaya Cetak: Rp 150.000"
+    ],
+    targetMarket: ["Mahasiswa S1/S2/S3", "Dosen muda", "Penulis pemula"],
+    successRate: "98%",
+    warna: "#8B5CF6",
+    kategori: "penerbitan-buku",
+    status: "aktif",
+    createdAt: new Date("2024-05-01"),
+    updatedAt: new Date("2024-10-01")
+  },
+  {
+    id: "bukustandar",
+    nama: "Paket Penerbitan Buku Standar",
+    tagline: "Paket Standar - Kualitas Terjamin",
+    deskripsi: "Paket penerbitan buku standar dengan proofreading untuk hasil lebih berkualitas",
+    deskripsiLengkap: "Paket Standar memberikan layanan penerbitan buku yang lebih lengkap dengan tambahan proofreading untuk memastikan naskah Anda bebas dari kesalahan dan siap terbit dengan kualitas profesional.",
+    icon: "book-open",
+    hargaMulai: 750000,
+    fiturUtama: [
+      "ISBN Buku",
+      "Layouting Cover dan Isi (Tanpa Revisi)",
+      "Terindeks Google Scholar",
+      "E-Sertifikat bagi Penulis Pertama",
+      "E-Book",
+      "Ukuran Buku Standar UNESCO",
+      "Proofreading",
+      "Biaya Cetak: Rp 150.000"
+    ],
+    targetMarket: ["Mahasiswa S2/S3", "Dosen", "Peneliti"],
+    successRate: "97%",
+    warna: "#F59E0B",
+    kategori: "penerbitan-buku",
+    status: "aktif",
+    createdAt: new Date("2024-05-01"),
+    updatedAt: new Date("2024-10-01")
+  },
+  {
+    id: "bukukomplit",
+    nama: "Paket Penerbitan Buku Komplit",
+    tagline: "Paket Komplit - Layanan Premium",
+    deskripsi: "Paket penerbitan buku premium dengan konversi naskah dan layouting high quality",
+    deskripsiLengkap: "Paket Komplit adalah layanan penerbitan buku paling lengkap kami. Termasuk konversi naskah dari skripsi/tesis/disertasi, layouting high quality, dan proofreading untuk hasil publikasi yang sempurna dan profesional.",
+    icon: "book-open",
+    hargaMulai: 1500000,
+    fiturUtama: [
+      "Konversi Naskah dari Skripsi/Tesis/Disertasi",
+      "E-ISBN Buku",
+      "Layouting Cover dan Isi High Quality (Tanpa Revisi)",
+      "Terindeks Google Scholar",
+      "E-Sertifikat bagi Penulis Pertama",
+      "E-Book",
+      "Ukuran Buku Standar UNESCO",
+      "Proofreading",
+      "Biaya Cetak: Rp 150.000"
+    ],
+    targetMarket: ["Mahasiswa S3", "Dosen", "Peneliti senior", "Institusi riset"],
+    successRate: "99%",
+    warna: "#DC2626",
+    kategori: "penerbitan-buku",
+    status: "aktif",
+    createdAt: new Date("2024-05-01"),
+    updatedAt: new Date("2024-10-01")
+  }
+];
+export function getActiveServices(): LayananData[] {
+  return services.filter((service) => service.status === "aktif");
+}
+
+export function getServiceById(id: string): LayananData | undefined {
+  return services.find((service) => service.id === id);
+}

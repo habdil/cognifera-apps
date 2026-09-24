@@ -2,43 +2,19 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, ChevronDown, ChevronUp, type LucideIcon } from "lucide-react";
-import type { NewUser } from "@/lib/auth-new";
-
-interface DropdownItem {
-  label: string;
-  href: string | null;
-  icon: LucideIcon;
-  action: (() => void) | null;
-}
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface MobileNavContentProps {
-  user: NewUser | null;
   expandedMenu: string | null;
   onToggleMenu: (menu: string) => void;
   onCloseMobile: () => void;
-  onLogout: () => void;
-  dropdownItems: DropdownItem[];
 }
 
 export const MobileNavContent = ({
-  user,
   expandedMenu,
   onToggleMenu,
-  onCloseMobile,
-  onLogout,
-  dropdownItems
+  onCloseMobile
 }: MobileNavContentProps) => {
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   return (
     <>
       {/* Home */}
@@ -162,83 +138,18 @@ export const MobileNavContent = ({
         Contacts
       </Link>
 
-      {/* User Section */}
-      {user ? (
-        <div className="w-full space-y-3">
-          {/* User Info */}
-          <div className="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg">
-            <Avatar className="h-10 w-10">
-              <AvatarImage
-                src={user.avatar_url || ''}
-                alt={user.full_name}
-              />
-              <AvatarFallback className="bg-[var(--color-primary)] text-white text-sm">
-                {getInitials(user.full_name)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <p className="text-sm font-medium">{user.full_name}</p>
-              <p className="text-xs text-gray-500">{user.role}</p>
-            </div>
-          </div>
-
-          {/* Menu Items */}
-          {dropdownItems.map((item, index) => {
-            const IconComponent = item.icon;
-
-            if (item.action) {
-              return (
-                <Button
-                  key={index}
-                  variant="outline"
-                  onClick={() => {
-                    item.action?.();
-                    onCloseMobile();
-                  }}
-                  className="flex items-center space-x-3 w-full p-3 text-sm text-gray-700 bg-white rounded-lg border hover:bg-gray-50 transition-colors text-left justify-start h-auto"
-                >
-                  <IconComponent className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </Button>
-              );
-            }
-
-            return (
-              <Link
-                key={index}
-                href={item.href || '#'}
-                className="flex items-center space-x-3 w-full p-3 text-sm text-gray-700 bg-white rounded-lg border hover:bg-gray-50 transition-colors"
-                onClick={onCloseMobile}
-              >
-                <IconComponent className="w-4 h-4" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-
-          {/* Logout */}
-          <Button
-            onClick={onLogout}
-            variant="outline"
-            className="w-full flex items-center justify-center space-x-2 text-red-600 border-red-200 hover:bg-red-50"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </Button>
-        </div>
-      ) : (
-        <div className="w-full">
-          <a
-            href="https://wa.me/message/VRRB5IFQ7LQ4A1"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full bg-primary hover:bg-primary/90 text-white text-center py-3 text-sm font-medium tracking-wide transition-colors"
-            onClick={onCloseMobile}
-          >
-            Konsultasi Sekarang
-          </a>
-        </div>
-      )}
+      {/* CTA */}
+      <div className="w-full">
+        <a
+          href="https://wa.me/message/VRRB5IFQ7LQ4A1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full bg-primary hover:bg-primary/90 text-white text-center py-3 text-sm font-medium tracking-wide transition-colors"
+          onClick={onCloseMobile}
+        >
+          Konsultasi Sekarang
+        </a>
+      </div>
     </>
   );
 };

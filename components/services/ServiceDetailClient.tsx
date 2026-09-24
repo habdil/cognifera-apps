@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { LayananData } from "@/types";
-import { layananAPI } from "@/lib/api-dummy";
+import { getServiceById } from "@/content/services";
 import {
   ArrowLeft,
   Check,
@@ -27,26 +27,15 @@ export function ServiceDetailClient({ initialService }: ServiceDetailClientProps
 
   useEffect(() => {
     if (!initialService && params.id) {
-      fetchService(params.id as string);
-    }
-  }, [params.id, initialService]);
-
-  const fetchService = async (id: string) => {
-    try {
-      setLoading(true);
-      const response = await layananAPI.getById(id);
-      if (response.success && response.data) {
-        setService(response.data);
+      const found = getServiceById(params.id as string);
+      if (found) {
+        setService(found);
       } else {
         setError("Layanan tidak ditemukan");
       }
-    } catch (error) {
-      console.error("Error fetching service:", error);
-      setError("Gagal memuat data layanan");
-    } finally {
       setLoading(false);
     }
-  };
+  }, [params.id, initialService]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {

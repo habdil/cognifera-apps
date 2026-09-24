@@ -3,7 +3,7 @@
  * Extracts base64 images, uploads them, and replaces with URLs
  */
 
-import { uploadArticleImage } from '@/lib/api/upload';
+import { uploadImage } from '@/lib/upload-client';
 
 /**
  * Convert base64 string to File object
@@ -77,11 +77,8 @@ export async function uploadBase64Images(
       const file = base64ToFile(base64, filename);
 
       // Upload to server
-      const response = await uploadArticleImage(file);
-
-      if (response.success) {
-        urlMap.set(base64, response.data.url);
-      }
+      const { url } = await uploadImage(file, 'articles');
+      urlMap.set(base64, url);
 
       // Report progress
       if (onProgress) {

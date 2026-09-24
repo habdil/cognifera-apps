@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import { mockBerita } from '@/mock-data/berita'
-import { mockLayanan } from '@/mock-data/layanan'
+import { getActiveServices } from '@/content/services'
 import { mockBooks } from '@/mock-data/publications'
 
 export async function GET() {
@@ -47,16 +46,8 @@ export async function GET() {
     }
   ]
 
-  // Dynamic news pages
-  const newsPages = mockBerita.map(article => ({
-    url: `${baseUrl}/news/${article.id}`,
-    lastmod: new Date(article.publicationDate).toISOString(),
-    changefreq: 'monthly',
-    priority: 0.7
-  }))
-
   // Dynamic service pages
-  const servicePages = mockLayanan.map(service => ({
+  const servicePages = getActiveServices().map(service => ({
     url: `${baseUrl}/services/${service.id}`,
     lastmod: currentDate,
     changefreq: 'weekly',
@@ -72,7 +63,7 @@ export async function GET() {
   }))
 
   // Combine all pages
-  const allPages = [...staticPages, ...newsPages, ...servicePages, ...bookPages]
+  const allPages = [...staticPages, ...servicePages, ...bookPages]
 
   // Generate XML
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

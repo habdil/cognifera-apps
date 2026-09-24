@@ -1,23 +1,22 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { layananAPI } from "@/lib/api-dummy";
+import { getServiceById } from "@/content/services";
 import { ServiceDetailClient } from "@/components/services/ServiceDetailClient";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const response = await layananAPI.getById(params.id);
+  const { id } = await params;
+  const service = getServiceById(id);
 
-  if (!response.success || !response.data) {
+  if (!service) {
     return {
       title: "Layanan Tidak Ditemukan - Cognifera Education Academy",
       description: "Layanan yang Anda cari tidak tersedia atau telah dihapus.",
     };
   }
-
-  const service = response.data;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -104,13 +103,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ServiceDetailPage({ params }: Props) {
-  const response = await layananAPI.getById(params.id);
+  const { id } = await params;
+  const service = getServiceById(id);
 
-  if (!response.success || !response.data) {
+  if (!service) {
     notFound();
   }
-
-  const service = response.data;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {

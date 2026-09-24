@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { TestimonialData } from "@/types";
-import { testimonialAPI } from "@/lib/api-dummy";
+import { getActiveTestimonials } from "@/content/testimonials";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 import { ArrowRight } from "lucide-react";
 
@@ -22,16 +22,8 @@ export function TestimonialSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await testimonialAPI.getAll({ status: "aktif" });
-      if (res.success && res.data) {
-        setTestimonials(
-          res.data.sort((a, b) => (a.featured === b.featured ? 0 : a.featured ? -1 : 1))
-        );
-      }
-      setLoading(false);
-    };
-    fetchData();
+    setTestimonials(getActiveTestimonials());
+    setLoading(false);
   }, []);
 
   if (loading || testimonials.length === 0) {

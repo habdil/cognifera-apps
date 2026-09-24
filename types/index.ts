@@ -48,82 +48,9 @@ export interface TestimonialData {
   updatedAt: Date;
 }
 
-export interface BeritaData {
-  id: string;
-  judul: string;
-  konten: string;
-  featuredImage?: string;
-  category: 'industry' | 'research' | 'company' | 'announcement';
-  tags: string[];
-  author: string;
-  publicationDate: string;
-  status: 'aktif' | 'nonaktif';
-  featured?: boolean;
-  metaDescription?: string;
-  keywords?: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-// Category interface (backend now returns object with name and description)
-export interface CategoryData {
-  name: string;
-  description: string;
-}
-
-// New interface for public articles with author info
-export interface PublicBeritaData {
-  id: string;
-  judul: string;
-  konten: string;
-  featuredImage?: string;
-  category: CategoryData | string; // Support both object (new) and string (old) for backward compatibility
-  tags: string[];
-  status: 'aktif';
-  publishedAt: string;
-  createdAt: string;
-  updatedAt: string;
-  author: {
-    id: string;
-    fullName: string;
-    email?: string;
-    avatar?: string;
-    bio?: string;
-  };
-}
-
 export interface ContactFormData {
   name: string;
   email: string;
   layananInterest: string;
   message: string;
-}
-
-export interface AdminStats {
-  totalLayanan: number;
-  activePromos: number;
-  totalTestimonials: number;
-  publishedNews: number;
-  recentActivities: {
-    id: string;
-    type: 'layanan' | 'iklan' | 'testimonial' | 'berita';
-    action: 'create' | 'update' | 'delete';
-    title: string;
-    timestamp: Date;
-  }[];
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  message?: string;
-}
-
-export interface FilterOptions {
-  search?: string;
-  status?: 'aktif' | 'nonaktif' | 'all';
-  category?: string;
-  sortBy?: 'name' | 'date' | 'priority';
-  sortOrder?: 'asc' | 'desc';
 }
