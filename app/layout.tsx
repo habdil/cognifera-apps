@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Work_Sans, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import PromoPopupProvider from "@/components/PromoPopupProvider";
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 import "./globals.css";
 
 const PROMO_POPUP_ENABLED = false;
@@ -133,6 +134,7 @@ export default function RootLayout({
         className={`${workSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <AnalyticsTracker />
         <PromoPopupProvider enabled={PROMO_POPUP_ENABLED} />
         <Toaster
           position="bottom-right"
