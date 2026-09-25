@@ -47,9 +47,9 @@ export const metadata: Metadata = {
     siteName: 'Cognifera',
     images: [
       {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
+        url: '/og-home.jpg',
+        width: 904,
+        height: 533,
         alt: 'Cognifera - Riset, Publikasi Jurnal & Penerbitan Buku',
       }
     ],
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Cognifera - Riset, Publikasi Jurnal & Penerbitan Buku',
     description: 'Cognifera menyediakan layanan riset akademik, konsultasi, dan pendidikan berkualitas tinggi.',
-    images: ['/og-image.png'],
+    images: ['/og-home.jpg'],
   },
   robots: {
     index: true,

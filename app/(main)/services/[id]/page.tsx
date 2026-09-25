@@ -59,9 +59,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: "Cognifera Education Academy",
       images: [
         {
-          url: `https://www.cognifera.web.id/og-fera.png`,
-          width: 1200,
-          height: 630,
+          url: `https://www.cognifera.web.id/og-home.jpg`,
+          width: 904,
+          height: 533,
           alt: `${service.nama} - Cognifera Education Academy`,
         },
       ],
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: `${service.nama} - ${service.tagline}`,
       description: `${service.deskripsiLengkap.substring(0, 120)}... Mulai dari ${formatPrice(service.hargaMulai)}.`,
-      images: [`https://www.cognifera.web.id/twitter-service-${service.id}.jpg`],
+      images: [`https://www.cognifera.web.id/og-home.jpg`],
       creator: "@cogniferedu",
       site: "@cogniferedu",
     },

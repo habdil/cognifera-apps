@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
 import { getPublishedArticleBySlug, getRelatedArticles } from "@/lib/articles";
 import { getCategoryLabel } from "@/lib/articles-shared";
+import { ogImageUrl } from "@/lib/og-image";
 import { NewsCard } from "@/components/news/NewsCard";
 import "@/components/editor/editor-styles.css";
 
@@ -21,10 +22,6 @@ function formatDate(value: Date | null) {
     month: "long",
     year: "numeric",
   }).format(value);
-}
-
-function absoluteImageUrl(path: string) {
-  return path.startsWith("http") ? path : `https://www.cognifera.web.id${path}`;
 }
 
 export async function generateMetadata({
@@ -54,8 +51,22 @@ export async function generateMetadata({
       type: "article",
       publishedTime: article.publishedAt?.toISOString(),
       images: article.coverImage
-        ? [{ url: absoluteImageUrl(article.coverImage), alt: article.title }]
-        : undefined,
+        ? [
+            {
+              url: ogImageUrl(article.coverImage),
+              width: 1200,
+              height: 630,
+              alt: article.title,
+            },
+          ]
+        : [
+            {
+              url: "/og-news.jpg",
+              width: 512,
+              height: 512,
+              alt: article.title,
+            },
+          ],
     },
   };
 }
@@ -75,7 +86,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     "@type": "NewsArticle",
     headline: article.title,
     description: article.excerpt || article.title,
-    image: article.coverImage ? [absoluteImageUrl(article.coverImage)] : undefined,
+    image: article.coverImage ? [ogImageUrl(article.coverImage)] : undefined,
     datePublished: article.publishedAt?.toISOString(),
     dateModified: article.updatedAt.toISOString(),
     author: {
