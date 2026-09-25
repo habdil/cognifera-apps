@@ -8,6 +8,7 @@ import { BookRecommendations } from "@/components/publications/books/BookRecomme
 import { PromoBanner } from "@/components/publications/books/PromoBanner";
 import { getBookByParam, getRelatedBooks } from "@/lib/books";
 import { getBookHref, getBookInquiryUrl } from "@/lib/books-shared";
+import { ogImageUrl } from "@/lib/og-image";
 
 export const revalidate = 300;
 
@@ -15,10 +16,6 @@ interface BookDetailPageProps {
   params: Promise<{
     id: string;
   }>;
-}
-
-function absoluteImageUrl(path: string) {
-  return path.startsWith("http") ? path : `https://www.cognifera.web.id${path}`;
 }
 
 export async function generateMetadata({
@@ -48,7 +45,10 @@ export async function generateMetadata({
       type: "website",
       images: [
         {
-          url: absoluteImageUrl(book.coverImage),
+          // Book covers are portrait: letterbox instead of cropping the title.
+          url: ogImageUrl(book.coverImage, "pad"),
+          width: 1200,
+          height: 630,
           alt: book.coverAlt ?? book.title,
         },
       ],
@@ -83,7 +83,7 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
     inLanguage: book.language === "id" ? "id-ID" : "en-US",
     datePublished: `${book.publicationYear}-01-01`,
     description: book.description,
-    image: absoluteImageUrl(book.coverImage),
+    image: ogImageUrl(book.coverImage, "pad"),
     url: `https://www.cognifera.web.id${getBookHref(book)}`,
     offers: {
       "@type": "Offer",

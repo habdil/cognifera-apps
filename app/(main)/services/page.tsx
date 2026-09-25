@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     siteName: "Cognifera",
     images: [
       {
-        url: "/og-services.jpg",
-        width: 1200,
-        height: 630,
+        url: "/og-home.jpg",
+        width: 904,
+        height: 533,
         alt: "Layanan Cognifera"
       }
     ]
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Layanan Penelitian & Publikasi Ilmiah - Cognifera",
     description: "Solusi komprehensif untuk kebutuhan penelitian, publikasi ilmiah, dan penerbitan buku.",
-    images: ["/og-services.jpg"]
+    images: ["/og-home.jpg"]
   },
   alternates: {
     canonical: "/services"

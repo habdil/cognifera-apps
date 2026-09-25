@@ -19,6 +19,14 @@ export const metadata: Metadata = {
     description: "Berita terbaru, artikel riset, dan pengumuman dari Cognifera.",
     url: "https://www.cognifera.web.id/news",
     type: "website",
+    images: [
+      {
+        url: "/og-news.jpg",
+        width: 512,
+        height: 512,
+        alt: "Berita & Artikel Cognifera",
+      },
+    ],
   },
   alternates: {
     canonical: "https://www.cognifera.web.id/news",

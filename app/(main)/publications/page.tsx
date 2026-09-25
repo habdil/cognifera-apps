@@ -17,6 +17,14 @@ export const metadata: Metadata = {
     description: "Koleksi buku ilmiah, monograf, dan buku referensi dari para peneliti terbaik Indonesia.",
     url: "https://www.cognifera.web.id/publications",
     type: "website",
+    images: [
+      {
+        url: "/og-home.jpg",
+        width: 904,
+        height: 533,
+        alt: "Cognifera Publications",
+      },
+    ],
   },
   alternates: {
     canonical: "https://www.cognifera.web.id/publications",
