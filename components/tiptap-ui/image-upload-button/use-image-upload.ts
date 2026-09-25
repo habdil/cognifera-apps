@@ -41,6 +41,15 @@ export interface UseImageUploadConfig {
    * Callback function called after a successful image insertion.
    */
   onInserted?: () => void
+  /**
+   * Uploads the picked file and resolves to the URL that gets inserted.
+   * When omitted, the file is inlined as a base64 data URL (legacy behavior).
+   */
+  uploadFile?: (file: File) => Promise<string>
+  /**
+   * Callback function called when the upload or insertion fails.
+   */
+  onUploadError?: (error: Error) => void
 }
 
 /**
@@ -73,43 +82,57 @@ export function isImageActive(editor: Editor | null, extensionName: string = "im
 /**
  * Handles image file upload and insertion
  */
-export function uploadAndInsertImage(editor: Editor | null, extensionName: string = "imageUpload", onInserted?: () => void): void {
+export function uploadAndInsertImage(
+  editor: Editor | null,
+  extensionName: string = "imageUpload",
+  onInserted?: () => void,
+  uploadFile?: (file: File) => Promise<string>,
+  onError?: (error: Error) => void
+): void {
   if (!editor || !editor.isEditable) return
   if (!canInsertImage(editor, extensionName)) return
 
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = 'image/*'
-  input.onchange = (e) => {
+  input.onchange = async (e) => {
     const file = (e.target as HTMLInputElement).files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const url = event.target?.result as string
-        if (url) {
-          let success = false
+    if (!file) return
 
-          // For standard image extension or imageResize, use setImage command
-          if (extensionName === "image" || extensionName === "imageResize") {
-            success = editor.chain().focus().setImage({ src: url }).run()
-          } else {
-            // For custom imageUpload extension, use insertContent
-            success = editor
-              .chain()
-              .focus()
-              .insertContent({
-                type: extensionName,
-                attrs: { src: url }
-              })
-              .run()
-          }
+    try {
+      const url = uploadFile
+        ? await uploadFile(file)
+        : await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = (event) => resolve(event.target?.result as string)
+            reader.onerror = () => reject(new Error('Gagal membaca file gambar.'))
+            reader.readAsDataURL(file)
+          })
 
-          if (success) {
-            onInserted?.()
-          }
-        }
+      if (!url) return
+
+      let success = false
+
+      // For standard image extension or imageResize, use setImage command
+      if (extensionName === "image" || extensionName === "imageResize") {
+        success = editor.chain().focus().setImage({ src: url }).run()
+      } else {
+        // For custom imageUpload extension, use insertContent
+        success = editor
+          .chain()
+          .focus()
+          .insertContent({
+            type: extensionName,
+            attrs: { src: url }
+          })
+          .run()
       }
-      reader.readAsDataURL(file)
+
+      if (success) {
+        onInserted?.()
+      }
+    } catch (error) {
+      onError?.(error instanceof Error ? error : new Error(String(error)))
     }
   }
   input.click()
@@ -198,6 +221,8 @@ export function useImageUpload(config?: UseImageUploadConfig) {
     extensionName = "imageUpload",
     hideWhenUnavailable = false,
     onInserted,
+    uploadFile,
+    onUploadError,
   } = config || {}
 
   const { editor } = useTiptapEditor(providedEditor)
@@ -225,9 +250,9 @@ export function useImageUpload(config?: UseImageUploadConfig) {
   const handleImage = React.useCallback(() => {
     if (!editor) return false
 
-    uploadAndInsertImage(editor, extensionName, onInserted)
+    uploadAndInsertImage(editor, extensionName, onInserted, uploadFile, onUploadError)
     return true
-  }, [editor, extensionName, onInserted])
+  }, [editor, extensionName, onInserted, uploadFile, onUploadError])
 
   useHotkeys(
     IMAGE_UPLOAD_SHORTCUT_KEY,

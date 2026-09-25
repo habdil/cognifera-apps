@@ -58,6 +58,8 @@ export const ImageUploadButton = React.forwardRef<
       extensionName,
       hideWhenUnavailable = false,
       onInserted,
+      uploadFile,
+      onUploadError,
       showShortcut = false,
       onClick,
       children,
@@ -79,6 +81,8 @@ export const ImageUploadButton = React.forwardRef<
       extensionName,
       hideWhenUnavailable,
       onInserted,
+      uploadFile,
+      onUploadError,
     })
 
     const handleClick = React.useCallback(

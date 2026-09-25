@@ -2,6 +2,9 @@
 
 import { useCurrentEditor } from '@tiptap/react';
 import { useState, useCallback } from 'react';
+import { toast } from 'sonner';
+
+import { uploadImage } from '@/lib/upload-client';
 
 // Tiptap UI Components
 import { HeadingButton } from '@/components/tiptap-ui/heading-button';
@@ -42,6 +45,23 @@ export const EditorToolbar = () => {
   const handleLinkRemove = useCallback(() => {
     editor?.chain().focus().unsetLink().run();
   }, [editor]);
+
+  // Uploads straight to Cloudinary so the editor only ever holds CDN URLs —
+  // inlined base64 images made the saved payload explode and broke publishing.
+  const handleImageUpload = useCallback(async (file: File) => {
+    const toastId = toast.loading('Mengupload gambar...');
+    try {
+      const { url } = await uploadImage(file, 'articles');
+      toast.success('Gambar berhasil diupload.', { id: toastId });
+      return url;
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Upload gambar gagal.',
+        { id: toastId }
+      );
+      throw error;
+    }
+  }, []);
 
   if (!editor) return null;
 
@@ -154,7 +174,7 @@ export const EditorToolbar = () => {
           {/* Image Upload */}
           <ImageUploadButton
             extensionName="image"
-            onInserted={() => console.log('Image uploaded successfully')}
+            uploadFile={handleImageUpload}
           />
 
           {/* Image Alignment */}

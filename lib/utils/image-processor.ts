@@ -62,6 +62,7 @@ export async function uploadBase64Images(
   onProgress?: (current: number, total: number) => void
 ): Promise<Map<string, string>> {
   const urlMap = new Map<string, string>();
+  const failures: string[] = [];
 
   for (let i = 0; i < base64Images.length; i++) {
     const base64 = base64Images[i];
@@ -79,15 +80,23 @@ export async function uploadBase64Images(
       // Upload to server
       const { url } = await uploadImage(file, 'articles');
       urlMap.set(base64, url);
-
-      // Report progress
-      if (onProgress) {
-        onProgress(i + 1, base64Images.length);
-      }
     } catch (error) {
       console.error('Failed to upload image:', error);
-      // Continue with other images even if one fails
+      failures.push(error instanceof Error ? error.message : 'Upload gagal.');
     }
+
+    // Report progress
+    if (onProgress) {
+      onProgress(i + 1, base64Images.length);
+    }
+  }
+
+  // Saving base64 into the DB would silently bloat the article, so a failed
+  // upload aborts the save with an actionable message instead.
+  if (failures.length > 0) {
+    throw new Error(
+      `Gagal mengupload ${failures.length} gambar konten (${failures[0]}). Artikel belum disimpan — coba lagi.`
+    );
   }
 
   return urlMap;
@@ -103,18 +112,12 @@ export function replaceBase64WithUrls(
 ): string {
   let updatedHtml = htmlContent;
 
-  // Replace each base64 with its corresponding URL
+  // Replace each base64 with its corresponding URL. split/join instead of
+  // RegExp: building a regex from a multi-MB base64 string throws V8's
+  // "Regular expression too large" and killed every save with a large image.
+  // Only the src value is replaced, so attributes like data-align survive.
   urlMap.forEach((url, base64) => {
-    // Escape special regex characters in base64 string for use in regex
-    const escapedBase64 = base64.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-    // Simply replace the base64 string with URL
-    // This works because we're only replacing the src value, not the entire tag
-    // All other attributes including data-align are preserved
-    updatedHtml = updatedHtml.replace(
-      new RegExp(escapedBase64, 'g'),
-      url
-    );
+    updatedHtml = updatedHtml.split(base64).join(url);
   });
 
   return updatedHtml;
